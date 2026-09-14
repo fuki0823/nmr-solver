@@ -34,6 +34,20 @@ const ATOMIC_WEIGHT: Record<string, number> = {
   P: 30.974,
 };
 
+// モノアイソトピック質量(最多存在同位体の質量)。MS(exact mass)照合に使う。
+const MONOISOTOPIC_MASS: Record<string, number> = {
+  H: 1.007825,
+  C: 12.0,
+  N: 14.003074,
+  O: 15.994915,
+  F: 18.998403,
+  Cl: 34.968853,
+  Br: 78.918338,
+  I: 126.904473,
+  S: 31.972071,
+  P: 30.973762,
+};
+
 // 芳香族結合(V2000 type 4)は価電子の勘定上 1.5 として扱う(ベンゼン環のCHで
 // 1.5+1.5=3、価数4-3=1Hとなり実際と一致することを確認済み)。
 function bondOrderValue(order: MolfileBondOrder): number {
@@ -54,6 +68,8 @@ export interface MoleculeGraph {
   atoms: AtomInfo[];
   formula: string;
   molecularWeight: number;
+  /** モノアイソトピック質量(exact mass)。MS照合用 */
+  exactMass: number;
   /** 対応不能な元素が含まれていた場合 true。この場合、原子数に依存するチェックは信頼できない */
   hasUnsupportedElement: boolean;
 }
@@ -115,19 +131,23 @@ export function buildMoleculeGraph(molfile: string): MoleculeGraph {
   delete formulaCounts.__proto__;
 
   let molecularWeight = 0;
+  let exactMass = 0;
   for (const [element, count] of Object.entries(formulaCounts)) {
     const weight = ATOMIC_WEIGHT[element];
-    if (weight === undefined) {
+    const monoMass = MONOISOTOPIC_MASS[element];
+    if (weight === undefined || monoMass === undefined) {
       hasUnsupportedElement = true;
       continue;
     }
     molecularWeight += weight * count;
+    exactMass += monoMass * count;
   }
 
   return {
     atoms,
     formula: formatFormula(formulaCounts),
     molecularWeight: Math.round(molecularWeight * 10) / 10,
+    exactMass: Math.round(exactMass * 10000) / 10000,
     hasUnsupportedElement,
   };
 }
@@ -275,4 +295,36 @@ export function computeSpinSystemIslands(graph: MoleculeGraph): number[] | null 
   }
 
   return islands.sort((a, b) => b - a);
+}
+
+/**
+ * 2原子間の最短結合数(bond distance)をBFSで求める。HMBC(2JCH/3JCH)の
+ * bond distance検証や、NOESYの自明なケース判定(直接結合していれば空間的
+ * にも必ず近い)に使う。到達不能な場合はnull。
+ */
+export function bondDistance(
+  graph: MoleculeGraph,
+  fromIndex: number,
+  toIndex: number,
+): number | null {
+  if (fromIndex === toIndex) return 0;
+  const visited = new Set<number>([fromIndex]);
+  let frontier = [fromIndex];
+  let distance = 0;
+  while (frontier.length > 0) {
+    distance++;
+    const next: number[] = [];
+    for (const idx of frontier) {
+      const atom = graph.atoms[idx];
+      if (!atom) continue;
+      for (const [nbrIdx] of atom.heavyNeighbors) {
+        if (visited.has(nbrIdx)) continue;
+        if (nbrIdx === toIndex) return distance;
+        visited.add(nbrIdx);
+        next.push(nbrIdx);
+      }
+    }
+    frontier = next;
+  }
+  return null;
 }

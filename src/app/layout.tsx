@@ -62,13 +62,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col bg-stone-50 text-stone-900">
         <header className="border-b border-stone-200 bg-white">
-          <div className="mx-auto flex max-w-5xl items-center px-6 py-3">
+          <div className="mx-auto flex max-w-5xl items-center gap-6 px-6 py-3">
             <Link
               href="/"
               className="text-sm font-semibold tracking-tight text-stone-900"
             >
               NMR Solver
             </Link>
+            <nav className="flex items-center gap-4 text-sm text-stone-600">
+              <Link href="/" className="transition-colors hover:text-stone-900">
+                Learn
+              </Link>
+              <Link href="/analyze" className="transition-colors hover:text-stone-900">
+                Analyze
+              </Link>
+              <span className="text-stone-300" title="今後実装予定">
+                Build
+              </span>
+            </nav>
           </div>
         </header>
         <main className="flex flex-1 flex-col">{children}</main>

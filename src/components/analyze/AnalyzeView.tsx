@@ -1,0 +1,242 @@
+"use client";
+
+import { useState } from "react";
+import type {
+  AnalysisInput,
+  Correlation2D,
+  MassSpecData,
+  SpectralPeak,
+} from "@/lib/analyze/types";
+import {
+  generateFormulaCandidates,
+  neutralMassFromAdduct,
+} from "@/lib/analyze/formula/massToFormulaCandidates";
+import { localCandidateProvider } from "@/lib/analyze/candidates/localProvider";
+import {
+  rankCandidates,
+  type CandidateEvaluation,
+} from "@/lib/analyze/scoring/rankCandidates";
+import MassSpecInput from "./MassSpecInput";
+import PeakTableInput from "./PeakTableInput";
+import CorrelationInput from "./CorrelationInput";
+import CandidateCard from "./CandidateCard";
+
+const STEPS = ["MS", "¹H NMR", "¹³C NMR", "2D NMR", "結果"] as const;
+
+export default function AnalyzeView() {
+  const [step, setStep] = useState(0);
+  const [ms, setMs] = useState<MassSpecData>({});
+  const [peaks, setPeaks] = useState<SpectralPeak[]>([]);
+  const [correlations, setCorrelations] = useState<Correlation2D[]>([]);
+  const [evaluations, setEvaluations] = useState<CandidateEvaluation[] | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+
+  const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
+  const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
+
+  const setPeaksForNucleus = (nucleus: "1H" | "13C") => (updated: SpectralPeak[]) => {
+    setPeaks([...peaks.filter((p) => p.nucleus !== nucleus), ...updated]);
+  };
+
+  const handleAnalyze = async () => {
+    setAnalyzing(true);
+    setAnalyzeError(null);
+    try {
+      const input: AnalysisInput = { ms, peaks, correlations };
+
+      let formulaCandidates: string[] | undefined;
+      let targetMass: number | null = null;
+      if (ms.exactMass != null) targetMass = ms.exactMass;
+      else if (ms.measuredMz != null && ms.ionAdduct) {
+        targetMass = neutralMassFromAdduct(ms.measuredMz, ms.ionAdduct);
+      }
+      if (targetMass != null) {
+        formulaCandidates = generateFormulaCandidates(
+          targetMass,
+          ms.massTolerancePpm ?? 10,
+        ).map((f) => f.formula);
+      }
+
+      const candidates = await localCandidateProvider.search({ formulaCandidates });
+      const results = await rankCandidates(input, candidates);
+      setEvaluations(results);
+      setStep(4);
+    } catch {
+      setAnalyzeError(
+        "解析中にエラーが発生しました。入力内容を確認し、もう一度お試しください。",
+      );
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-6 px-6 py-8">
+      <header className="flex flex-col gap-2">
+        <h1 className="text-2xl font-semibold text-stone-900">Analyze</h1>
+        <p className="text-sm text-stone-700">
+          MS・¹H NMR・¹³C NMR(・COSY/HSQC/HMBC/NOESY)を入力すると、既存クイズの正解構造を候補プールとして、一致度をランキングします。化学的な一致判定はすべて決定論的なロジックで行い、AIは使用していません。
+        </p>
+      </header>
+
+      <nav className="flex flex-wrap gap-2">
+        {STEPS.map((label, i) => (
+          <button
+            key={label}
+            type="button"
+            onClick={() => setStep(i)}
+            className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+              step === i
+                ? "bg-stone-900 text-white"
+                : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+            }`}
+          >
+            Step {i + 1}: {label}
+          </button>
+        ))}
+      </nav>
+
+      {step === 0 && (
+        <section className="rounded-lg border border-stone-200 bg-white p-5">
+          <h2 className="mb-3 text-xs font-semibold tracking-wide text-stone-600 uppercase">
+            MS
+          </h2>
+          <MassSpecInput value={ms} onChange={setMs} />
+        </section>
+      )}
+
+      {step === 1 && (
+        <section className="rounded-lg border border-stone-200 bg-white p-5">
+          <h2 className="mb-3 text-xs font-semibold tracking-wide text-stone-600 uppercase">
+            ¹H NMR
+          </h2>
+          <PeakTableInput
+            nucleus="1H"
+            peaks={protonPeaks}
+            onChange={setPeaksForNucleus("1H")}
+          />
+        </section>
+      )}
+
+      {step === 2 && (
+        <section className="rounded-lg border border-stone-200 bg-white p-5">
+          <h2 className="mb-3 text-xs font-semibold tracking-wide text-stone-600 uppercase">
+            ¹³C NMR
+          </h2>
+          <PeakTableInput
+            nucleus="13C"
+            peaks={carbonPeaks}
+            onChange={setPeaksForNucleus("13C")}
+          />
+        </section>
+      )}
+
+      {step === 3 && (
+        <section className="flex flex-col gap-5 rounded-lg border border-stone-200 bg-white p-5">
+          <h2 className="text-xs font-semibold tracking-wide text-stone-600 uppercase">
+            2D NMR(任意)
+          </h2>
+          {peaks.length === 0 ? (
+            <p className="text-sm text-stone-500">
+              先にStep2/Step3でピークを入力してください。
+            </p>
+          ) : (
+            <>
+              <CorrelationInput
+                kind="COSY"
+                peaks={peaks}
+                correlations={correlations}
+                onChange={setCorrelations}
+              />
+              <CorrelationInput
+                kind="HSQC"
+                peaks={peaks}
+                correlations={correlations}
+                onChange={setCorrelations}
+              />
+              <CorrelationInput
+                kind="HMBC"
+                peaks={peaks}
+                correlations={correlations}
+                onChange={setCorrelations}
+              />
+              <CorrelationInput
+                kind="NOESY"
+                peaks={peaks}
+                correlations={correlations}
+                onChange={setCorrelations}
+              />
+            </>
+          )}
+        </section>
+      )}
+
+      {step < 4 && (
+        <div className="flex items-center gap-3">
+          {step > 0 && (
+            <button
+              type="button"
+              onClick={() => setStep((s) => s - 1)}
+              className="rounded-md border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition-colors hover:bg-stone-50"
+            >
+              戻る
+            </button>
+          )}
+          {step < 3 ? (
+            <button
+              type="button"
+              onClick={() => setStep((s) => s + 1)}
+              className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700"
+            >
+              次へ
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleAnalyze}
+              disabled={analyzing || peaks.length === 0}
+              className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700 disabled:cursor-not-allowed disabled:bg-stone-300"
+            >
+              {analyzing ? "解析中…" : "Analyze"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {analyzeError && (
+        <p className="rounded-md bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          {analyzeError}
+        </p>
+      )}
+
+      {step === 4 && (
+        <section className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold tracking-wide text-stone-600 uppercase">
+              Candidate structures
+            </h2>
+            <button
+              type="button"
+              onClick={() => setStep(0)}
+              className="rounded-md border border-stone-300 px-3 py-1 text-xs font-medium text-stone-600 transition-colors hover:bg-stone-50"
+            >
+              入力からやり直す
+            </button>
+          </div>
+          {evaluations == null ? (
+            <p className="text-sm text-stone-500">まだ解析していません。</p>
+          ) : evaluations.length === 0 ? (
+            <p className="text-sm text-stone-500">
+              条件に一致する候補が見つかりませんでした(現在は既存クイズの正解構造のみを候補プールとして検索しています)。
+            </p>
+          ) : (
+            evaluations.map((evaluation, i) => (
+              <CandidateCard key={evaluation.candidate.id} rank={i + 1} evaluation={evaluation} />
+            ))
+          )}
+        </section>
+      )}
+    </div>
+  );
+}
