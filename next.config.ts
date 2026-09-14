@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
-// このアプリは外部API・外部スクリプト・外部フォントを一切使用せず、すべて
+// Analyzeモードの候補検索でPubChem(pubchem.ncbi.nlm.nih.gov)にブラウザから
+// 直接fetchするため(CORS許可を確認済み、APIキー不要)、connect-srcにのみ
+// 追加している。それ以外は外部API・外部スクリプト・外部フォントを使用せず、
 // 同一オリジンで完結する(構造エディタのWASMも自己ホスト)。そのためCSPは
 // 比較的厳しく設定できるが、Next.js自体がハイドレーション用のインライン
 // scriptタグを埋め込むため(nonce対応にはmiddlewareでの追加実装が必要)、
@@ -21,7 +23,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "connect-src 'self'",
+  "connect-src 'self' https://pubchem.ncbi.nlm.nih.gov",
   "worker-src 'self' blob:",
   "object-src 'none'",
   "base-uri 'self'",

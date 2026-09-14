@@ -12,10 +12,15 @@ import {
   neutralMassFromAdduct,
 } from "@/lib/analyze/formula/massToFormulaCandidates";
 import { localCandidateProvider } from "@/lib/analyze/candidates/localProvider";
+import { pubchemCandidateProvider } from "@/lib/analyze/candidates/pubchemProvider";
+import type { CandidateProvider } from "@/lib/analyze/candidates/CandidateProvider";
+import type { CandidateStructure } from "@/lib/analyze/types";
 import {
   rankCandidates,
   type CandidateEvaluation,
 } from "@/lib/analyze/scoring/rankCandidates";
+
+const PROVIDERS: CandidateProvider[] = [localCandidateProvider, pubchemCandidateProvider];
 import MassSpecInput from "./MassSpecInput";
 import PeakTableInput from "./PeakTableInput";
 import CorrelationInput from "./CorrelationInput";
@@ -31,6 +36,7 @@ export default function AnalyzeView() {
   const [evaluations, setEvaluations] = useState<CandidateEvaluation[] | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
+  const [searchedPubchem, setSearchedPubchem] = useState(false);
 
   const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
   const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
@@ -58,7 +64,21 @@ export default function AnalyzeView() {
         ).map((f) => f.formula);
       }
 
-      const candidates = await localCandidateProvider.search({ formulaCandidates });
+      setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);
+
+      // 各プロバイダは順番に問い合わせる(PubChemのレート制限に配慮し、
+      // かつ候補プールが十分あれば途中で打ち切れるようにするため)。
+      const seenSmiles = new Set<string>();
+      const candidates: CandidateStructure[] = [];
+      for (const provider of PROVIDERS) {
+        const found = await provider.search({ formulaCandidates, limit: 30 });
+        for (const c of found) {
+          if (seenSmiles.has(c.smiles)) continue;
+          seenSmiles.add(c.smiles);
+          candidates.push(c);
+        }
+      }
+
       const results = await rankCandidates(input, candidates);
       setEvaluations(results);
       setStep(4);
@@ -76,7 +96,7 @@ export default function AnalyzeView() {
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold text-stone-900">Analyze</h1>
         <p className="text-sm text-stone-700">
-          MS・¹H NMR・¹³C NMR(・COSY/HSQC/HMBC/NOESY)を入力すると、既存クイズの正解構造を候補プールとして、一致度をランキングします。化学的な一致判定はすべて決定論的なロジックで行い、AIは使用していません。
+          MS・¹H NMR・¹³C NMR(・COSY/HSQC/HMBC/NOESY)を入力すると、既存クイズの正解構造とPubChem(MSの分子式候補で検索)を候補プールとして、一致度をランキングします。化学的な一致判定はすべて決定論的なロジックで行い、AIは使用していません。
         </p>
       </header>
 
@@ -224,11 +244,16 @@ export default function AnalyzeView() {
               入力からやり直す
             </button>
           </div>
+          {!searchedPubchem && (
+            <p className="rounded-md bg-stone-100 px-4 py-2 text-xs text-stone-600">
+              MSデータ(測定m/z+アダクト、またはExact Mass)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
+            </p>
+          )}
           {evaluations == null ? (
             <p className="text-sm text-stone-500">まだ解析していません。</p>
           ) : evaluations.length === 0 ? (
             <p className="text-sm text-stone-500">
-              条件に一致する候補が見つかりませんでした(現在は既存クイズの正解構造のみを候補プールとして検索しています)。
+              条件に一致する候補が見つかりませんでした。
             </p>
           ) : (
             evaluations.map((evaluation, i) => (

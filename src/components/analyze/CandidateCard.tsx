@@ -47,15 +47,34 @@ export default function CandidateCard({ rank, evaluation }: CandidateCardProps) 
     };
   }, [evaluation.candidate.smiles]);
 
+  const { candidate } = evaluation;
+
   return (
     <div className="rounded-lg border border-stone-200 bg-white p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-stone-900">
-            Candidate {rank} — {evaluation.candidate.name ?? evaluation.candidate.molecularFormula}
+            Candidate {rank} — {candidate.name ?? candidate.molecularFormula}
+            <span className="ml-2 rounded bg-stone-100 px-1.5 py-0.5 align-middle text-[10px] font-medium text-stone-500 uppercase">
+              {candidate.source}
+            </span>
           </p>
           <p className="font-mono text-xs text-stone-600">
-            {evaluation.candidate.molecularFormula} / MW {evaluation.candidate.molecularWeight}
+            {candidate.molecularFormula} / MW {candidate.molecularWeight}
+            {candidate.databaseUrl && (
+              <>
+                {" "}
+                ·{" "}
+                <a
+                  href={candidate.databaseUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-stone-300 underline-offset-2 hover:text-stone-900"
+                >
+                  データベースで見る
+                </a>
+              </>
+            )}
           </p>
         </div>
         <div className="flex items-center gap-3 text-sm">
