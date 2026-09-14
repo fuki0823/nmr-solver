@@ -12,3 +12,16 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 数値入力欄のスピンボタン(クリックで増減するUI)を非表示にする。
+   type="number" 自体は数値キーボード表示・検証のため維持する。 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
