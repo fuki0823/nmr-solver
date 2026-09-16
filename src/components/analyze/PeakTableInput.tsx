@@ -8,10 +8,22 @@ interface PeakTableInputProps {
   onChange: (peaks: SpectralPeak[]) => void;
 }
 
-const peakIdCounters: Record<Nucleus, number> = { "1H": 0, "13C": 0 };
-function nextPeakId(nucleus: Nucleus): string {
-  peakIdCounters[nucleus]++;
-  return `${nucleus === "1H" ? "H" : "C"}${peakIdCounters[nucleus]}`;
+/**
+ * そのnucleusで現在使われていない最小の番号を採番する。モジュール全体で
+ * 増え続けるカウンタにすると、全部削除してから追加したときに番号が
+ * 1に戻らず分かりにくいため、常に「今表示されている行」から計算する。
+ */
+function nextPeakId(nucleus: Nucleus, existingPeaks: SpectralPeak[]): string {
+  const prefix = nucleus === "1H" ? "H" : "C";
+  const used = new Set(
+    existingPeaks
+      .filter((p) => p.nucleus === nucleus)
+      .map((p) => parseInt(p.id.slice(prefix.length), 10))
+      .filter((n) => !Number.isNaN(n)),
+  );
+  let n = 1;
+  while (used.has(n)) n++;
+  return `${prefix}${n}`;
 }
 
 export default function PeakTableInput({
@@ -22,7 +34,12 @@ export default function PeakTableInput({
   const addRow = () => {
     onChange([
       ...peaks,
-      { id: nextPeakId(nucleus), nucleus, shift: 0, integration: nucleus === "1H" ? 1 : undefined },
+      {
+        id: nextPeakId(nucleus, peaks),
+        nucleus,
+        shift: 0,
+        integration: nucleus === "1H" ? 1 : undefined,
+      },
     ]);
   };
 
@@ -52,13 +69,22 @@ export default function PeakTableInput({
             <tr key={peak.id} className="border-b border-stone-100">
               <td className="py-1 font-mono text-stone-500">{peak.id}</td>
               <td className="py-1 pr-2">
+                {/*
+                  value/onChangeで毎キー入力ごとに数値へ丸めてしまうと、
+                  空にして打ち直そうとしたときに直後に0へ戻され、
+                  Backspaceで消せない/打ち直した値が反映されない、という
+                  問題が起きる。defaultValue+onBlurの非制御入力にして、
+                  フォーカスが外れた時点(次へ/Analyzeボタン押下時を含む)
+                  でだけ確定させる。
+                */}
                 <input
                   type="number"
                   step="0.01"
-                  value={peak.shift}
-                  onChange={(e) =>
-                    updateRow(peak.id, { shift: parseFloat(e.target.value) || 0 })
-                  }
+                  defaultValue={peak.shift}
+                  onBlur={(e) => {
+                    const parsed = parseFloat(e.target.value);
+                    updateRow(peak.id, { shift: Number.isNaN(parsed) ? 0 : parsed });
+                  }}
                   className="w-24 rounded border border-stone-300 px-2 py-1"
                   aria-label={`${peak.id} の化学シフト`}
                 />
@@ -67,12 +93,13 @@ export default function PeakTableInput({
                 <td className="py-1 pr-2">
                   <input
                     type="number"
-                    value={peak.integration ?? ""}
-                    onChange={(e) =>
+                    defaultValue={peak.integration ?? ""}
+                    onBlur={(e) => {
+                      const parsed = parseInt(e.target.value, 10);
                       updateRow(peak.id, {
-                        integration: parseInt(e.target.value, 10) || undefined,
-                      })
-                    }
+                        integration: Number.isNaN(parsed) ? undefined : parsed,
+                      });
+                    }}
                     className="w-16 rounded border border-stone-300 px-2 py-1"
                     aria-label={`${peak.id} の積分値`}
                   />
