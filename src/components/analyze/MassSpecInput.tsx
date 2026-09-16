@@ -84,8 +84,28 @@ export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
               massTolerancePpm: e.target.value ? parseFloat(e.target.value) : undefined,
             })
           }
+          disabled={value.massToleranceDa != null}
+          className="rounded border border-stone-300 px-2 py-1.5 disabled:bg-stone-100 disabled:text-stone-400"
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm text-stone-700">
+        質量許容誤差 (Da絶対値、低分解能MS向け)
+        <input
+          type="number"
+          step="0.01"
+          placeholder="例: 0.1(単位質量分解能の機器等)"
+          value={value.massToleranceDa ?? ""}
+          onChange={(e) =>
+            onChange({
+              ...value,
+              massToleranceDa: e.target.value ? parseFloat(e.target.value) : undefined,
+            })
+          }
           className="rounded border border-stone-300 px-2 py-1.5"
         />
+        <span className="text-xs text-stone-500">
+          入力するとppm指定より優先されます。精密質量(HRMS)が無い場合のみ使用してください。
+        </span>
       </label>
     </div>
   );

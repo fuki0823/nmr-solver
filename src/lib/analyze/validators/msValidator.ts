@@ -18,8 +18,10 @@ export function msValidator(context: ValidationContext): ValidationResult {
   }
 
   if (targetExactMass != null) {
-    const tolerancePpm = ms.massTolerancePpm ?? DEFAULT_TOLERANCE_PPM;
-    const toleranceDa = Math.max((targetExactMass * tolerancePpm) / 1e6, 0.003);
+    const toleranceDa =
+      ms.massToleranceDa != null
+        ? ms.massToleranceDa
+        : Math.max((targetExactMass * (ms.massTolerancePpm ?? DEFAULT_TOLERANCE_PPM)) / 1e6, 0.003);
     const errorDa = candidate.exactMass - targetExactMass;
     const withinTolerance = Math.abs(errorDa) <= toleranceDa;
     const withinLooseTolerance = Math.abs(errorDa) <= toleranceDa * 3;

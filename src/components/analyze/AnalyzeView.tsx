@@ -82,10 +82,25 @@ export default function AnalyzeView() {
         targetMass = neutralMassFromAdduct(ms.measuredMz, ms.ionAdduct);
       }
       if (targetMass != null) {
-        formulaCandidates = generateFormulaCandidates(
-          targetMass,
-          ms.massTolerancePpm ?? 10,
-        ).map((f) => f.formula);
+        const tolerance =
+          ms.massToleranceDa != null
+            ? { da: ms.massToleranceDa }
+            : { ppm: ms.massTolerancePpm ?? 10 };
+        let generated = generateFormulaCandidates(targetMass, tolerance);
+
+        // 低分解能MS(絶対誤差Da指定)では該当する分子式候補が数百件規模に
+        // なりうる。¹³Cピークが入力済みなら、観測本数より炭素数が少ない
+        // 分子式は物理的にあり得ない(1原子から複数シグナルは出ない)ため、
+        // PubChemへ問い合わせる前にここで除外し、無駄な通信と構造解析を
+        // 減らす(carbonValidatorのハード制約と同じ考え方を、候補取得の
+        // 段階で先取りして適用している)。
+        const observed13CCount = peaks.filter((p) => p.nucleus === "13C").length;
+        if (observed13CCount > 0) {
+          const filtered = generated.filter((f) => f.counts.C >= observed13CCount);
+          if (filtered.length > 0) generated = filtered;
+        }
+
+        formulaCandidates = generated.map((f) => f.formula);
       }
 
       setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);

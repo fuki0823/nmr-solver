@@ -23,10 +23,13 @@ import type { CandidateProvider, CandidateSearchQuery } from "./CandidateProvide
  * 偶然の近い質量に埋もれ、10位前後まで下がりうることを実測で確認した)。
  * そのため、ここでのみ順位を絞りすぎず、ある程度の候補を実際に
  * PubChemへ問い合わせることで、入力精度の粗さに対する耐性を持たせている。
+ * 低分解能MS(massToleranceDa指定)では該当する分子式が数百件規模になり
+ * うるが、そちら側は呼び出し元(AnalyzeView)で¹³C観測本数による事前絞り
+ * 込みを行っているため、ここでは現実的な範囲(25件)まで引き上げている。
  */
 
 const PUBCHEM_BASE = "https://pubchem.ncbi.nlm.nih.gov/rest/pug";
-const MAX_FORMULAS_TO_QUERY = 15;
+const MAX_FORMULAS_TO_QUERY = 25;
 const MAX_CIDS_PER_FORMULA = 15;
 
 interface PubchemPropertyRow {

@@ -52,6 +52,11 @@ export interface MassSpecData {
   exactMass?: number;
   /** 質量許容誤差(ppm)。未指定時はバリデータ側のデフォルトを使う */
   massTolerancePpm?: number;
+  /**
+   * 質量許容誤差の絶対値(Da)。単位質量分解能の機器等、精密質量(ppm精度)
+   * が出せない低分解能MSデータ向け。指定時はmassTolerancePpmより優先される。
+   */
+  massToleranceDa?: number;
 }
 
 export interface AnalysisInput {

@@ -61,12 +61,25 @@ export function neutralMassFromAdduct(
   return measuredMz - delta;
 }
 
+export interface MassTolerance {
+  /** ppm指定(HRMS向け)。既定10ppm */
+  ppm?: number;
+  /**
+   * 絶対値(Da)指定(単位質量分解能の低分解能MS向け)。指定時はppmより
+   * 優先される。質量が大きいほどppm換算では狭くなるが、絶対値としては
+   * 一定のため、低分解能機器の実際の精度に近い挙動になる。
+   */
+  da?: number;
+}
+
 export function generateFormulaCandidates(
   targetMass: number,
-  tolerancePpm: number = 10,
+  tolerance: MassTolerance | number = { ppm: 10 },
   bounds: FormulaSearchBounds = DEFAULT_FORMULA_SEARCH_BOUNDS,
 ): FormulaCandidate[] {
-  const toleranceDa = Math.max((targetMass * tolerancePpm) / 1e6, 0.003);
+  const spec: MassTolerance = typeof tolerance === "number" ? { ppm: tolerance } : tolerance;
+  const toleranceDa =
+    spec.da != null ? spec.da : Math.max((targetMass * (spec.ppm ?? 10)) / 1e6, 0.003);
   const results: FormulaCandidate[] = [];
   const maxC = Math.min(bounds.maxCarbon, Math.floor(targetMass / MONOISOTOPIC_MASS.C) + 1);
 
