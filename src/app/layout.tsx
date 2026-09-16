@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 const description =
-  "分子式とNMRデータ(¹H・¹³C・DEPT・COSY・HSQC・HMBCなど)をもとに構造式を推定する、NMR構造解析の学習用Webアプリ。";
+  "NMR(¹H・¹³C・DEPT・COSY・HSQC・HMBCなど)とMSデータから有機化合物の構造を決定するWebアプリ。構造決定クイズ(Learn)と、実測データから候補構造をランキングするAnalyzeの2モード。化学的な判定はすべて決定論的なロジックで行う。";
 
 // 本番URLが未設定(NEXT_PUBLIC_SITE_URL未設定)でもビルドが壊れないよう、
 // ローカル用のフォールバックを用意する。Vercelにデプロイする際は
@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               NMR Solver
             </Link>
             <nav className="flex items-center gap-4 text-sm text-stone-600">
-              <Link href="/" className="transition-colors hover:text-stone-900">
+              <Link href="/learn" className="transition-colors hover:text-stone-900">
                 Learn
               </Link>
               <Link href="/analyze" className="transition-colors hover:text-stone-900">
