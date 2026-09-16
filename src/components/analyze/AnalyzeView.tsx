@@ -136,7 +136,7 @@ export default function AnalyzeView() {
       <header className="flex flex-col gap-2">
         <h1 className="text-2xl font-semibold text-stone-900">Analyze</h1>
         <p className="text-sm text-stone-700">
-          MS・¹H NMR・¹³C NMR(・COSY/HSQC/HMBC/NOESY)を入力すると、既存クイズの正解構造とPubChem(MSの分子式候補で検索)を候補プールとして評価します。¹³C炭素数・HSQC・HMBCの観測データと明らかに矛盾する候補はハード制約として除外し(理由付きで確認可能)、残った候補を一致度でランキングします。化学的な判定はすべて決定論的なロジックで行い、AIは使用していません。
+          MS・¹H NMR・¹³C NMR(・COSY/HSQC/HMBC/NOESY)を入力すると、一致度をランキングします。化学的な一致判定はすべて決定論的なロジックで行います。
         </p>
       </header>
 
