@@ -16,11 +16,23 @@ import { pubchemCandidateProvider } from "@/lib/analyze/candidates/pubchemProvid
 import type { CandidateProvider } from "@/lib/analyze/candidates/CandidateProvider";
 import type { CandidateStructure } from "@/lib/analyze/types";
 import {
+  evaluateCandidate,
   rankCandidates,
   type CandidateEvaluation,
 } from "@/lib/analyze/scoring/rankCandidates";
 
 const PROVIDERS: CandidateProvider[] = [localCandidateProvider, pubchemCandidateProvider];
+
+// 開発/テスト用フック: 本番ビルドではNODE_ENVチェックによりdead-code
+// eliminationで消える。ハード制約ロジック(¹³C数/HSQC/HMBC)を、
+// PubChemへの実ネットワーク呼び出しやウィザードUIの手操作なしに、
+// Playwrightから決定論的に検証するために window に公開している。
+// (scripts/analyze-hard-constraints.test.mjs から使用)
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+  (window as unknown as { __nmrAnalyzeDebug?: unknown }).__nmrAnalyzeDebug = {
+    evaluateCandidate,
+  };
+}
 import MassSpecInput from "./MassSpecInput";
 import PeakTableInput from "./PeakTableInput";
 import CorrelationInput from "./CorrelationInput";
@@ -283,9 +295,36 @@ export default function AnalyzeView() {
               条件に一致する候補が見つかりませんでした。
             </p>
           ) : (
-            evaluations.map((evaluation, i) => (
-              <CandidateCard key={evaluation.candidate.id} rank={i + 1} evaluation={evaluation} />
-            ))
+            (() => {
+              const included = evaluations.filter((e) => !e.excluded);
+              const excluded = evaluations.filter((e) => e.excluded);
+              return (
+                <>
+                  {included.map((evaluation, i) => (
+                    <CandidateCard key={evaluation.candidate.id} rank={i + 1} evaluation={evaluation} />
+                  ))}
+                  {excluded.length > 0 && (
+                    <>
+                      <div className="mt-2 flex items-center gap-2">
+                        <h3 className="text-xs font-semibold tracking-wide text-stone-500 uppercase">
+                          除外された候補({excluded.length}件)
+                        </h3>
+                        <p className="text-xs text-stone-400">
+                          ¹³C炭素数・HSQC・HMBCの観測データと明らかに矛盾するため除外されましたが、参考として確認できます。
+                        </p>
+                      </div>
+                      {excluded.map((evaluation, i) => (
+                        <CandidateCard
+                          key={evaluation.candidate.id}
+                          rank={included.length + i + 1}
+                          evaluation={evaluation}
+                        />
+                      ))}
+                    </>
+                  )}
+                </>
+              );
+            })()
           )}
         </section>
       )}

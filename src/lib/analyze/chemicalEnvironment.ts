@@ -104,3 +104,51 @@ export function protonBucketForCarbonBucket(bucket: CarbonBucket): ProtonBucket 
       return "aliphatic";
   }
 }
+
+/**
+ * 候補構造中に、指定した¹³Cバケットに該当する炭素原子(プロトン化の有無を
+ * 問わない)が1つでも存在するか。HMBCの相関先(第四級炭素でもよい)側の
+ * 「割当自体が原理的に不可能」判定に使う。
+ */
+export function hasCarbonInBucket(graph: MoleculeGraph, bucket: CarbonBucket): boolean {
+  return graph.atoms.some(
+    (a) => a.element === "C" && classifyCarbonBucket(graph, a) === bucket,
+  );
+}
+
+/**
+ * 候補構造中に、指定した¹³Cバケットに該当する「プロトン化された」炭素
+ * 原子が1つでも存在するか。HSQCの相関先や、HMBCの起点(プロトンが直接
+ * 結合している炭素)側の「割当自体が原理的に不可能」判定に使う。
+ */
+export function hasProtonatedCarbonInBucket(graph: MoleculeGraph, bucket: CarbonBucket): boolean {
+  return graph.atoms.some(
+    (a) => a.element === "C" && (a.attachedH ?? 0) > 0 && classifyCarbonBucket(graph, a) === bucket,
+  );
+}
+
+/**
+ * 指定したプロトンバケットに対応しうる¹³Cバケットの一覧
+ * (protonBucketForCarbonBucket の逆引き)。
+ */
+export function carbonBucketsForProtonBucket(target: ProtonBucket): CarbonBucket[] {
+  const all: CarbonBucket[] = [
+    "carbonyl",
+    "carboxylOrAmide",
+    "aromaticOrAlkene",
+    "oxygenatedSp3",
+    "aliphatic",
+  ];
+  return all.filter((b) => protonBucketForCarbonBucket(b) === target);
+}
+
+/**
+ * 候補構造中に、指定したプロトンバケットに該当しうる「プロトン化された」
+ * 炭素原子が1つでも存在するか。
+ */
+export function hasProtonatedCarbonForProtonBucket(
+  graph: MoleculeGraph,
+  target: ProtonBucket,
+): boolean {
+  return carbonBucketsForProtonBucket(target).some((b) => hasProtonatedCarbonInBucket(graph, b));
+}

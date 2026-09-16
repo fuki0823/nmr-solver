@@ -34,6 +34,14 @@ export interface Correlation2D {
   from: string;
   /** SpectralPeak.id */
   to: string;
+  /**
+   * HMBC用: このピークで許容する結合数(nJCH)。未指定時はバリデータ側の
+   * デフォルト([2, 3])を使う。将来、化合物クラスによって典型的な
+   * 相関距離が異なる場合(例: 4結合が頻出するヘテロ環等)に、相関ごとに
+   * 個別指定できるようにするためのフィールド。ハードコードされた
+   * しきい値をここに逃がす目的で用意している。
+   */
+  allowedBondDistances?: number[];
 }
 
 export interface MassSpecData {

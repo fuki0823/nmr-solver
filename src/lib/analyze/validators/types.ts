@@ -16,6 +16,16 @@ export type ValidationStatus = "match" | "partial" | "mismatch" | "not_evaluated
 export interface ValidationDetail {
   summary: string;
   status: ValidationStatus;
+  /**
+   * true の場合、この detail は「明らかに矛盾する」ハード制約違反を表す
+   * (例: 観測¹³Cシグナル数が候補の炭素原子数を超える、HSQC相関に対応する
+   * プロトン化炭素が候補中に存在しない等)。status が "mismatch" かつ
+   * hardConstraint が true の detail が1つでもあれば、その候補は
+   * rankCandidates 側で除外(excluded)候補としてマークされる。
+   * 「期待される相関が観測されなかった」ような不確実性由来の不一致は
+   * 決して true にしない(除外は物理的に説明不能な矛盾のみに限定する)。
+   */
+  hardConstraint?: boolean;
 }
 
 export interface ValidationResult {

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "validate": "node --no-warnings scripts/validate-questions.mts"
+    "validate": "node --no-warnings scripts/validate-questions.mts",
+    "test:analyze": "node scripts/analyze-hard-constraints.test.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
@@ -25,6 +26,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
+    "playwright": "^1.63.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

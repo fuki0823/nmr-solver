@@ -43,6 +43,15 @@ export interface CandidateEvaluation {
   totalScore: number;
   confidence: Confidence;
   structureImageSmiles: string;
+  /**
+   * true の場合、¹³C炭素数・HSQC・HMBCなどのハード制約(hardConstraint:
+   * true の ValidationDetail)に明らかに矛盾しており、Stage 1(ハード
+   * フィルタリング)で除外された候補。ranking結果からは取り除かず、
+   * 「なぜ除外されたか」をユーザーが確認できるよう保持する。
+   */
+  excluded: boolean;
+  /** excluded=true の場合の除外理由(hardConstraint違反のsummary一覧) */
+  exclusionReasons: string[];
 }
 
 export async function evaluateCandidate(
@@ -77,7 +86,55 @@ export async function evaluateCandidate(
   const confidence: Confidence =
     evaluatedMethods >= 4 ? "high" : evaluatedMethods >= 2 ? "medium" : "low";
 
-  return { candidate, results, totalScore, confidence, structureImageSmiles: candidate.smiles };
+  // Stage 1: ハードフィルタリング。分子式・質量・¹³C炭素数・HSQC・HMBC等の
+  // validatorが hardConstraint: true を立てた detail が1つでもあれば、
+  // AIの印象評価ではなく構造化された化学的制約のみに基づき「明らかに
+  // 矛盾する」候補として excluded とする。除外してもリストからは
+  // 落とさず、理由と共にそのまま返す(ユーザーが後から検証できるように)。
+  const exclusionReasons: string[] = [];
+  for (const r of results) {
+    for (const d of r.details) {
+      if (d.hardConstraint && d.status === "mismatch") {
+        exclusionReasons.push(`[${r.method}] ${d.summary}`);
+      }
+    }
+  }
+  const excluded = exclusionReasons.length > 0;
+
+  if (process.env.NODE_ENV !== "production") {
+    const carbonAtomCount = candidateGraph.atoms.filter((a) => a.element === "C").length;
+    const observed13CCount = input.peaks.filter((p) => p.nucleus === "13C").length;
+    const hsqcResult = results.find((r) => r.method === "HSQC");
+    const hmbcResult = results.find((r) => r.method === "HMBC");
+    const countByStatus = (r: ValidationResult | undefined, status: string) =>
+      r?.details.filter((d) => d.status === status).length ?? 0;
+    console.debug("[analyze/evaluateCandidate]", {
+      candidateId: candidate.id,
+      formula: candidate.molecularFormula,
+      smiles: candidate.smiles,
+      carbonAtomCount,
+      observed13CCount,
+      carbonCountStatus: observed13CCount > carbonAtomCount ? "impossible" : "ok",
+      hsqcMatched: countByStatus(hsqcResult, "match"),
+      hsqcFailed: countByStatus(hsqcResult, "mismatch"),
+      hmbcMatched: countByStatus(hmbcResult, "match"),
+      hmbcFailed: countByStatus(hmbcResult, "mismatch"),
+      excluded,
+      exclusionReasons,
+      totalScore,
+      finalStatus: excluded ? "excluded" : "ranked",
+    });
+  }
+
+  return {
+    candidate,
+    results,
+    totalScore,
+    confidence,
+    structureImageSmiles: candidate.smiles,
+    excluded,
+    exclusionReasons,
+  };
 }
 
 export async function rankCandidates(
@@ -92,5 +149,11 @@ export async function rankCandidates(
     const evaluation = await evaluateCandidate(input, c);
     if (evaluation) evaluations.push(evaluation);
   }
-  return evaluations.sort((a, b) => b.totalScore - a.totalScore);
+  // Stage 1で除外された候補はリストの末尾にまとめ、除外されなかった候補を
+  // totalScoreで降順ランキングする(除外候補も非表示にはせず、常に確認
+  // できる状態を保つ)。
+  return evaluations.sort((a, b) => {
+    if (a.excluded !== b.excluded) return a.excluded ? 1 : -1;
+    return b.totalScore - a.totalScore;
+  });
 }
