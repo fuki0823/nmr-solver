@@ -38,7 +38,6 @@ interface PubchemPropertyRow {
   MolecularWeight: string;
   MonoisotopicMass: string;
   ConnectivitySMILES?: string;
-  IsomericSMILES?: string;
   IUPACName?: string;
 }
 
@@ -60,7 +59,6 @@ async function fetchPropertiesForCids(
     "MolecularWeight",
     "MonoisotopicMass",
     "ConnectivitySMILES",
-    "IsomericSMILES",
     "IUPACName",
   ].join(",");
   const res = await fetch(
@@ -106,7 +104,6 @@ export const pubchemCandidateProvider: CandidateProvider = {
             id: `pubchem-${row.CID}`,
             source: "pubchem",
             smiles,
-            stereoSmiles: row.IsomericSMILES,
             molecularFormula: row.MolecularFormula,
             molecularWeight: parseFloat(row.MolecularWeight),
             exactMass: parseFloat(row.MonoisotopicMass),

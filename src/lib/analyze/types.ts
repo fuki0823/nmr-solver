@@ -18,12 +18,8 @@ export interface SpectralPeak {
   nucleus: Nucleus;
   /** 化学シフト (ppm)。スコアリングに使うため数値必須 */
   shift: number;
-  /** 表示用ラベル。範囲表記("1.45-1.85")等はこちらに自由記述する */
-  shiftLabel?: string;
   /** ¹Hのみ: プロトン数(積分値) */
   integration?: number;
-  multiplicity?: string;
-  jValues?: number[];
 }
 
 export type CorrelationKind = "COSY" | "HSQC" | "HMBC" | "NOESY";
@@ -70,13 +66,11 @@ export interface CandidateStructure {
   /** どのCandidateProviderから来たか。例: "local" */
   source: string;
   smiles: string;
-  stereoSmiles?: string;
   molecularFormula: string;
   molecularWeight: number;
   exactMass: number;
   name?: string;
   databaseUrl?: string;
-  inchiKey?: string;
 }
 
 export type Confidence = "low" | "medium" | "high";

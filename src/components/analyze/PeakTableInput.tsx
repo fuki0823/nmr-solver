@@ -59,8 +59,6 @@ export default function PeakTableInput({
             <th className="w-16 py-1">id</th>
             <th className="py-1">δ (ppm)</th>
             {nucleus === "1H" && <th className="py-1">積分</th>}
-            {nucleus === "1H" && <th className="py-1">多重度</th>}
-            {nucleus === "1H" && <th className="py-1">J (Hz)</th>}
             <th className="w-10 py-1" />
           </tr>
         </thead>
@@ -102,37 +100,6 @@ export default function PeakTableInput({
                     }}
                     className="w-16 rounded border border-stone-300 px-2 py-1"
                     aria-label={`${peak.id} の積分値`}
-                  />
-                </td>
-              )}
-              {nucleus === "1H" && (
-                <td className="py-1 pr-2">
-                  <input
-                    type="text"
-                    value={peak.multiplicity ?? ""}
-                    onChange={(e) => updateRow(peak.id, { multiplicity: e.target.value })}
-                    className="w-16 rounded border border-stone-300 px-2 py-1"
-                    placeholder="s, d, m..."
-                    aria-label={`${peak.id} の多重度`}
-                  />
-                </td>
-              )}
-              {nucleus === "1H" && (
-                <td className="py-1 pr-2">
-                  <input
-                    type="text"
-                    value={peak.jValues?.join(", ") ?? ""}
-                    onChange={(e) =>
-                      updateRow(peak.id, {
-                        jValues: e.target.value
-                          .split(",")
-                          .map((v) => parseFloat(v.trim()))
-                          .filter((v) => !Number.isNaN(v)),
-                      })
-                    }
-                    className="w-24 rounded border border-stone-300 px-2 py-1"
-                    placeholder="7.1"
-                    aria-label={`${peak.id} のJ値`}
                   />
                 </td>
               )}
