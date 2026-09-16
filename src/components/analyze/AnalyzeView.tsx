@@ -34,12 +34,24 @@ export default function AnalyzeView() {
   const [peaks, setPeaks] = useState<SpectralPeak[]>([]);
   const [correlations, setCorrelations] = useState<Correlation2D[]>([]);
   const [evaluations, setEvaluations] = useState<CandidateEvaluation[] | null>(null);
+  // 直近の解析に使われた入力(参照)を覚えておき、現在の入力と比較する
+  // ことで「結果が古い(入力変更後に未再解析)」かどうかをレンダー時に
+  // 導出する。effect内でsetStateして無効化する方式は、React 19の
+  // purityルール(setState in effect)に反するため避けている。
+  const [analyzedInput, setAnalyzedInput] = useState<AnalysisInput | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [searchedPubchem, setSearchedPubchem] = useState(false);
 
   const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
   const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
+
+  const isStale =
+    evaluations != null &&
+    analyzedInput != null &&
+    (analyzedInput.ms !== ms ||
+      analyzedInput.peaks !== peaks ||
+      analyzedInput.correlations !== correlations);
 
   const setPeaksForNucleus = (nucleus: "1H" | "13C") => (updated: SpectralPeak[]) => {
     setPeaks([...peaks.filter((p) => p.nucleus !== nucleus), ...updated]);
@@ -81,6 +93,7 @@ export default function AnalyzeView() {
 
       const results = await rankCandidates(input, candidates);
       setEvaluations(results);
+      setAnalyzedInput(input);
       setStep(4);
     } catch {
       setAnalyzeError(
@@ -249,8 +262,22 @@ export default function AnalyzeView() {
               MSデータ(測定m/z+アダクト、またはExact Mass)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
             </p>
           )}
-          {evaluations == null ? (
-            <p className="text-sm text-stone-500">まだ解析していません。</p>
+          {evaluations == null || isStale ? (
+            <div className="flex flex-col items-start gap-3 rounded-lg border border-stone-200 bg-white p-5">
+              <p className="text-sm text-stone-500">
+                {isStale
+                  ? "入力内容が変更されました。再解析してください。"
+                  : "まだ解析していません。"}
+              </p>
+              <button
+                type="button"
+                onClick={handleAnalyze}
+                disabled={analyzing || peaks.length === 0}
+                className="rounded-md bg-stone-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-stone-700 disabled:cursor-not-allowed disabled:bg-stone-300"
+              >
+                {analyzing ? "解析中…" : isStale ? "再解析する (Analyze)" : "Analyze"}
+              </button>
+            </div>
           ) : evaluations.length === 0 ? (
             <p className="text-sm text-stone-500">
               条件に一致する候補が見つかりませんでした。
