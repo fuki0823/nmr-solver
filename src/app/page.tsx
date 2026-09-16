@@ -32,7 +32,7 @@ export default function Home() {
           <span className="text-xs font-semibold tracking-wide text-stone-500 uppercase">
             Analyze
           </span>
-          <h2 className="text-lg font-semibold text-stone-900">候補構造の解析・ランキング</h2>
+          <h2 className="text-lg font-semibold text-stone-900">候補構造の解析</h2>
           <p className="text-sm text-stone-700">
             実測(またはシミュレーション)のMS・NMRデータを入力すると、候補構造を¹³C炭素数・HSQC・HMBCなどの化学的制約で評価します。明らかに矛盾する候補は除外した上で、残った候補を一致度でランキングします。
           </p>
