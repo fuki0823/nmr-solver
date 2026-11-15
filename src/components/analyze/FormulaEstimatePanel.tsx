@@ -14,9 +14,6 @@ const LEVEL_NOTE: Record<FormulaEstimate["level"], string> = {
 };
 
 function massNote(result: FormulaSearchResult): string {
-  if (result.reinterpretedExactMassAsAverage) {
-    return `Exact Mass欄の ${result.targetMass} を精密質量として探すとNMRと両立する分子式が無かったため、平均分子量(Molecular Weight)として計算しました。精密質量のつもりであれば、入力値を確認してください。`;
-  }
   return result.massKind === "average"
     ? `分子量 ${result.targetMass}(平均分子量)から計算しています。`
     : `精密質量 ${result.targetMass.toFixed(4)}(モノアイソトピック)から計算しています。`;
@@ -28,11 +25,7 @@ export default function FormulaEstimatePanel({ result }: { result: FormulaSearch
   return (
     <div className="rounded-lg border border-stone-200 bg-white p-4">
       <h3 className="text-xs font-semibold tracking-wide text-stone-600 uppercase">推定分子式</h3>
-      <p
-        className={`mt-1 text-xs ${result.reinterpretedExactMassAsAverage ? "text-amber-700" : "text-stone-600"}`}
-      >
-        {massNote(result)}
-      </p>
+      <p className="mt-1 text-xs text-stone-600">{massNote(result)}</p>
       <p
         className={`mt-1 text-xs ${estimate.level === "strict" ? "text-stone-600" : "text-amber-700"}`}
       >

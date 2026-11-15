@@ -44,21 +44,6 @@ export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
         </select>
       </label>
       <label className="flex flex-col gap-1 text-sm text-stone-700">
-        Exact Mass(分かっていれば直接入力)
-        <input
-          type="number"
-          step="0.0001"
-          value={value.exactMass ?? ""}
-          onChange={(e) =>
-            onChange({
-              ...value,
-              exactMass: e.target.value ? parseFloat(e.target.value) : undefined,
-            })
-          }
-          className="rounded border border-stone-300 px-2 py-1.5"
-        />
-      </label>
-      <label className="flex flex-col gap-1 text-sm text-stone-700">
         Molecular Weight(概算のみの場合)
         <input
           type="number"

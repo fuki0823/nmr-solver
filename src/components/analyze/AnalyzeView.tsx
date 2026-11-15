@@ -77,19 +77,12 @@ export default function AnalyzeView() {
     try {
       const input: AnalysisInput = { ms, peaks, correlations };
 
-      // MS(精密質量 or 分子量)の質量に合う分子式を、¹³Cピーク数(炭素数)・
+      // MS(m/z+アダクト or 分子量)の質量に合う分子式を、¹³Cピーク数(炭素数)・
       // ¹H積分合計(水素数)・sp2炭素数(不飽和度の下限)で絞り込み、その
       // 分子式でPubChemを検索する。詳細は formulasFromInput.ts /
       // estimateFormula.ts を参照。
       const estimate = estimateFormulasFromInput(ms, peaks);
       const formulaCandidates = estimate?.estimate.formulas.map((f) => f.formula);
-
-      // Exact Mass欄の値を平均分子量として解釈し直した場合は、候補の
-      // 評価(MSバリデータ)も分子量として行う。analyzedInputには元の入力を
-      // 保存する(isStaleの参照比較を壊さないため)。
-      const rankInput: AnalysisInput = estimate?.reinterpretedExactMassAsAverage
-        ? { ...input, ms: { ...ms, exactMass: undefined, molecularWeight: ms.exactMass } }
-        : input;
 
       setFormulaEstimate(estimate);
       setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);
@@ -107,7 +100,7 @@ export default function AnalyzeView() {
         }
       }
 
-      const results = await rankCandidates(rankInput, candidates);
+      const results = await rankCandidates(input, candidates);
       setEvaluations(results);
       setAnalyzedInput(input);
       setStep(4);
@@ -275,7 +268,7 @@ export default function AnalyzeView() {
           </div>
           {!searchedPubchem && (
             <p className="rounded-md bg-stone-100 px-4 py-2 text-xs text-stone-600">
-              MSデータ(測定m/z+アダクト、Exact Mass、またはMolecular Weight)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
+              MSデータ(測定m/z+アダクト、またはMolecular Weight)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
             </p>
           )}
           {formulaEstimate && evaluations != null && !isStale && (
