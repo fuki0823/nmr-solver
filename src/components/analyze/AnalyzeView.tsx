@@ -11,6 +11,10 @@ import {
   generateFormulaCandidates,
   neutralMassFromAdduct,
 } from "@/lib/analyze/formula/massToFormulaCandidates";
+import {
+  estimateFormulas,
+  type FormulaEstimate,
+} from "@/lib/analyze/formula/estimateFormula";
 import { localCandidateProvider } from "@/lib/analyze/candidates/localProvider";
 import { pubchemCandidateProvider } from "@/lib/analyze/candidates/pubchemProvider";
 import type { CandidateProvider } from "@/lib/analyze/candidates/CandidateProvider";
@@ -37,6 +41,7 @@ import MassSpecInput from "./MassSpecInput";
 import PeakTableInput from "./PeakTableInput";
 import CorrelationInput from "./CorrelationInput";
 import CandidateCard from "./CandidateCard";
+import FormulaEstimatePanel from "./FormulaEstimatePanel";
 
 const STEPS = ["MS", "¹H NMR", "¹³C NMR", "2D NMR", "結果"] as const;
 
@@ -54,6 +59,7 @@ export default function AnalyzeView() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [searchedPubchem, setSearchedPubchem] = useState(false);
+  const [formulaEstimate, setFormulaEstimate] = useState<FormulaEstimate | null>(null);
 
   const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
   const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
@@ -76,6 +82,7 @@ export default function AnalyzeView() {
       const input: AnalysisInput = { ms, peaks, correlations };
 
       let formulaCandidates: string[] | undefined;
+      let estimate: FormulaEstimate | null = null;
       let targetMass: number | null = null;
       if (ms.exactMass != null) targetMass = ms.exactMass;
       else if (ms.measuredMz != null && ms.ionAdduct) {
@@ -86,23 +93,23 @@ export default function AnalyzeView() {
           ms.massToleranceDa != null
             ? { da: ms.massToleranceDa }
             : { ppm: ms.massTolerancePpm ?? 10 };
-        let generated = generateFormulaCandidates(targetMass, tolerance);
+        const generated = generateFormulaCandidates(targetMass, tolerance);
 
-        // 低分解能MS(絶対誤差Da指定)では該当する分子式候補が数百件規模に
-        // なりうる。¹³Cピークが入力済みなら、観測本数より炭素数が少ない
-        // 分子式は物理的にあり得ない(1原子から複数シグナルは出ない)ため、
-        // PubChemへ問い合わせる前にここで除外し、無駄な通信と構造解析を
-        // 減らす(carbonValidatorのハード制約と同じ考え方を、候補取得の
-        // 段階で先取りして適用している)。
-        const observed13CCount = peaks.filter((p) => p.nucleus === "13C").length;
-        if (observed13CCount > 0) {
-          const filtered = generated.filter((f) => f.counts.C >= observed13CCount);
-          if (filtered.length > 0) generated = filtered;
-        }
-
-        formulaCandidates = generated.map((f) => f.formula);
+        // 質量だけで選んだ分子式候補を、¹³Cピーク数(炭素数)と¹H積分合計
+        // (水素数)で絞り込み・並べ替えてからPubChemへ問い合わせる。
+        // 質量が合っても炭素数が大きく異なる分子式(例: 27本に対しC35)を
+        // 検索対象から外すため。詳細は estimateFormula.ts を参照。
+        estimate = estimateFormulas(generated, {
+          carbonPeakCount: peaks.filter((p) => p.nucleus === "13C").length,
+          carbonShifts: peaks.filter((p) => p.nucleus === "13C").map((p) => p.shift),
+          protonIntegralTotal: peaks
+            .filter((p) => p.nucleus === "1H")
+            .reduce((sum, p) => sum + (p.integration ?? 0), 0),
+        });
+        formulaCandidates = estimate.formulas.map((f) => f.formula);
       }
 
+      setFormulaEstimate(estimate);
       setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);
 
       // 各プロバイダは順番に問い合わせる(PubChemのレート制限に配慮し、
@@ -288,6 +295,9 @@ export default function AnalyzeView() {
             <p className="rounded-md bg-stone-100 px-4 py-2 text-xs text-stone-600">
               MSデータ(測定m/z+アダクト、またはExact Mass)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
             </p>
+          )}
+          {formulaEstimate && evaluations != null && !isStale && (
+            <FormulaEstimatePanel estimate={formulaEstimate} />
           )}
           {evaluations == null || isStale ? (
             <div className="flex flex-col items-start gap-3 rounded-lg border border-stone-200 bg-white p-5">
