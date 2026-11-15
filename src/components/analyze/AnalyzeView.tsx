@@ -8,13 +8,9 @@ import type {
   SpectralPeak,
 } from "@/lib/analyze/types";
 import {
-  generateFormulaCandidates,
-  neutralMassFromAdduct,
-} from "@/lib/analyze/formula/massToFormulaCandidates";
-import {
-  estimateFormulas,
-  type FormulaEstimate,
-} from "@/lib/analyze/formula/estimateFormula";
+  estimateFormulasFromInput,
+  type FormulaSearchResult,
+} from "@/lib/analyze/formula/formulasFromInput";
 import { localCandidateProvider } from "@/lib/analyze/candidates/localProvider";
 import { pubchemCandidateProvider } from "@/lib/analyze/candidates/pubchemProvider";
 import type { CandidateProvider } from "@/lib/analyze/candidates/CandidateProvider";
@@ -59,7 +55,7 @@ export default function AnalyzeView() {
   const [analyzing, setAnalyzing] = useState(false);
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [searchedPubchem, setSearchedPubchem] = useState(false);
-  const [formulaEstimate, setFormulaEstimate] = useState<FormulaEstimate | null>(null);
+  const [formulaEstimate, setFormulaEstimate] = useState<FormulaSearchResult | null>(null);
 
   const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
   const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
@@ -81,33 +77,19 @@ export default function AnalyzeView() {
     try {
       const input: AnalysisInput = { ms, peaks, correlations };
 
-      let formulaCandidates: string[] | undefined;
-      let estimate: FormulaEstimate | null = null;
-      let targetMass: number | null = null;
-      if (ms.exactMass != null) targetMass = ms.exactMass;
-      else if (ms.measuredMz != null && ms.ionAdduct) {
-        targetMass = neutralMassFromAdduct(ms.measuredMz, ms.ionAdduct);
-      }
-      if (targetMass != null) {
-        const tolerance =
-          ms.massToleranceDa != null
-            ? { da: ms.massToleranceDa }
-            : { ppm: ms.massTolerancePpm ?? 10 };
-        const generated = generateFormulaCandidates(targetMass, tolerance);
+      // MS(精密質量 or 分子量)の質量に合う分子式を、¹³Cピーク数(炭素数)・
+      // ¹H積分合計(水素数)・sp2炭素数(不飽和度の下限)で絞り込み、その
+      // 分子式でPubChemを検索する。詳細は formulasFromInput.ts /
+      // estimateFormula.ts を参照。
+      const estimate = estimateFormulasFromInput(ms, peaks);
+      const formulaCandidates = estimate?.estimate.formulas.map((f) => f.formula);
 
-        // 質量だけで選んだ分子式候補を、¹³Cピーク数(炭素数)と¹H積分合計
-        // (水素数)で絞り込み・並べ替えてからPubChemへ問い合わせる。
-        // 質量が合っても炭素数が大きく異なる分子式(例: 27本に対しC35)を
-        // 検索対象から外すため。詳細は estimateFormula.ts を参照。
-        estimate = estimateFormulas(generated, {
-          carbonPeakCount: peaks.filter((p) => p.nucleus === "13C").length,
-          carbonShifts: peaks.filter((p) => p.nucleus === "13C").map((p) => p.shift),
-          protonIntegralTotal: peaks
-            .filter((p) => p.nucleus === "1H")
-            .reduce((sum, p) => sum + (p.integration ?? 0), 0),
-        });
-        formulaCandidates = estimate.formulas.map((f) => f.formula);
-      }
+      // Exact Mass欄の値を平均分子量として解釈し直した場合は、候補の
+      // 評価(MSバリデータ)も分子量として行う。analyzedInputには元の入力を
+      // 保存する(isStaleの参照比較を壊さないため)。
+      const rankInput: AnalysisInput = estimate?.reinterpretedExactMassAsAverage
+        ? { ...input, ms: { ...ms, exactMass: undefined, molecularWeight: ms.exactMass } }
+        : input;
 
       setFormulaEstimate(estimate);
       setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);
@@ -125,7 +107,7 @@ export default function AnalyzeView() {
         }
       }
 
-      const results = await rankCandidates(input, candidates);
+      const results = await rankCandidates(rankInput, candidates);
       setEvaluations(results);
       setAnalyzedInput(input);
       setStep(4);
@@ -293,11 +275,11 @@ export default function AnalyzeView() {
           </div>
           {!searchedPubchem && (
             <p className="rounded-md bg-stone-100 px-4 py-2 text-xs text-stone-600">
-              MSデータ(測定m/z+アダクト、またはExact Mass)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
+              MSデータ(測定m/z+アダクト、Exact Mass、またはMolecular Weight)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
             </p>
           )}
           {formulaEstimate && evaluations != null && !isStale && (
-            <FormulaEstimatePanel estimate={formulaEstimate} />
+            <FormulaEstimatePanel result={formulaEstimate} />
           )}
           {evaluations == null || isStale ? (
             <div className="flex flex-col items-start gap-3 rounded-lg border border-stone-200 bg-white p-5">

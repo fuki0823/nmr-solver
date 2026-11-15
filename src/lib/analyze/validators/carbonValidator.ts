@@ -1,14 +1,6 @@
 import { countDistinctCarbonEnvironments } from "../../moleculeGraph";
-import { carbonBucketFromShift, classifyCarbonBucket, type CarbonBucket } from "../chemicalEnvironment";
+import { expectedCarbonRange, inRange, maxBipartiteMatching } from "../shiftRanges";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
-
-const BUCKET_LABEL: Record<CarbonBucket, string> = {
-  carbonyl: "カルボニル(δ190+)",
-  carboxylOrAmide: "エステル/酸/アミド(δ155-190)",
-  aromaticOrAlkene: "芳香族/アルケン(δ95-155)",
-  oxygenatedSp3: "ヘテロ原子隣接sp3(δ50-95)",
-  aliphatic: "脂肪族(δ0-50)",
-};
 
 export function carbonValidator(context: ValidationContext): ValidationResult {
   const { input, candidateGraph } = context;
@@ -65,45 +57,42 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
     }
   }
 
-  // 2. 化学シフト領域(バケット)ごとの分布比較
-  const candidateBucketCounts: Record<CarbonBucket, number> = {
-    carbonyl: 0,
-    carboxylOrAmide: 0,
-    aromaticOrAlkene: 0,
-    oxygenatedSp3: 0,
-    aliphatic: 0,
-  };
-  for (const atom of candidateGraph.atoms) {
-    if (atom.element !== "C") continue;
-    candidateBucketCounts[classifyCarbonBucket(candidateGraph, atom)]++;
-  }
-  const peakBucketCounts: Record<CarbonBucket, number> = {
-    carbonyl: 0,
-    carboxylOrAmide: 0,
-    aromaticOrAlkene: 0,
-    oxygenatedSp3: 0,
-    aliphatic: 0,
-  };
-  for (const peak of peaks) {
-    peakBucketCounts[carbonBucketFromShift(peak.shift)]++;
-  }
+  // 2. 化学シフトの整合性。各ピークを「その局所構造なら出うる範囲」に
+  // 入る炭素原子へ1対1で割り当て(最大マッチング)、割り当てられた割合で
+  // 評価する。範囲は重なりを許しているため、キノンC=O(δ186)やフェノール
+  // C-O(δ155-160)のような境界付近の官能基も正しく扱える(詳細は
+  // shiftRanges.ts)。
+  const carbons = candidateGraph.atoms.filter((a) => a.element === "C");
+  const ranges = carbons.map((a) => expectedCarbonRange(candidateGraph, a));
+  const sortedPeaks = [...peaks].sort((a, b) => b.shift - a.shift);
+  const matchLeft = maxBipartiteMatching(sortedPeaks.length, carbons.length, (i, j) =>
+    inRange(sortedPeaks[i].shift, ranges[j]),
+  );
+  const unmatched = sortedPeaks.filter((_, i) => matchLeft[i] < 0);
+  const matchedCount = sortedPeaks.length - unmatched.length;
+  const shiftScore = sortedPeaks.length > 0 ? matchedCount / sortedPeaks.length : 0;
+  details.push({
+    status: unmatched.length === 0 ? "match" : unmatched.length <= 1 ? "partial" : "mismatch",
+    summary:
+      unmatched.length === 0
+        ? `¹³C化学シフト: ${sortedPeaks.length}本すべてを、局所構造から見て矛盾のない炭素に割り当てられます`
+        : `¹³C化学シフト: ${sortedPeaks.length}本中${matchedCount}本を割り当て可能。割り当て先のないピーク: ${unmatched
+            .slice(0, 6)
+            .map((p) => `δ${p.shift}`)
+            .join(", ")}${unmatched.length > 6 ? " ほか" : ""}`,
+  });
 
-  let bucketMismatches = 0;
-  for (const bucket of Object.keys(BUCKET_LABEL) as CarbonBucket[]) {
-    const expected = peakBucketCounts[bucket];
-    const actual = candidateBucketCounts[bucket];
-    if (expected === 0 && actual === 0) continue;
-    const bucketStatus =
-      expected === actual ? "match" : Math.abs(expected - actual) === 1 ? "partial" : "mismatch";
-    if (bucketStatus !== "match") bucketMismatches++;
-    details.push({
-      status: bucketStatus,
-      summary: `${BUCKET_LABEL[bucket]}: 入力${expected}本 / 候補は炭素${actual}個`,
-    });
-  }
-  const bucketScore = Math.max(0, 1 - bucketMismatches / 5);
+  // 範囲ごとの内訳(参考表示)。候補構造の炭素がどの種類に何個あるか。
+  const labelCounts = new Map<string, number>();
+  for (const r of ranges) labelCounts.set(r.label, (labelCounts.get(r.label) ?? 0) + 1);
+  details.push({
+    status: "match",
+    summary: `候補構造の炭素の内訳: ${Array.from(labelCounts.entries())
+      .map(([label, n]) => `${label}${n}`)
+      .join(" / ")}`,
+  });
 
-  const score = hardReject ? 0 : (countScore + bucketScore) / 2;
+  const score = hardReject ? 0 : (countScore + shiftScore) / 2;
   const status = hardReject ? "mismatch" : score >= 0.8 ? "match" : score >= 0.4 ? "partial" : "mismatch";
 
   return { method: "13C", status, score, details };

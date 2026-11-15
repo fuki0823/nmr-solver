@@ -16,6 +16,21 @@ const MONOISOTOPIC_MASS = {
   S: 31.972071,
 } as const;
 
+/**
+ * 平均原子量(IUPAC標準原子量の慣用値)。カタログやPubChemの
+ * "Molecular Weight"(例: ダウノルビシン 527.52)は平均分子量のため、
+ * 分子量しか分からない場合はこちらで分子式を探索する。
+ */
+const AVERAGE_MASS = {
+  H: 1.008,
+  C: 12.011,
+  N: 14.007,
+  O: 15.999,
+  S: 32.06,
+} as const;
+
+export type MassKind = "monoisotopic" | "average";
+
 // 一般的な有機小分子・天然物を想定した既定の探索範囲。
 export interface FormulaSearchBounds {
   maxCarbon: number;
@@ -76,34 +91,36 @@ export function generateFormulaCandidates(
   targetMass: number,
   tolerance: MassTolerance | number = { ppm: 10 },
   bounds: FormulaSearchBounds = DEFAULT_FORMULA_SEARCH_BOUNDS,
+  massKind: MassKind = "monoisotopic",
 ): FormulaCandidate[] {
+  const MASS = massKind === "average" ? AVERAGE_MASS : MONOISOTOPIC_MASS;
   const spec: MassTolerance = typeof tolerance === "number" ? { ppm: tolerance } : tolerance;
   const toleranceDa =
     spec.da != null ? spec.da : Math.max((targetMass * (spec.ppm ?? 10)) / 1e6, 0.003);
   const results: FormulaCandidate[] = [];
-  const maxC = Math.min(bounds.maxCarbon, Math.floor(targetMass / MONOISOTOPIC_MASS.C) + 1);
+  const maxC = Math.min(bounds.maxCarbon, Math.floor(targetMass / MASS.C) + 1);
 
   for (let c = 1; c <= maxC; c++) {
-    const massC = c * MONOISOTOPIC_MASS.C;
+    const massC = c * MASS.C;
     if (massC - toleranceDa > targetMass) break;
 
     for (let n = 0; n <= bounds.maxNitrogen; n++) {
-      const massCN = massC + n * MONOISOTOPIC_MASS.N;
+      const massCN = massC + n * MASS.N;
       if (massCN - toleranceDa > targetMass) break;
 
       for (let o = 0; o <= bounds.maxOxygen; o++) {
-        const massCNO = massCN + o * MONOISOTOPIC_MASS.O;
+        const massCNO = massCN + o * MASS.O;
         if (massCNO - toleranceDa > targetMass) break;
 
         for (let s = 0; s <= bounds.maxSulfur; s++) {
-          const massWithoutH = massCNO + s * MONOISOTOPIC_MASS.S;
+          const massWithoutH = massCNO + s * MASS.S;
           const remainingForH = targetMass - massWithoutH;
           if (remainingForH < -toleranceDa) break;
 
-          const h = Math.round(remainingForH / MONOISOTOPIC_MASS.H);
+          const h = Math.round(remainingForH / MASS.H);
           if (h < 0) continue;
 
-          const exactMass = massWithoutH + h * MONOISOTOPIC_MASS.H;
+          const exactMass = massWithoutH + h * MASS.H;
           const massError = exactMass - targetMass;
           if (Math.abs(massError) > toleranceDa) continue;
 
