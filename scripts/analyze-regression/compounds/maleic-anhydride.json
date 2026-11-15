@@ -1,0 +1,45 @@
+{
+  "id": "maleic-anhydride",
+  "name": "無水マレイン酸 (maleic anhydride)",
+  "categories": [
+    "カルボニル化合物(酸無水物)",
+    "複素環化合物",
+    "対称性(4炭素・2シグナル)"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 7923,
+    "molecularFormula": "C4H2O3",
+    "smiles": "C1=CC(=O)OC1=O"
+  },
+  "conditions": {
+    "solvent": null,
+    "frequency": null,
+    "temperature": null
+  },
+  "source": {
+    "type": "unverified",
+    "citation": "既存の回帰テスト(analyze-hard-constraints.test.mjs)から移行。出典未記録。",
+    "reliability": "値は文献値に近いが出典未確認。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 98.06,
+      "note": "構造から計算した平均分子量(理論値)。実測値ではない。"
+    },
+    "h1": [
+      [
+        7.0,
+        2
+      ]
+    ],
+    "c13": [
+      164.5,
+      136.4
+    ],
+    "correlations": []
+  },
+  "notes": [
+    "対称性により炭素4個に対しシグナル2本。ハード制約で除外されないことの確認用。"
+  ]
+}

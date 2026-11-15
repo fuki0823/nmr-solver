@@ -68,3 +68,21 @@ export async function generateCandidateImage(smiles: string): Promise<string> {
     return `data:image/png;base64,${base64}`;
   });
 }
+
+const MIME_INCHI_KEY = "chemical/x-inchi-key" as ChemicalMimeType;
+
+/**
+ * InChIKeyを計算する。回帰テストで「候補が正解化合物か」を判定するために使う
+ * (前半14文字が骨格=原子の接続、後半が立体・プロトン化状態を表す)。
+ */
+export async function inchiKeyOf(smiles: string): Promise<string> {
+  return enqueue(async () => {
+    const structService = await getStructService();
+    const result = await structService.convert({
+      struct: smiles,
+      input_format: MIME_DAYLIGHT_SMILES,
+      output_format: MIME_INCHI_KEY,
+    });
+    return result.struct.trim();
+  });
+}

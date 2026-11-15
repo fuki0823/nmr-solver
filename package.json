@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "validate": "node --no-warnings scripts/validate-questions.mts",
-    "test:analyze": "node scripts/analyze-hard-constraints.test.mjs"
+    "test:analyze": "node scripts/analyze-hard-constraints.test.mjs",
+    "test:regression": "node scripts/analyze-regression.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",

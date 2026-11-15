@@ -8,6 +8,8 @@
  * 使われる古典的な手法の簡易版。DFTによるshift予測等とは無関係)。
  */
 
+import { checkElementRatios } from "./elementRatios";
+
 const MONOISOTOPIC_MASS = {
   H: 1.007825,
   C: 12.0,
@@ -128,6 +130,8 @@ export function generateFormulaCandidates(
           if (!Number.isInteger(dbe) || dbe < 0) continue;
           // 極端に大きい/小さいDBEは非現実的な組成として除外
           if (dbe > c + n + 1) continue;
+          // 既知化合物にほぼ存在しない元素比(Seven Golden Rules の extended 範囲外)は除外
+          if (checkElementRatios({ C: c, H: h, N: n, O: o, S: s }).level === "implausible") continue;
 
           results.push({
             formula: formatFormula({ C: c, H: h, N: n, O: o, S: s }),

@@ -14,5 +14,6 @@ export interface CandidateSearchQuery {
 export interface CandidateProvider {
   id: string;
   label: string;
-  search(query: CandidateSearchQuery): Promise<CandidateStructure[]>;
+  /** report: 検索の一部が失敗した等、結果に影響する警告を呼び出し元へ伝える */
+  search(query: CandidateSearchQuery, report?: (warning: string) => void): Promise<CandidateStructure[]>;
 }

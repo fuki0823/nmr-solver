@@ -41,8 +41,39 @@ interface PubchemPropertyRow {
   IUPACName?: string;
 }
 
+// PubChem PUG-RESTは短時間に連続して呼ぶと 503(サーバー混雑)/429 を返す。
+// 以前はこれを黙って「0件」として扱っていたため、回帰テストで連続実行した際に
+// 正解を含む候補がまるごと消えていた(SMTP-7、ルチン)。リクエスト間隔を空け、
+// 一時的なエラーは待ってから再試行し、それでも失敗したら例外にする。
+const MIN_INTERVAL_MS = 250;
+// 混雑時は数十秒続くことがあるため、長めに待つ(合計 約90秒)。
+const RETRY_DELAYS_MS = [2000, 4000, 8000, 16000, 30000, 30000];
+let lastRequestAt = 0;
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+async function pubchemFetch(url: string): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const wait = lastRequestAt + MIN_INTERVAL_MS - Date.now();
+    if (wait > 0) await sleep(wait);
+    lastRequestAt = Date.now();
+    let res: Response | null = null;
+    try {
+      res = await fetch(url);
+    } catch {
+      res = null; // ネットワークエラー
+    }
+    // 404 は「該当なし」(fastformulaで該当化合物が無い等)なので正常応答として返す
+    if (res && (res.ok || res.status === 404)) return res;
+    const retryable = !res || res.status === 503 || res.status === 429 || res.status >= 500;
+    if (!retryable || attempt >= RETRY_DELAYS_MS.length) {
+      throw new Error(`PubChem request failed (${res ? res.status : "network error"})`);
+    }
+    await sleep(RETRY_DELAYS_MS[attempt]);
+  }
+}
+
 async function fetchCidsForFormula(formula: string, cap: number): Promise<number[]> {
-  const res = await fetch(
+  const res = await pubchemFetch(
     `${PUBCHEM_BASE}/compound/fastformula/${encodeURIComponent(formula)}/cids/JSON`,
   );
   if (!res.ok) return [];
@@ -61,7 +92,7 @@ async function fetchPropertiesForCids(
     "ConnectivitySMILES",
     "IUPACName",
   ].join(",");
-  const res = await fetch(
+  const res = await pubchemFetch(
     `${PUBCHEM_BASE}/compound/cid/${cids.join(",")}/property/${props}/JSON`,
   );
   if (!res.ok) return [];
@@ -74,7 +105,7 @@ async function fetchPropertiesForCids(
 export const pubchemCandidateProvider: CandidateProvider = {
   id: "pubchem",
   label: "PubChem",
-  async search(query: CandidateSearchQuery): Promise<CandidateStructure[]> {
+  async search(query: CandidateSearchQuery, report?: (warning: string) => void): Promise<CandidateStructure[]> {
     const formulas = (query.formulaCandidates ?? []).slice(
       0,
       MAX_FORMULAS_TO_QUERY,
@@ -116,9 +147,11 @@ export const pubchemCandidateProvider: CandidateProvider = {
             databaseUrl: `https://pubchem.ncbi.nlm.nih.gov/compound/${row.CID}`,
           });
         }
-      } catch {
+      } catch (err) {
         // 1つの分子式の検索が失敗しても、他の分子式の検索は続行する
         // (PubChemが一時的に落ちていてもアプリ全体は壊さない)。
+        // ただし失敗したことは呼び出し元に伝える(黙って0件にしない)。
+        report?.(`PubChemで分子式 ${formula} の検索に失敗しました(${err instanceof Error ? err.message : "不明なエラー"})。この分子式の候補は含まれていません。`);
       }
     }
 

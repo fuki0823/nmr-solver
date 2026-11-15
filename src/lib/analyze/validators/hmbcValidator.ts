@@ -1,147 +1,88 @@
-import { bondDistance } from "../../moleculeGraph";
-import {
-  carbonBucketFromShift,
-  hasCarbonInBucket,
-  hasProtonatedCarbonForProtonBucket,
-  protonBucketFromShift,
-} from "../chemicalEnvironment";
+import { carbonsFor, nJ, peakById, protonHostsWithHsqc, shiftModel } from "./twoDHelpers";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
 /** allowedBondDistances未指定時のデフォルト(典型的な2-3結合) */
 const DEFAULT_ALLOWED_BOND_DISTANCES = [2, 3];
 
 /**
- * HMBC(主に2JCH/3JCH)の検証。
+ * HMBC(主に²JCH/³JCH)の検証。特定のピーク割当を仮定しない。
  *
- * 割当済みの「プロトンが結合している炭素」から「対象炭素」までの結合数
- * (炭素-炭素間のbond distance)を求め、そこに+1して初めてH起点のnJCH
- * (プロトンから対象炭素までの結合数)になる点に注意(例: プロトンの
- * 属する炭素と対象炭素が直接結合=炭素間距離1 の場合、H-C-C'で2JCHになる)。
- *
- * 許容するnJCHは相関ごとに `allowedBondDistances` で指定可能(未指定時は
- * [2,3])。範囲のすぐ外側(min-1 / max+1)は稀に観測されるためsoftに
- * partial扱いとする。
- *
- * ハード制約として扱うのは、以下の「候補構造として原理的にあり得ない」
- * ケースのみ:
- *   (a) 相関の一方または両方に対応する炭素/プロトン化炭素が候補中に
- *       1つも存在しない(割当の曖昧さではなく構造上存在しない)
- *   (b) 両端とも高信頼度で一意に割当できているにもかかわらず、
- *       nJCHが許容範囲から明確に(±1の猶予を超えて)外れている
- * 「観測されるはずの相関が観測されなかった」ことは一切評価しない
- * (このバリデータは observed な相関のみを走査する)。また、割当の
- * 確信度が低い場合はハード制約にしない(曖昧=除外しない)。
+ * 相関 δH → δC は、「δHを持ちうるHの原子X(HSQCがあればその炭素に限定)」と
+ * 「δCになりうる炭素Y」の組で、H–X…Y の結合数 nJCH が許容範囲(既定2–3)に
+ * 入るものがあれば説明できるとする。
+ *  - 許容範囲内の組がある → 1点
+ *  - 許容範囲±1(⁴JCH、¹JCHの漏れ込み等)の組だけがある → 0.4点
+ *  - ハード制約: 範囲を広げても、⁴JCH以内で説明できる組が1つも無い
+ * 観測されなかった相関は評価しない。
  */
 export function hmbcValidator(context: ValidationContext): ValidationResult {
-  const { input, candidateGraph, assignment } = context;
-  const hmbcCorrelations = input.correlations.filter((c) => c.kind === "HMBC");
-  if (hmbcCorrelations.length === 0) {
-    return { method: "HMBC", status: "not_evaluated", score: 0, details: [] };
-  }
+  const { input, candidateGraph } = context;
+  const correlations = input.correlations.filter((c) => c.kind === "HMBC");
+  if (correlations.length === 0) return { method: "HMBC", status: "not_evaluated", score: 0, details: [] };
 
+  const model = shiftModel(candidateGraph);
   const details: ValidationDetail[] = [];
-  let matchScore = 0;
-  let evaluatedCount = 0;
+  let scoreSum = 0;
+  let evaluated = 0;
 
-  for (const corr of hmbcCorrelations) {
-    const fromPeak = input.peaks.find((p) => p.id === corr.from);
-    const toPeak = input.peaks.find((p) => p.id === corr.to);
-    const protonPeak =
-      fromPeak?.nucleus === "1H" ? fromPeak : toPeak?.nucleus === "1H" ? toPeak : undefined;
-    const carbonPeak =
-      fromPeak?.nucleus === "13C" ? fromPeak : toPeak?.nucleus === "13C" ? toPeak : undefined;
-    if (!protonPeak || !carbonPeak) {
-      details.push({
-        status: "not_evaluated",
-        summary: `${corr.from} → ${corr.to}: ¹H/¹³Cのペアとして解釈できません`,
-      });
+  for (const corr of correlations) {
+    const a = peakById(input, corr.from);
+    const b = peakById(input, corr.to);
+    const h = a?.nucleus === "1H" ? a : b?.nucleus === "1H" ? b : undefined;
+    const c = a?.nucleus === "13C" ? a : b?.nucleus === "13C" ? b : undefined;
+    if (!h || !c) {
+      details.push({ status: "not_evaluated", summary: `${corr.from} → ${corr.to}: ¹H/¹³Cのペアとして解釈できません` });
       continue;
     }
-    const protonPeakId = protonPeak.id;
-    const carbonPeakId = carbonPeak.id;
-
-    const protonAssignment = assignment.byPeakId.get(protonPeakId);
-    const carbonAssignment = assignment.byPeakId.get(carbonPeakId);
-    if (!protonAssignment || !carbonAssignment) {
-      // 割当できなかった側が、候補構造中に該当する炭素環境自体を
-      // 一つも持たないかを確認する。「複数候補があって一意に決まらない」
-      // のと「そもそも存在しない」のを区別するため。
-      let bucketEmpty = false;
-      let emptySide = "";
-      if (!protonAssignment) {
-        const targetBucket = protonBucketFromShift(protonPeak.shift);
-        if (!hasProtonatedCarbonForProtonBucket(candidateGraph, targetBucket)) {
-          bucketEmpty = true;
-          emptySide = `${protonPeakId}(該当するプロトン化炭素)`;
-        }
-      }
-      if (!bucketEmpty && !carbonAssignment) {
-        const bucket = carbonBucketFromShift(carbonPeak.shift);
-        if (!hasCarbonInBucket(candidateGraph, bucket)) {
-          bucketEmpty = true;
-          emptySide = `${carbonPeakId}(該当する炭素)`;
-        }
-      }
-      evaluatedCount += bucketEmpty ? 1 : 0;
-      details.push(
-        bucketEmpty
-          ? {
-              status: "mismatch",
-              hardConstraint: true,
-              summary: `${protonPeakId} → ${carbonPeakId}: 候補構造には${emptySide}が存在しません`,
-            }
-          : {
-              status: "not_evaluated",
-              summary: `${protonPeakId} → ${carbonPeakId}: 候補構造中に候補が複数あり、一意に割当できないため評価できません`,
-            },
-      );
-      continue;
-    }
-
-    const carbonToCarbonDistance = bondDistance(
-      candidateGraph,
-      protonAssignment.atomIndex,
-      carbonAssignment.atomIndex,
-    );
-    // H-C(自分の炭素)-...-C(対象炭素) なので、nJCH = 炭素間距離 + 1
-    const nJCH = carbonToCarbonDistance === null ? null : carbonToCarbonDistance + 1;
-    const highConfidence =
-      protonAssignment.confidence === "high" && carbonAssignment.confidence === "high";
+    evaluated++;
     const allowed = corr.allowedBondDistances ?? DEFAULT_ALLOWED_BOND_DISTANCES;
-    const minAllowed = Math.min(...allowed);
-    const maxAllowed = Math.max(...allowed);
-    evaluatedCount++;
+    const lo = Math.min(...allowed);
+    const hi = Math.max(...allowed);
 
-    if (nJCH !== null && allowed.includes(nJCH)) {
-      matchScore += 1;
-      details.push({
-        status: highConfidence ? "match" : "partial",
-        summary: `${protonPeakId} → ${carbonPeakId}: ${nJCH}JCH相当(許容範囲[${allowed.join(",")}]内)`,
-      });
-    } else if (nJCH !== null && (nJCH === minAllowed - 1 || nJCH === maxAllowed + 1)) {
-      matchScore += 0.4;
-      details.push({
-        status: "partial",
-        summary: `${protonPeakId} → ${carbonPeakId}: ${nJCH}JCH相当(許容範囲[${allowed.join(",")}]からは外れますが、稀に観測されうる範囲です)`,
-      });
-    } else if (highConfidence) {
-      // 両端とも一意に割当できており、かつ許容範囲から明確に外れている
-      // 場合のみハード制約とする。
-      details.push({
-        status: "mismatch",
-        hardConstraint: true,
-        summary: `${protonPeakId} → ${carbonPeakId}: ${nJCH !== null ? `${nJCH}JCH相当` : "到達不能"}で、許容範囲[${allowed.join(",")}]から大きく外れており、この候補構造とは整合しません`,
-      });
+    const best = (wide: boolean) => {
+      let bestN = Infinity;
+      let inAllowed = false;
+      for (const x of protonHostsWithHsqc(model, input, h, wide)) {
+        for (const y of carbonsFor(model, c.shift, { widen: wide })) {
+          if (x === y) continue;
+          const n = nJ(model, x, y);
+          if (allowed.includes(n)) inAllowed = true;
+          const dist = n < lo ? lo - n : n > hi ? n - hi : 0;
+          bestN = Math.min(bestN, dist);
+        }
+      }
+      return { inAllowed, offBy: bestN };
+    };
+
+    const strict = best(false);
+    const label = `${h.id}(δ${h.shift}) → ${c.id}(δ${c.shift})`;
+    if (strict.inAllowed) {
+      scoreSum += 1;
+      continue;
+    }
+    if (strict.offBy === 1) {
+      scoreSum += 0.4;
+      details.push({ status: "partial", summary: `${label}: ${lo}–${hi}結合では説明できず、${hi + 1}JCH等(稀に観測される範囲)でのみ説明できます` });
+      continue;
+    }
+    const wide = best(true);
+    if (wide.inAllowed || wide.offBy <= 1) {
+      scoreSum += 0.2;
+      details.push({ status: "partial", summary: `${label}: 典型的なシフト範囲から外れる原子を仮定した場合にのみ説明できます` });
     } else {
       details.push({
         status: "mismatch",
-        summary: `${protonPeakId} → ${carbonPeakId}: ${nJCH !== null ? `${nJCH}JCH相当` : "到達不能"}で、この候補構造とは整合しません(割当の確信度が低いため確定的な矛盾とはしません)`,
+        hardConstraint: true,
+        summary: `${label}: このHとこの炭素を${hi + 1}結合以内で結ぶ組み合わせが候補構造にありません`,
       });
     }
   }
 
-  const score = evaluatedCount > 0 ? matchScore / evaluatedCount : 0;
-  const status = evaluatedCount === 0 ? "not_evaluated" : score >= 0.8 ? "match" : score >= 0.4 ? "partial" : "mismatch";
-
+  const score = evaluated > 0 ? scoreSum / evaluated : 0;
+  details.unshift({
+    status: score >= 0.999 ? "match" : score >= 0.6 ? "partial" : "mismatch",
+    summary: `HMBC: ${evaluated}件中${Math.round(scoreSum * 10) / 10}件分を、候補構造の2–3結合(相関ごとの指定があればその範囲)で説明できます`,
+  });
+  const status = evaluated === 0 ? "not_evaluated" : score >= 0.8 ? "match" : score >= 0.4 ? "partial" : "mismatch";
   return { method: "HMBC", status, score, details };
 }

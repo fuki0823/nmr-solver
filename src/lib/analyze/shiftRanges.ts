@@ -179,11 +179,14 @@ export function expectedCarbonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
   if (e.aromatic || e.doubleToC) {
     // 炭素の範囲は芳香族とアルケンでほぼ重なるため同じ値を使い、ラベルだけ分ける
     const kind = e.aromatic ? "芳香族" : "アルケン";
-    if (e.singleO > 0) return { lo: 135, hi: 172, label: `${kind} C-O` };
+    // 下限: カルボニルのβ位で遮蔽されるエノール型C-O(フラボノール3-O-配糖体のC3 δ133前後)まで含める
+    if (e.singleO > 0) return { lo: 125, hi: 172, label: `${kind} C-O` };
     if (e.singleN > 0 || e.aromaticToHetero) {
       return { lo: 110, hi: 170, label: `${kind} C-N` };
     }
-    return { lo: 95, hi: 160, label: kind };
+    // 下限: 2つのOR/OHにオルト・パラ位で挟まれた電子豊富な芳香族CH(5,7-ジヒドロキシ
+    // フラボノイドのC6/C8 δ93-99等)やエノールエーテルのβ炭素はδ90前後まで下がる。
+    return { lo: 88, hi: 160, label: kind };
   }
 
   // sp3

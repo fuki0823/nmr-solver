@@ -61,17 +61,14 @@ async function testEthylAcetateRegression(page) {
       { kind: "HSQC", from: "H2", to: "C2" },
       { kind: "HSQC", from: "H1", to: "C3" },
       { kind: "HSQC", from: "H3", to: "C4" },
-      // 注: assignPeaksは化学的な意味づけをせず、バケット内で同じ
-      // attachedH(ここでは2つのメチル基がどちらもCH3)の候補を分子内の
-      // 原子index順に位置的に割り当てるため、δ21.0とδ14.2のどちらが
-      // 「アセチル基のCH3」でどちらが「エチル基末端のCH3」に対応する
-      // 割当先原子になるかはSMILES記述順に依存する(この近似は
-      // assignPeaks.ts で既知の制限として文書化されている)。そのため
-      // ここでは「どちらのメチルがどちらに割り当てられても2-3結合で
-      // 説明できる」相関(各メチル→隣接する炭素1個)を選んでいる。
-      { kind: "HMBC", from: "H2", to: "C1" }, // OCH2 -> C=O (3JCH)
-      { kind: "HMBC", from: "H1", to: "C2" }, // メチル -> 隣接炭素 (2JCH)
-      { kind: "HMBC", from: "H3", to: "C1" }, // メチル -> 隣接炭素 (2JCH)
+      // 酢酸エチルで実際に観測される2-3結合のHMBC相関。
+      // (以前は、旧来の「並び順で割り当てる」assignPeaksの癖に合わせて
+      // アセチルCH3→OCH2炭素、エチルCH3→C=O という実際には4結合の相関を
+      // 使っていた。2D検証を割当に依存しない方式に改めたため、化学的に
+      // 正しい相関に置き換えた。)
+      { kind: "HMBC", from: "H2", to: "C1" }, // OCH2 (δ4.12) -> C=O (³JCH)
+      { kind: "HMBC", from: "H1", to: "C1" }, // アセチルCH3 (δ2.04) -> C=O (²JCH)
+      { kind: "HMBC", from: "H3", to: "C2" }, // エチルCH3 (δ1.25) -> OCH2炭素 (²JCH)
     ],
   };
   const candidate = {

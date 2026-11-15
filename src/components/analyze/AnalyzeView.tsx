@@ -7,30 +7,25 @@ import type {
   MassSpecData,
   SpectralPeak,
 } from "@/lib/analyze/types";
-import {
-  estimateFormulasFromInput,
-  type FormulaSearchResult,
-} from "@/lib/analyze/formula/formulasFromInput";
-import { localCandidateProvider } from "@/lib/analyze/candidates/localProvider";
-import { pubchemCandidateProvider } from "@/lib/analyze/candidates/pubchemProvider";
-import type { CandidateProvider } from "@/lib/analyze/candidates/CandidateProvider";
-import type { CandidateStructure } from "@/lib/analyze/types";
+import type { FormulaSearchResult } from "@/lib/analyze/formula/formulasFromInput";
 import {
   evaluateCandidate,
-  rankCandidates,
   type CandidateEvaluation,
 } from "@/lib/analyze/scoring/rankCandidates";
-
-const PROVIDERS: CandidateProvider[] = [localCandidateProvider, pubchemCandidateProvider];
+import { runAnalysis } from "@/lib/analyze/runAnalysis";
+import { inchiKeyOf } from "@/lib/analyze/ketcherService";
 
 // 開発/テスト用フック: 本番ビルドではNODE_ENVチェックによりdead-code
-// eliminationで消える。ハード制約ロジック(¹³C数/HSQC/HMBC)を、
-// PubChemへの実ネットワーク呼び出しやウィザードUIの手操作なしに、
-// Playwrightから決定論的に検証するために window に公開している。
-// (scripts/analyze-hard-constraints.test.mjs から使用)
+// eliminationで消える。Playwrightから解析処理を直接呼び出すために
+// window に公開している。
+//  - evaluateCandidate: 1候補の評価(scripts/analyze-hard-constraints.test.mjs)
+//  - runAnalysis: パイプライン全体(scripts/analyze-regression.mjs)
+//  - inchiKeyOf: 正解判定用のInChIKey計算(同上)
 if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
   (window as unknown as { __nmrAnalyzeDebug?: unknown }).__nmrAnalyzeDebug = {
     evaluateCandidate,
+    runAnalysis,
+    inchiKeyOf,
   };
 }
 import MassSpecInput from "./MassSpecInput";
@@ -56,6 +51,7 @@ export default function AnalyzeView() {
   const [analyzeError, setAnalyzeError] = useState<string | null>(null);
   const [searchedPubchem, setSearchedPubchem] = useState(false);
   const [formulaEstimate, setFormulaEstimate] = useState<FormulaSearchResult | null>(null);
+  const [warnings, setWarnings] = useState<string[]>([]);
 
   const protonPeaks = peaks.filter((p) => p.nucleus === "1H");
   const carbonPeaks = peaks.filter((p) => p.nucleus === "13C");
@@ -77,30 +73,11 @@ export default function AnalyzeView() {
     try {
       const input: AnalysisInput = { ms, peaks, correlations };
 
-      // MS(m/z+アダクト or 分子量)の質量に合う分子式を、¹³Cピーク数(炭素数)・
-      // ¹H積分合計(水素数)・sp2炭素数(不飽和度の下限)で絞り込み、その
-      // 分子式でPubChemを検索する。詳細は formulasFromInput.ts /
-      // estimateFormula.ts を参照。
-      const estimate = estimateFormulasFromInput(ms, peaks);
-      const formulaCandidates = estimate?.estimate.formulas.map((f) => f.formula);
-
-      setFormulaEstimate(estimate);
-      setSearchedPubchem((formulaCandidates?.length ?? 0) > 0);
-
-      // 各プロバイダは順番に問い合わせる(PubChemのレート制限に配慮し、
-      // かつ候補プールが十分あれば途中で打ち切れるようにするため)。
-      const seenSmiles = new Set<string>();
-      const candidates: CandidateStructure[] = [];
-      for (const provider of PROVIDERS) {
-        const found = await provider.search({ formulaCandidates, limit: 30 });
-        for (const c of found) {
-          if (seenSmiles.has(c.smiles)) continue;
-          seenSmiles.add(c.smiles);
-          candidates.push(c);
-        }
-      }
-
-      const results = await rankCandidates(input, candidates);
+      const result = await runAnalysis(input);
+      setFormulaEstimate(result.formulaEstimate);
+      setSearchedPubchem(result.searchedPubchem);
+      setWarnings(result.warnings);
+      const results = result.evaluations;
       setEvaluations(results);
       setAnalyzedInput(input);
       setStep(4);
@@ -270,6 +247,13 @@ export default function AnalyzeView() {
             <p className="rounded-md bg-stone-100 px-4 py-2 text-xs text-stone-600">
               MSデータ(測定m/z+アダクト、またはMolecular Weight)が未入力のため、今回はPubChemを検索していません(既存クイズの正解構造のみを候補プールとしています)。
             </p>
+          )}
+          {warnings.length > 0 && evaluations != null && !isStale && (
+            <ul className="flex flex-col gap-1 rounded-md bg-amber-50 px-4 py-2 text-xs text-amber-800">
+              {warnings.map((w) => (
+                <li key={w}>{w}</li>
+              ))}
+            </ul>
           )}
           {formulaEstimate && evaluations != null && !isStale && (
             <FormulaEstimatePanel result={formulaEstimate} />
