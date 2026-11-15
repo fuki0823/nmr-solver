@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 const description =
-  "NMR(¹H・¹³C・DEPT・COSY・HSQC・HMBCなど)とMSデータから有機化合物の構造を決定するWebアプリ。構造決定クイズ(Learn)と、実測データから候補構造をランキングするAnalyzeの2モード。化学的な判定はすべて決定論的なロジックで行う。";
+  "NMR(核磁気共鳴)スペクトルから有機化合物の構造を決定する、無料のWebアプリ";
 
 // 本番URLが未設定(NEXT_PUBLIC_SITE_URL未設定)でもビルドが壊れないよう、
 // ローカル用のフォールバックを用意する。Vercelにデプロイする際は

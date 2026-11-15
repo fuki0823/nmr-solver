@@ -6,7 +6,7 @@ export default function Home() {
       <header className="flex flex-col gap-3">
         <h1 className="text-3xl font-semibold text-stone-900">NMR Solver</h1>
         <p className="text-base text-stone-700">
-          NMR(核磁気共鳴)スペクトルから有機化合物の構造を決定する、無料のWebアプリです。化学的な判定はすべて決定論的なロジックで行い、AIによる印象評価には依存していません。
+          NMR(核磁気共鳴)スペクトルから有機化合物の構造を決定する、無料のWebアプリ
         </p>
       </header>
 
