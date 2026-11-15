@@ -100,6 +100,11 @@ export const pubchemCandidateProvider: CandidateProvider = {
         for (const row of rows) {
           const smiles = row.ConnectivitySMILES;
           if (!smiles) continue;
+          // 塩・混合物(複数成分のSMILES。例: アトロピン3分子分で分子式が
+          // C51H69N3O9 になる登録)は、単離化合物のNMR解析の答えには
+          // なり得ないため除外する。分子式だけは一致するため、除外しないと
+          // 上位に紛れ込む。
+          if (smiles.includes(".")) continue;
           results.push({
             id: `pubchem-${row.CID}`,
             source: "pubchem",

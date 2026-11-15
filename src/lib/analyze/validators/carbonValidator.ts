@@ -1,5 +1,10 @@
 import { countDistinctCarbonEnvironments } from "../../moleculeGraph";
-import { expectedCarbonRange, inRange, maxBipartiteMatching } from "../shiftRanges";
+import {
+  expectedCarbonRange,
+  inRange,
+  maxBipartiteMatching,
+  shiftConsistencyScore,
+} from "../shiftRanges";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
 export function carbonValidator(context: ValidationContext): ValidationResult {
@@ -70,7 +75,8 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
   );
   const unmatched = sortedPeaks.filter((_, i) => matchLeft[i] < 0);
   const matchedCount = sortedPeaks.length - unmatched.length;
-  const shiftScore = sortedPeaks.length > 0 ? matchedCount / sortedPeaks.length : 0;
+  const shiftScore =
+    sortedPeaks.length > 0 ? shiftConsistencyScore(unmatched.length / sortedPeaks.length) : 0;
   details.push({
     status: unmatched.length === 0 ? "match" : unmatched.length <= 1 ? "partial" : "mismatch",
     summary:
@@ -92,7 +98,9 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
       .join(" / ")}`,
   });
 
-  const score = hardReject ? 0 : (countScore + shiftScore) / 2;
+  // 本数の一致は同じ分子式の候補同士ではほぼ差が出ないため、構造の違いが
+  // 表れる化学シフトの整合性を2倍に重み付けする。
+  const score = hardReject ? 0 : (countScore + 2 * shiftScore) / 3;
   const status = hardReject ? "mismatch" : score >= 0.8 ? "match" : score >= 0.4 ? "partial" : "mismatch";
 
   return { method: "13C", status, score, details };

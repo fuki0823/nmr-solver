@@ -42,6 +42,75 @@ interface LocalEnv {
   tripleToN: boolean;
 }
 
+/**
+ * 芳香環に属する原子の集合。PubChem等のSMILESはケクレ構造(単結合/二重結合の
+ * 交互表記)で、芳香族結合(order 4)を使わないことが多いため、環構造から判定する:
+ *  - 6員環: 環内の全原子がC/Nで、各原子が環内の隣接原子と二重結合(または
+ *    芳香族結合)を持つ(ベンゼン、ピリジン、縮環系のナフタレン等)
+ *  - 5員環: 4原子が環内の二重結合を持ち、残り1原子がO/N/S(フラン、ピロール、
+ *    チオフェン、イミダゾール等)
+ * キノンや環外C=Oを持つ環は条件を満たさないため、芳香族とみなさない。
+ */
+const aromaticCache = new WeakMap<MoleculeGraph, Set<number>>();
+
+function findSmallRings(graph: MoleculeGraph): number[][] {
+  const rings: number[][] = [];
+  const seen = new Set<string>();
+  const n = graph.atoms.length;
+  for (let start = 0; start < n; start++) {
+    const path = [start];
+    const onPath = new Set([start]);
+    const dfs = (current: number) => {
+      for (const [next] of graph.atoms[current].heavyNeighbors) {
+        if (next === start && path.length >= 5) {
+          const key = [...path].sort((a, b) => a - b).join(",");
+          if (!seen.has(key)) {
+            seen.add(key);
+            rings.push([...path]);
+          }
+          continue;
+        }
+        // 開始原子を環内で最小のindexに固定して重複探索を抑える
+        if (next <= start || onPath.has(next) || path.length >= 6) continue;
+        path.push(next);
+        onPath.add(next);
+        dfs(next);
+        path.pop();
+        onPath.delete(next);
+      }
+    };
+    dfs(start);
+  }
+  return rings;
+}
+
+export function findAromaticAtoms(graph: MoleculeGraph): Set<number> {
+  const cached = aromaticCache.get(graph);
+  if (cached) return cached;
+  const aromatic = new Set<number>();
+  for (const atom of graph.atoms) {
+    if (atom.heavyNeighbors.some(([, order]) => order === 4)) aromatic.add(atom.index);
+  }
+  for (const ring of findSmallRings(graph)) {
+    const inRing = new Set(ring);
+    const hasRingPi = (idx: number) =>
+      graph.atoms[idx].heavyNeighbors.some(
+        ([nbr, order]) => inRing.has(nbr) && (order === 2 || order === 4),
+      );
+    const withPi = ring.filter(hasRingPi);
+    const without = ring.filter((idx) => !hasRingPi(idx));
+    const isAromatic =
+      ring.length === 6
+        ? without.length === 0 && ring.every((idx) => ["C", "N"].includes(graph.atoms[idx].element))
+        : withPi.length === 4 &&
+          without.length === 1 &&
+          ["O", "N", "S"].includes(graph.atoms[without[0]].element);
+    if (isAromatic) for (const idx of ring) aromatic.add(idx);
+  }
+  aromaticCache.set(graph, aromatic);
+  return aromatic;
+}
+
 function localEnv(graph: MoleculeGraph, atom: AtomInfo): LocalEnv {
   const env: LocalEnv = {
     singleO: 0,
@@ -56,6 +125,7 @@ function localEnv(graph: MoleculeGraph, atom: AtomInfo): LocalEnv {
     triple: false,
     tripleToN: false,
   };
+  if (findAromaticAtoms(graph).has(atom.index)) env.aromatic = true;
   for (const [idx, order] of atom.heavyNeighbors) {
     const el = graph.atoms[idx]?.element;
     if (!el) continue;
@@ -107,11 +177,13 @@ export function expectedCarbonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
   if (e.doubleToN) return { lo: 140, hi: 175, label: "C=N" };
 
   if (e.aromatic || e.doubleToC) {
-    if (e.singleO > 0) return { lo: 135, hi: 172, label: "芳香族/アルケン C-O" };
+    // 炭素の範囲は芳香族とアルケンでほぼ重なるため同じ値を使い、ラベルだけ分ける
+    const kind = e.aromatic ? "芳香族" : "アルケン";
+    if (e.singleO > 0) return { lo: 135, hi: 172, label: `${kind} C-O` };
     if (e.singleN > 0 || e.aromaticToHetero) {
-      return { lo: 110, hi: 170, label: "芳香族/アルケン C-N(ヘテロ環)" };
+      return { lo: 110, hi: 170, label: `${kind} C-N` };
     }
-    return { lo: 95, hi: 160, label: "芳香族/アルケン" };
+    return { lo: 95, hi: 160, label: kind };
   }
 
   // sp3
@@ -134,7 +206,10 @@ export function expectedProtonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
   if (e.doubleToO) return { lo: 7.8, hi: 10.8, label: "アルデヒド/ホルミル H" };
   if (e.doubleToN) return { lo: 6.5, hi: 9.5, label: "CH=N" };
   if (e.triple) return { lo: 1.7, hi: 3.4, label: "アルキン H" };
-  if (e.aromatic || e.doubleToC) return { lo: 4.3, hi: 9.6, label: "芳香族/アルケン H" };
+  // 芳香族Hとアルケン Hは範囲が大きく異なる(アルケン Hはδ5前後が多く、
+  // 芳香族Hはフェノールのオルト位等でもδ6前後より低磁場)ため分けて扱う。
+  if (e.aromatic) return { lo: 5.9, hi: 9.6, label: "芳香族 H" };
+  if (e.doubleToC) return { lo: 4.4, hi: 8.0, label: "アルケン H" };
 
   if (e.singleO >= 2) return { lo: 4.2, hi: 6.4, label: "アセタール H" };
   if (e.singleO === 1) return { lo: 3.0, hi: 5.7, label: "O-CH" };
@@ -186,4 +261,15 @@ export function maxBipartiteMatching(
 
 export function inRange(shift: number, range: ShiftRange): boolean {
   return shift >= range.lo && shift <= range.hi;
+}
+
+/**
+ * 割り当てられなかった割合(0〜1)から、化学シフトの整合性スコア(0〜1)を出す。
+ * 割り当て不能なピーク/水素は「その構造ではあり得ない」ことの直接の証拠なので、
+ * 割合をそのまま引く(例: 15%不一致 → 0.85)と、構造がまるで違う候補でも
+ * 高得点になってしまう。そこで不一致の割合の3倍を減点する
+ * (5% → 0.85、15% → 0.55、33%以上 → 0)。
+ */
+export function shiftConsistencyScore(unmatchedFraction: number): number {
+  return Math.max(0, 1 - 3 * unmatchedFraction);
 }
