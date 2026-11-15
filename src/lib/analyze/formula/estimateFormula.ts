@@ -66,6 +66,13 @@ export type FormulaEstimateLevel =
 export interface FormulaEstimate {
   formulas: RankedFormula[];
   level: FormulaEstimateLevel;
+  /**
+   * level が strict のとき、炭素数がピーク数+carbonSlack を超えるが他の条件は満たす
+   * 分子式(炭素数の差が小さい順)。¹³Cで観測されにくい第四級炭素が複数ある場合
+   * (例: カフェインは8炭素中5本しか帰属されていない)に正解がここに入るため、
+   * 主候補とは別枠で補助的に検索する。
+   */
+  extraFormulas: RankedFormula[];
 }
 
 function hydrogenTolerance(protonTotal: number): number {
@@ -113,7 +120,7 @@ export function estimateFormulas(
       );
 
   if (nC <= 0 && nH <= 0) {
-    return { formulas: sortRanked(candidates), level: "massOnly" };
+    return { formulas: sortRanked(candidates), level: "massOnly", extraFormulas: [] };
   }
 
   const carbonLowerOk = (f: FormulaCandidate) => nC <= 0 || f.counts.C >= nC;
@@ -121,10 +128,12 @@ export function estimateFormulas(
   const dbeOk = (f: FormulaCandidate) => f.degreeOfUnsaturation >= minDbe;
 
   const strict = candidates.filter((f) => carbonLowerOk(f) && carbonUpperOk(f) && hydrogenOk(f, nH) && dbeOk(f));
-  if (strict.length > 0) return { formulas: sortRanked(strict), level: "strict" };
-
   const symmetry = candidates.filter((f) => carbonLowerOk(f) && hydrogenOk(f, nH) && dbeOk(f));
-  if (symmetry.length > 0) return { formulas: sortRanked(symmetry), level: "symmetry" };
+  if (strict.length > 0) {
+    const beyondSlack = symmetry.filter((f) => !carbonUpperOk(f));
+    return { formulas: sortRanked(strict), level: "strict", extraFormulas: sortRanked(beyondSlack) };
+  }
+  if (symmetry.length > 0) return { formulas: sortRanked(symmetry), level: "symmetry", extraFormulas: [] };
 
   // 炭素数の下限は物理的な制約なので、最後の段階でも維持する
   // (満たす分子式が無ければ、それも外して質量のみで返す)。
@@ -132,5 +141,6 @@ export function estimateFormulas(
   return {
     formulas: sortRanked(lowerOnly.length > 0 ? lowerOnly : candidates),
     level: "massOnly",
+    extraFormulas: [],
   };
 }

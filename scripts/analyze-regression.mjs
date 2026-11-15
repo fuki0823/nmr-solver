@@ -70,6 +70,7 @@ async function runOne(page, compound) {
           smiles: e.candidate.smiles,
           inchiKey: key,
           totalScore: e.totalScore,
+          rawScore: e.rawScore ?? e.totalScore / 100,
           excluded: e.excluded,
           exclusionReasons: e.exclusionReasons,
           scores: Object.fromEntries(
@@ -83,6 +84,7 @@ async function runOne(page, compound) {
         expectedInchiKey: expectedKey,
         formulaLevel: run.formulaEstimate?.estimate.level ?? null,
         formulas: run.formulaEstimate?.estimate.formulas.map((f) => f.formula) ?? [],
+        extraFormulas: run.formulaEstimate?.estimate.extraFormulas?.map((f) => f.formula) ?? [],
         searchedPubchem: run.searchedPubchem,
         candidateCount: run.candidates.length,
         warnings: run.warnings ?? [],
@@ -102,15 +104,20 @@ function summarize(compound, out) {
   let rank = null;
   let tiedWith = 0;
   if (correct && !correct.excluded) {
-    rank = 1 + ranked.filter((r) => !r.excluded && r.totalScore > correct.totalScore).length;
-    tiedWith = ranked.filter((r) => !r.excluded && !r.isCorrect && r.totalScore === correct.totalScore).length;
+    // 順位・同点は丸める前のスコアで判定する(1e-9 未満の差は同点とみなす)
+    const EPS = 1e-9;
+    rank = 1 + ranked.filter((r) => !r.excluded && r.rawScore > correct.rawScore + EPS).length;
+    tiedWith = ranked.filter((r) => !r.excluded && !r.isCorrect && Math.abs(r.rawScore - correct.rawScore) <= EPS).length;
   }
   const formulaIndex = out.formulas.indexOf(compound.structure.molecularFormula);
+  const extraIndex = (out.extraFormulas ?? []).indexOf(compound.structure.molecularFormula);
   let stage;
   if (correct == null) {
     stage =
-      formulaIndex < 0
+      formulaIndex < 0 && extraIndex < 0
         ? "A. MS・分子式推定: 正しい分子式が分子式候補に含まれていない"
+        : formulaIndex < 0
+        ? `E. 候補生成: 分子式は補助候補(${extraIndex + 1}番目)にあるが、正解構造が候補プールに含まれていない`
         : `E. 候補生成: 分子式(候補${formulaIndex + 1}番目)はあるが、正解構造が候補プール(${out.candidateCount}件)に含まれていない`;
   } else if (correct.excluded) {
     stage = "ハード制約で除外された: " + correct.exclusionReasons.join(" / ");
@@ -127,6 +134,7 @@ function summarize(compound, out) {
     expectedFormula: compound.structure.molecularFormula,
     formulaLevel: out.formulaLevel,
     formulaRank: formulaIndex >= 0 ? formulaIndex + 1 : null,
+    extraFormulaRank: extraIndex >= 0 ? extraIndex + 1 : null,
     formulaCount: out.formulas.length,
     candidateCount: out.candidateCount,
     warnings: out.warnings,
@@ -183,7 +191,7 @@ async function main() {
     s.seconds = Math.round((Date.now() - started) / 1000);
     results.push(s);
     console.log(`${s.seconds}s`);
-    console.log(`  分子式: 正解${s.expectedFormula} は候補${s.formulaRank ?? "外"}/${s.formulaCount}件 (level=${s.formulaLevel}) / 候補プール${s.candidateCount}件`);
+    console.log(`  分子式: 正解${s.expectedFormula} は候補${s.formulaRank ?? (s.extraFormulaRank ? `外(補助候補${s.extraFormulaRank}番目)` : "外")}/${s.formulaCount}件 (level=${s.formulaLevel}) / 候補プール${s.candidateCount}件`);
     for (const w of s.warnings) console.log(`  ⚠ ${w}`);
     console.log(`  結果: ${s.rank != null ? `${s.rank}位 (表示${s.position}番目, 同点${s.tiedWith}件), score ${s.correctScore}` : "順位なし"} — ${s.stage}`);
     if (s.top && !s.top.isCorrect) console.log(`  1位候補: ${s.top.name.slice(0, 80)} (${s.top.formula}) score ${s.top.totalScore}`);

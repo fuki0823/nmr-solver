@@ -1,0 +1,2768 @@
+{
+  "timestamp": "2026-11-15T14:33:58.244Z",
+  "baseUrl": "http://localhost:3000",
+  "results": [
+    {
+      "id": "aminopenicillanic-acid",
+      "name": "6-アミノペニシラン酸 (6-APA)",
+      "expectedFormula": "C8H12N2O3S",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 11,
+      "candidateCount": 37,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 83,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 75,
+        "HSQC": 80
+      },
+      "correctIssues": [
+        "[13C] ¹³C化学シフト: 8本中7本を割り当て可能。割り当て先のないピーク: δ63.03",
+        "[HSQC] HSQC: 相関のある¹³C 5本中4本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます"
+      ],
+      "top": {
+        "name": "(2S,5R,6R)-6-amino-3,3-dimethyl-7-oxo-4-thia-1-azabicyclo[3.2.0]heptane-2-carboxylic acid",
+        "formula": "C8H12N2O3S",
+        "totalScore": 83,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 75,
+          "HSQC": 80
+        },
+        "isCorrect": true,
+        "smiles": "CC1(C(N2C(S1)C(C2=O)N)C(=O)O)C",
+        "issues": [
+          "[13C] ¹³C化学シフト: 8本中7本を割り当て可能。割り当て先のないピーク: δ63.03",
+          "[HSQC] HSQC: 相関のある¹³C 5本中4本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます"
+        ]
+      },
+      "bestWrong": {
+        "name": "1,3-bis(2-hydroxyethyl)-5,5-dimethylimidazolidine-2,4-dione",
+        "formula": "C9H16N2O4",
+        "totalScore": 77,
+        "scores": {
+          "MS": 80,
+          "1H": 25,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "CC1(C(=O)N(C(=O)N1CCO)CCO)C",
+        "issues": [
+          "[1H] 積分値の合計: 入力9H / 候補は炭素上14H + OH・NH等2H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造の炭素上のHのうち5個が、どのピークにも対応しません(O-CH3 / N-CH2)"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(2S,5R,6R)-6-amino-3,3-dimethyl-7-oxo-4-thia-1-azabicyclo[3.2.0]heptane-2-carboxylic acid",
+          "totalScore": 83,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(2S,5R,6R)-6-azaniumyl-3,3-dimethyl-7-oxo-4-thia-1-azabicyclo[3.2.0]heptane-2-carboxylate",
+          "totalScore": 83,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "1,3-bis(2-hydroxyethyl)-5,5-dimethylimidazolidine-2,4-dione",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[3-[3-(diaminomethylideneamino)propoxy]propyl]guanidine",
+          "totalScore": 67,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-[3-[3-(diaminomethylideneamino)propoxy]propyl]guanidine",
+          "totalScore": 67,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-(propan-2-ylamino)-3-(1,3-thiazol-2-yloxy)propan-2-ol",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3aR,4R,5R,6R,6aS)-2-(dimethylamino)-6-(hydroxymethyl)-4,5,6,6a-tetrahydro-3aH-cyclopenta[d][1,3]oxazole-4,5-diol",
+          "totalScore": 62,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "10,10-dimethyl-9-oxa-1,2,4,5-tetrazaspiro[5.5]undecane-3-thione",
+          "totalScore": 59,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-hydroxyethyl 4-methylbenzenesulfonate",
+          "totalScore": 54,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-amino-6-tert-butyl-3-methylsulfanyl-2,4-dihydrotriazin-5-one",
+          "totalScore": 53,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 42
+    },
+    {
+      "id": "artemisinin",
+      "name": "アルテミシニン (artemisinin)",
+      "expectedFormula": "C15H22O5",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 10,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(1R,4S,5R,8S,9R,12S,13R)-1,5,9-trimethyl-11,14,15,16-tetraoxatetracyclo[10.3.1.04,13.08,13]hexadecan-10-one",
+        "formula": "C15H22O5",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC1CCC2C(C(=O)OC3C24C1CCC(O3)(OO4)C)C",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(4aR,5R,8R,8aR,9aS)-5,8,9a-trihydroxy-3,5,8a-trimethyl-4,4a,6,7,8,9-hexahydrobenzo[f][1]benzofuran-2-one",
+        "formula": "C15H22O5",
+        "totalScore": 86,
+        "scores": {
+          "MS": 80,
+          "1H": 91,
+          "13C": 87,
+          "HSQC": 89
+        },
+        "smiles": "CC1=C2CC3C(CCC(C3(CC2(OC1=O)O)C)O)(C)O",
+        "issues": [
+          "[1H] 候補構造のメチル基3個のうち1個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[13C] ¹³C化学シフト: 15本中14本を割り当て可能。割り当て先のないピーク: δ12.5682",
+          "[HSQC] HSQC: 相関のある¹³C 9本中8本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H1(δ5.8676) ↔ C3(δ93.6996): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(1R,4S,5R,8S,9R,12S,13R)-1,5,9-trimethyl-11,14,15,16-tetraoxatetracyclo[10.3.1.04,13.08,13]hexadecan-10-one",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(4aR,5R,8R,8aR,9aS)-5,8,9a-trihydroxy-3,5,8a-trimethyl-4,4a,6,7,8,9-hexahydrobenzo[f][1]benzofuran-2-one",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1S,3R,7R,9R,10S,12R,14R)-12,14-dihydroxy-1,9-dimethyl-4-methylidene-6,13-dioxatricyclo[8.4.0.03,7]tetradecan-5-one",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,8-dihydroxy-3-(hydroxymethyl)-9-methyl-6-methylidene-4,5,6a,7,8,9,9a,9b-octahydro-3aH-azuleno[4,5-b]furan-2-one",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "octyl 3,4,5-trihydroxybenzoate",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-ethylhexyl 3,4,5-trihydroxybenzoate",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-(2,6-dihydroxy-6-methylheptan-2-yl)-3-hydroxybenzoic acid",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1R,6S,9R)-10-hydroxy-10-(hydroxymethyl)-2,2,6-trimethyl-7,8-dioxatricyclo[7.3.1.01,6]tridec-3-en-5-one",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2Z,4E)-5-[(1R,3S,5R,8S)-3,8-dihydroxy-1,5-dimethyl-6-oxabicyclo[3.2.1]octan-8-yl]-3-methylpenta-2,4-dienoic acid",
+          "totalScore": 64,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(hydroxymethyl)-1,5-dimethylspiro[8-oxatricyclo[7.2.1.02,7]dodec-5-ene-12,2'-oxirane]-10,11-diol",
+          "totalScore": 54,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 3
+    },
+    {
+      "id": "biotin",
+      "name": "ビオチン (biotin)",
+      "expectedFormula": "C10H16N2O3S",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 13,
+      "candidateCount": 37,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 86,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 80
+      },
+      "correctIssues": [
+        "[13C] ¹³C化学シフト: 10本中9本を割り当て可能。割り当て先のないピーク: δ186.53"
+      ],
+      "top": {
+        "name": "5-[(3aS,4S,6aR)-2-oxo-1,3,3a,4,6,6a-hexahydrothieno[3,4-d]imidazol-4-yl]pentanoic acid",
+        "formula": "C10H16N2O3S",
+        "totalScore": 86,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 80
+        },
+        "isCorrect": true,
+        "smiles": "C1C2C(C(S1)CCCCC(=O)O)NC(=O)N2",
+        "issues": [
+          "[13C] ¹³C化学シフト: 10本中9本を割り当て可能。割り当て先のないピーク: δ186.53"
+        ]
+      },
+      "bestWrong": {
+        "name": "2-[[[(3R)-3-amino-4-(2-aminocyclopropyl)butanoyl]amino]-methylamino]acetic acid",
+        "formula": "C10H20N4O3",
+        "totalScore": 78,
+        "scores": {
+          "MS": 80,
+          "1H": 73,
+          "13C": 80
+        },
+        "smiles": "CN(CC(=O)O)NC(=O)CC(CC1CC1N)N",
+        "issues": [
+          "[1H] 積分値の合計: 入力13H / 候補は炭素上14H + OH・NH等6H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造のメチル基1個のうち1個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(脂肪族 H1)",
+          "[13C] ¹³C化学シフト: 10本中9本を割り当て可能。割り当て先のないピーク: δ186.53"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "5-[(3aS,4S,6aR)-2-oxo-1,3,3a,4,6,6a-hexahydrothieno[3,4-d]imidazol-4-yl]pentanoic acid",
+          "totalScore": 86,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "2-[[[(3R)-3-amino-4-(2-aminocyclopropyl)butanoyl]amino]-methylamino]acetic acid",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[[[(3S)-3-amino-3-[2-(aminomethyl)cyclopropyl]propanoyl]amino]-methylamino]acetic acid",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5-hydroxy-2-(pentylsulfinylmethyl)pyran-4-one",
+          "totalScore": 71,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[(4-hydroxypyrrolidine-2-carbonyl)amino]-4-methylpentanoic acid",
+          "totalScore": 71,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[1-[(2S)-2-methyl-3-sulfanylpropanoyl]piperidin-4-yl]acetamide",
+          "totalScore": 71,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-methyl-4-[2-(2H-triazol-4-ylsulfanyl)ethylamino]pentan-2-ol",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(1-hydroxy-2,2,6,6-tetramethylpiperidin-4-ylidene)amino]thiourea",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3aR,4R,5R,6R,7aS)-2-(dimethylamino)-6-[(1S)-1-hydroxyethyl]-3a,4,5,6,7,7a-hexahydro-1,3-benzoxazole-4,5-diol",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-(1-ethyl-3,5,5-trimethyl-2-oxoimidazolidin-4-yl)-1-hydroxy-3-methylurea",
+          "totalScore": 65,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 42
+    },
+    {
+      "id": "caffeine",
+      "name": "カフェイン (caffeine)",
+      "expectedFormula": "C8H10N4O2",
+      "formulaLevel": "strict",
+      "formulaRank": null,
+      "extraFormulaRank": 1,
+      "formulaCount": 8,
+      "candidateCount": 35,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 83,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 55,
+        "HSQC": 100
+      },
+      "correctIssues": [
+        "[13C] ¹³Cシグナル数(5本)は候補構造の炭素環境(8種類)より3本少ないですが、候補の第四級炭素(4種類)が観測されていないとすれば説明できます",
+        "[13C] ¹³C化学シフト: 5本中4本を割り当て可能。割り当て先のないピーク: δ109.993"
+      ],
+      "top": {
+        "name": "1,3,7-trimethylpurine-2,6-dione",
+        "formula": "C8H10N4O2",
+        "totalScore": 83,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 55,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
+        "issues": [
+          "[13C] ¹³Cシグナル数(5本)は候補構造の炭素環境(8種類)より3本少ないですが、候補の第四級炭素(4種類)が観測されていないとすれば説明できます",
+          "[13C] ¹³C化学シフト: 5本中4本を割り当て可能。割り当て先のないピーク: δ109.993"
+        ]
+      },
+      "bestWrong": {
+        "name": "2-[(6-amino-7H-purin-2-yl)amino]ethanol",
+        "formula": "C7H10N6O",
+        "totalScore": 78,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 30,
+          "HSQC": 100
+        },
+        "smiles": "C1=NC2=NC(=NC(=C2N1)N)NCCO",
+        "issues": [
+          "[13C] ¹³Cシグナル数(5本)は候補構造の炭素環境(7種類)より2本少ないですが、候補の第四級炭素(4種類)が観測されていないとすれば説明できます",
+          "[13C] ¹³C化学シフト: 5本中2本を割り当て可能。割り当て先のないピーク: δ109.993, δ32.517, δ30.609"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "1,3,7-trimethylpurine-2,6-dione",
+          "totalScore": 83,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "2-[(6-amino-7H-purin-2-yl)amino]ethanol",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[(6-amino-7H-purin-8-yl)amino]ethanol",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,4-diamino-7,8-dihydro-6H-pteridine-5-carbaldehyde",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(2-methylprop-2-enoyloxy)ethanesulfonic acid",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-propyl-7H-purine-2,6-dione",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(1R,6R)-6-hydroxycyclohex-3-en-1-yl] hydrogen sulfate",
+          "totalScore": 68,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[(4-aminobenzoyl)amino]acetic acid",
+          "totalScore": 64,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-amino-3-(2-amino-2-oxoethyl)sulfinylpropanoic acid",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "methyl 5-methyl-1,1-dioxo-1,2,5-thiadiazolidine-2-carboxylate",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": true
+        }
+      ],
+      "status": "active",
+      "seconds": 31
+    },
+    {
+      "id": "camphor",
+      "name": "カンファー (camphor)",
+      "expectedFormula": "C10H16O",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 12,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 2,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "カンファー (camphor)",
+        "formula": "C10H16O",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC12C(=O)CC(C2(C)C)CC1",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "1,3,3-trimethylbicyclo[2.2.1]heptan-2-one",
+        "formula": "C10H16O",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "CC1(C2CCC(C2)(C1=O)C)C",
+        "issues": []
+      },
+      "stage": "1位だが2件と同点",
+      "candidatesTop10": [
+        {
+          "name": "カンファー (camphor)",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "1,7,7-trimethylbicyclo[2.2.1]heptan-2-one",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "1,3,3-trimethylbicyclo[2.2.1]heptan-2-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1S,5R)-4-methyl-1-propan-2-ylbicyclo[3.1.0]hexan-3-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "6,6-dimethyl-2-methylidenebicyclo[3.1.1]heptan-3-ol",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6,6-dimethyl-2-bicyclo[3.1.1]hept-2-enyl)methanol",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,6,6-trimethylcyclohexene-1-carbaldehyde",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2E,4E)-deca-2,4-dienal",
+          "totalScore": 60,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-methyl-2-propan-2-ylidenecyclohexan-1-one",
+          "totalScore": 56,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4-prop-1-en-2-ylcyclohexen-1-yl)methanol",
+          "totalScore": 46,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 2
+    },
+    {
+      "id": "cholecalciferol",
+      "name": "コレカルシフェロール (ビタミンD3)",
+      "expectedFormula": "C27H44O",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 12,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 95,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100,
+        "HMBC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(1S,3Z)-3-[(2E)-2-[(1R,3aS,7aR)-7a-methyl-1-[(2R)-6-methylheptan-2-yl]-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylidenecyclohexan-1-ol",
+        "formula": "C27H44O",
+        "totalScore": 95,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100,
+          "HMBC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC(C)CCCC(C)C1CCC2C1(CCCC2=CC=C3CC(CCC3=C)O)C",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(1S)-3-[(Z)-2-[(1R,3aR,7aR)-7a-methyl-1-[(2R)-6-methylheptan-2-yl]-1,2,3,3a,6,7-hexahydroinden-4-yl]ethenyl]-4-methylcyclohex-3-en-1-ol",
+        "formula": "C27H44O",
+        "totalScore": 94,
+        "scores": {
+          "MS": 80,
+          "1H": 95,
+          "13C": 100,
+          "HSQC": 100,
+          "HMBC": 100
+        },
+        "smiles": "CC1=C(CC(CC1)O)C=CC2=CCCC3(C2CCC3C(C)CCCC(C)C)C",
+        "issues": [
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(脂肪族 H1)"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(1S,3Z)-3-[(2E)-2-[(1R,3aS,7aR)-7a-methyl-1-[(2R)-6-methylheptan-2-yl]-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylidenecyclohexan-1-ol",
+          "totalScore": 95,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(1S)-3-[(Z)-2-[(1R,3aR,7aR)-7a-methyl-1-[(2R)-6-methylheptan-2-yl]-1,2,3,3a,6,7-hexahydroinden-4-yl]ethenyl]-4-methylcyclohex-3-en-1-ol",
+          "totalScore": 94,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,8S,9S,10R,13R,14S,17R)-10,13-dimethyl-17-[(2R)-6-methylheptan-2-yl]-2,3,8,9,11,12,14,15,16,17-decahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 92,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,8S,9S,10R,13R,14S,17R)-10,13-dimethyl-17-[(E,2R)-6-methylhept-3-en-2-yl]-2,3,4,7,8,9,11,12,14,15,16,17-dodecahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 92,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,9S,10R,13R,14R,17R)-10,13-dimethyl-17-[(2R)-6-methylheptan-2-yl]-2,3,4,9,11,12,14,15,16,17-decahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,8S,9S,10R,13R,14S,17R)-10,13-dimethyl-17-[(2R)-6-methylhept-5-en-2-yl]-2,3,4,7,8,9,11,12,14,15,16,17-dodecahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,10S,13R,14R,17R)-10,13-dimethyl-17-[(2R)-6-methylheptan-2-yl]-2,3,4,7,11,12,14,15,16,17-decahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,5S,9R,10S,13R,14R,17R)-10,13-dimethyl-17-[(2R)-6-methylhept-5-en-2-yl]-2,3,4,5,6,9,11,12,14,15,16,17-dodecahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "(3S,5S,10S,13R,14R,17R)-10,13-dimethyl-17-[(2R)-6-methylhept-5-en-2-yl]-2,3,4,5,6,7,11,12,14,15,16,17-dodecahydro-1H-cyclopenta[a]phenanthren-3-ol",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "(8S,9S,10R,13R,14S,17R)-10,13-dimethyl-17-[(2R)-6-methylheptan-2-yl]-1,2,6,7,8,9,11,12,14,15,16,17-dodecahydrocyclopenta[a]phenanthren-3-one",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": true
+        }
+      ],
+      "status": "active",
+      "seconds": 3
+    },
+    {
+      "id": "colchicine",
+      "name": "コルヒチン (colchicine)",
+      "expectedFormula": "C22H25NO6",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 9,
+      "candidateCount": 38,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "N-[(7S)-1,2,3,10-tetramethoxy-9-oxo-6,7-dihydro-5H-benzo[a]heptalen-7-yl]acetamide",
+        "formula": "C22H25NO6",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC(=O)NC1CCC2=CC(=C(C(=C2C3=CC=C(C(=O)C=C13)OC)OC)OC)OC",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "N-methyl-N-[(7S)-1,2,3,10-tetramethoxy-9-oxo-6,7-dihydro-5H-benzo[a]heptalen-7-yl]formamide",
+        "formula": "C22H25NO6",
+        "totalScore": 86,
+        "scores": {
+          "MS": 80,
+          "1H": 69,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "CN(C=O)C1CCC2=CC(=C(C(=C2C3=CC=C(C(=O)C=C13)OC)OC)OC)OC",
+        "issues": [
+          "[1H] 積分値の合計: 入力24H / 候補の総水素数25H",
+          "[1H] 候補構造のメチル基5個のうち1個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] ¹H化学シフト: 24H分中22H分を割り当て可能。割り当て先のないピーク: δ1.8469, δ1.8099",
+          "[1H] 候補構造の炭素上のHのうち3個が、どのピークにも対応しません(アルデヒド/ホルミル H1 / O-CH2)"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "N-[(7S)-1,2,3,10-tetramethoxy-9-oxo-6,7-dihydro-5H-benzo[a]heptalen-7-yl]acetamide",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "N-methyl-N-[(7S)-1,2,3,10-tetramethoxy-9-oxo-6,7-dihydro-5H-benzo[a]heptalen-7-yl]formamide",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-methyl-2-[4-(3-pyrrolidin-1-ylpropoxy)phenyl]-1,4lambda6-benzoxathiine 4,4-dioxide",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(3,4-dimethoxyphenyl)-N-[[4-(4-methoxyphenyl)oxan-4-yl]methyl]acetamide",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "ethyl 2-[[(E)-3-(4-methoxyphenyl)prop-2-enoyl]amino]-6-methyl-4,5,6,7-tetrahydro-1-benzothiophene-3-carboxylate",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[2-oxo-2-(3-phenylpropylamino)ethyl] 3-methoxy-4-(2-methylpropoxy)benzoate",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-[5-(4-phenylpiperazin-1-yl)pentyl]benzo[cd]indol-2-one",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(E)-N-[2-(4-hydroxyphenyl)ethyl]-3-(4-methoxy-3-pentylsulfanylphenyl)prop-2-enamide",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(1,1-dioxo-2,3-dihydro-1-benzothiophen-5-yl)-N-[[(1R)-5-methoxy-1,2,3,4-tetrahydronaphthalen-1-yl]methyl]-N-methylethanamine",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4-cyclopropyl-2,3-dihydroquinoxalin-1-yl)-[4-(2,5-dimethylphenoxy)-3-pyridinyl]methanone",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 35
+    },
+    {
+      "id": "cortisone",
+      "name": "コルチゾン (cortisone)",
+      "expectedFormula": "C21H28O5",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 6,
+      "candidateCount": 34,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 90,
+        "HSQC": 83,
+        "HMBC": 100
+      },
+      "correctIssues": [
+        "[13C] ¹³C化学シフト: 21本中20本を割り当て可能。割り当て先のないピーク: δ169.317",
+        "[HSQC] HSQC: 相関のある¹³C 6本中5本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+        "[HSQC] H6(δ2.148) ↔ C8(δ62.897): 典型的な範囲から少し外れるCHでのみ説明できます"
+      ],
+      "top": {
+        "name": "(8S,9S,10R,13S,14S,17R)-17-hydroxy-17-(2-hydroxyacetyl)-10,13-dimethyl-1,2,6,7,8,9,12,14,15,16-decahydrocyclopenta[a]phenanthrene-3,11-dione",
+        "formula": "C21H28O5",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 90,
+          "HSQC": 83,
+          "HMBC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC12CCC(=O)C=C1CCC3C2C(=O)CC4(C3CCC4(C(=O)CO)O)C",
+        "issues": [
+          "[13C] ¹³C化学シフト: 21本中20本を割り当て可能。割り当て先のないピーク: δ169.317",
+          "[HSQC] HSQC: 相関のある¹³C 6本中5本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H6(δ2.148) ↔ C8(δ62.897): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "bestWrong": {
+        "name": "(8S,9S,10R,11S,13R,14S,17S)-11-hydroxy-17-(2-hydroxyacetyl)-10-methyl-3-oxo-1,2,6,7,8,9,11,12,14,15,16,17-dodecahydrocyclopenta[a]phenanthrene-13-carbaldehyde",
+        "formula": "C21H28O5",
+        "totalScore": 88,
+        "scores": {
+          "MS": 80,
+          "1H": 86,
+          "13C": 90,
+          "HSQC": 83,
+          "HMBC": 100
+        },
+        "smiles": "CC12CCC(=O)C=C1CCC3C2C(CC4(C3CCC4C(=O)CO)C=O)O",
+        "issues": [
+          "[1H] ¹H化学シフト: 27H分中26H分を割り当て可能。割り当て先のないピーク: δ0.601",
+          "[1H] 候補構造の炭素上のHのうち2個が、どのピークにも対応しません(O-CH1 / アルデヒド/ホルミル H1)",
+          "[13C] ¹³C化学シフト: 21本中20本を割り当て可能。割り当て先のないピーク: δ169.317",
+          "[HSQC] HSQC: 相関のある¹³C 6本中5本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H6(δ2.148) ↔ C8(δ62.897): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(8S,9S,10R,13S,14S,17R)-17-hydroxy-17-(2-hydroxyacetyl)-10,13-dimethyl-1,2,6,7,8,9,12,14,15,16-decahydrocyclopenta[a]phenanthrene-3,11-dione",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(8S,9S,10R,11S,13R,14S,17S)-11-hydroxy-17-(2-hydroxyacetyl)-10-methyl-3-oxo-1,2,6,7,8,9,11,12,14,15,16,17-dodecahydrocyclopenta[a]phenanthrene-13-carbaldehyde",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(8S,9S,10R,11S,13S,14S,17R)-11,17-dihydroxy-17-(2-hydroxyacetyl)-10,13-dimethyl-7,8,9,11,12,14,15,16-octahydro-6H-cyclopenta[a]phenanthren-3-one",
+          "totalScore": 85,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "S-methyl 2-[(10S,13S)-13-methyl-3,17-dioxo-2,6,7,8,9,11,12,14,15,16-decahydro-1H-cyclopenta[a]phenanthren-10-yl]ethanethioate",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5E)-5-[(3aS,4R,5R,6aS)-5-hydroxy-4-[(E,3S)-3-hydroxy-4-methyloct-1-en-6-ynyl]-3,3a,4,5,6,6a-hexahydro-1H-pentalen-2-ylidene]pentanoic acid",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[4-[(5-cyclohexyl-1H-pyrazol-4-yl)methyl]-1-(3-methylbut-2-enyl)piperazin-2-yl]ethanol",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6R)-6-[(1R,3aS,4E,7aR)-7a-methyl-4-[2-(tetrazol-1-yl)ethylidene]-2,3,3a,5,6,7-hexahydro-1H-inden-1-yl]-2-methylheptan-2-ol",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6R)-6-[(1R,3aS,4E,7aR)-7a-methyl-4-[2-(tetrazol-2-yl)ethylidene]-2,3,3a,5,6,7-hexahydro-1H-inden-1-yl]-2-methylheptan-2-ol",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[(E)-[(E)-3-[(1R,3aS,5S,7aR)-5-cyclohexyl-3a-hydroxy-7a-methyl-2,3,4,5,6,7-hexahydro-1H-inden-1-yl]-2-methylprop-2-enylidene]amino]guanidine",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1S,13R)-10-(cyclopropylmethyl)-1,13-dimethyl-N-(4-methylphenyl)-10-azatricyclo[7.3.1.02,7]trideca-2(7),3,5-trien-4-amine",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 22
+    },
+    {
+      "id": "daunorubicin-user-1",
+      "name": "ダウノルビシン (daunorubicin) — ¹³Cデータ1",
+      "expectedFormula": "C27H29NO10",
+      "formulaLevel": "strict",
+      "formulaRank": 2,
+      "extraFormulaRank": null,
+      "formulaCount": 4,
+      "candidateCount": 36,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 1,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(7S,9S)-9-acetyl-7-[(2R,4S,5S,6S)-4-amino-5-hydroxy-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+        "formula": "C27H29NO10",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC1C(C(CC(O1)OC2CC(CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)C)O)N)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(7S,9S)-7-[(2S,4R,6S)-4-amino-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-9-(2-hydroxyacetyl)-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+        "formula": "C27H29NO10",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "smiles": "CC1CC(CC(O1)OC2CC(CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)CO)O)N",
+        "issues": []
+      },
+      "stage": "1位だが1件と同点",
+      "candidatesTop10": [
+        {
+          "name": "(7S,9S)-9-acetyl-7-[(2R,4S,5S,6S)-4-amino-5-hydroxy-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(7S,9S)-7-[(2S,4R,6S)-4-amino-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-9-(2-hydroxyacetyl)-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4,8,12,22,24-pentahydroxy-10-methoxy-1,12-dimethyl-23-(methylamino)-20,25-dioxahexacyclo[19.3.1.02,19.05,18.07,16.09,14]pentacosa-2,4,7(16),8,14,18-hexaene-6,17-dione",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4aS,5aR,12aR)-1,10,11,12a-tetrahydroxy-3,12-dioxo-7-[2-[4-(2-oxopropyl)phenyl]ethynyl]-4a,5,5a,6-tetrahydro-4H-tetracene-2-carboxamide",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-[2-[4-(4-cyclobutyl-2,5-dioxoimidazolidin-4-yl)phenyl]ethynyl]-5-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]imidazolidine-2,4-dione",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "methyl (15S,16R,18R)-16-hydroxy-10,23-bis(hydroxymethyl)-15-methyl-3-oxo-28-oxa-4,14,19-triazaoctacyclo[12.11.2.115,18.02,6.07,27.08,13.019,26.020,25]octacosa-1,6,8(13),9,11,20(25),21,23,26-nonaene-16-carboxylate",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[2-[1-[5-[2-[(4R)-4-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]-2,5-dioxoimidazolidin-4-yl]ethynyl]-2-pyridinyl]imidazol-4-yl]ethyl]acetamide",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-[2-[6-[2-(dimethylamino)pyrimidin-5-yl]-3-methoxy-2-pyridinyl]ethynyl]-5-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]imidazolidine-2,4-dione",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(5S,5aR,8aR,9R)-8-oxo-9-(3,4,5-trimethoxyphenyl)-5a,6,8a,9-tetrahydro-5H-[2]benzofuro[5,6-f][1,3]benzodioxol-5-yl] morpholine-4-carboxylate",
+          "totalScore": 64,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[5-[3-[2-(4-benzoylpiperazin-1-yl)-2-oxoacetyl]-4-methoxy-1H-pyrrolo[2,3-c]pyridin-7-yl]pyrazin-2-yl]acetamide",
+          "totalScore": 61,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 13
+    },
+    {
+      "id": "daunorubicin-user-2",
+      "name": "ダウノルビシン (daunorubicin) — ¹³Cデータ2",
+      "expectedFormula": "C27H29NO10",
+      "formulaLevel": "strict",
+      "formulaRank": 2,
+      "extraFormulaRank": null,
+      "formulaCount": 4,
+      "candidateCount": 36,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 1,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(7S,9S)-9-acetyl-7-[(2R,4S,5S,6S)-4-amino-5-hydroxy-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+        "formula": "C27H29NO10",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC1C(C(CC(O1)OC2CC(CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)C)O)N)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(7S,9S)-7-[(2S,4R,6S)-4-amino-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-9-(2-hydroxyacetyl)-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+        "formula": "C27H29NO10",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "smiles": "CC1CC(CC(O1)OC2CC(CC3=C2C(=C4C(=C3O)C(=O)C5=C(C4=O)C(=CC=C5)OC)O)(C(=O)CO)O)N",
+        "issues": []
+      },
+      "stage": "1位だが1件と同点",
+      "candidatesTop10": [
+        {
+          "name": "(7S,9S)-9-acetyl-7-[(2R,4S,5S,6S)-4-amino-5-hydroxy-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(7S,9S)-7-[(2S,4R,6S)-4-amino-6-methyloxan-2-yl]oxy-6,9,11-trihydroxy-9-(2-hydroxyacetyl)-4-methoxy-8,10-dihydro-7H-tetracene-5,12-dione",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4,8,12,22,24-pentahydroxy-10-methoxy-1,12-dimethyl-23-(methylamino)-20,25-dioxahexacyclo[19.3.1.02,19.05,18.07,16.09,14]pentacosa-2,4,7(16),8,14,18-hexaene-6,17-dione",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4aS,5aR,12aR)-1,10,11,12a-tetrahydroxy-3,12-dioxo-7-[2-[4-(2-oxopropyl)phenyl]ethynyl]-4a,5,5a,6-tetrahydro-4H-tetracene-2-carboxamide",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-[2-[4-(4-cyclobutyl-2,5-dioxoimidazolidin-4-yl)phenyl]ethynyl]-5-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]imidazolidine-2,4-dione",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "methyl (15S,16R,18R)-16-hydroxy-10,23-bis(hydroxymethyl)-15-methyl-3-oxo-28-oxa-4,14,19-triazaoctacyclo[12.11.2.115,18.02,6.07,27.08,13.019,26.020,25]octacosa-1,6,8(13),9,11,20(25),21,23,26-nonaene-16-carboxylate",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[2-[1-[5-[2-[(4R)-4-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]-2,5-dioxoimidazolidin-4-yl]ethynyl]-2-pyridinyl]imidazol-4-yl]ethyl]acetamide",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-[2-[6-[2-(dimethylamino)pyrimidin-5-yl]-3-methoxy-2-pyridinyl]ethynyl]-5-[(5-methoxy-3-oxo-1H-isoindol-2-yl)methyl]imidazolidine-2,4-dione",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(5S,5aR,8aR,9R)-8-oxo-9-(3,4,5-trimethoxyphenyl)-5a,6,8a,9-tetrahydro-5H-[2]benzofuro[5,6-f][1,3]benzodioxol-5-yl] morpholine-4-carboxylate",
+          "totalScore": 64,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[5-[3-[2-(4-benzoylpiperazin-1-yl)-2-oxoacetyl]-4-methoxy-1H-pyrrolo[2,3-c]pyridin-7-yl]pyrazin-2-yl]acetamide",
+          "totalScore": 61,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 3
+    },
+    {
+      "id": "epicatechin",
+      "name": "(-)-エピカテキン (epicatechin)",
+      "expectedFormula": "C15H14O6",
+      "formulaLevel": "strict",
+      "formulaRank": 2,
+      "extraFormulaRank": null,
+      "formulaCount": 5,
+      "candidateCount": 36,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(2R,3S)-2-(3,4-dihydroxyphenyl)-3,4-dihydro-2H-chromene-3,5,7-triol",
+        "formula": "C15H14O6",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "C1C(C(OC2=CC(=CC(=C21)O)O)C3=CC(=C(C=C3)O)O)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(3R,4R,5S)-4-acetamido-5-amino-3-phenoxycyclohexene-1-carboxylic acid",
+        "formula": "C15H18N2O4",
+        "totalScore": 71,
+        "scores": {
+          "MS": 80,
+          "1H": 26,
+          "13C": 73,
+          "HSQC": 100
+        },
+        "smiles": "CC(=O)NC1C(CC(=CC1OC2=CC=CC=C2)C(=O)O)N",
+        "issues": [
+          "[1H] 積分値の合計: 入力9H / 候補は炭素上14H + OH・NH等4H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造のメチル基1個のうち1個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] 候補構造の炭素上のHのうち5個が、どのピークにも対応しません(ベンジル/アリル/α-カルボニル H3 / N-CH1 / 芳香族 H1)",
+          "[13C] ¹³C化学シフト: 15本中13本を割り当て可能。割り当て先のないピーク: δ94.8733, δ93.9069"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(2R,3S)-2-(3,4-dihydroxyphenyl)-3,4-dihydro-2H-chromene-3,5,7-triol",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(3R,4R,5S)-4-acetamido-5-amino-3-phenoxycyclohexene-1-carboxylic acid",
+          "totalScore": 71,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "ethyl 4-(4-methoxyphenyl)-6-methyl-2-oxo-3,4-dihydro-1H-pyrimidine-5-carboxylate",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[(E)-3-(2,4-dimethoxyphenyl)prop-2-enoyl]piperazin-2-one",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "ethyl 4-(4-methoxyphenyl)-5-methyl-2-oxo-3,4-dihydro-1H-pyrimidine-6-carboxylate",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3,5-dimethylpyrazol-1-yl)-(3,4,5-trimethoxyphenyl)methanone",
+          "totalScore": 69,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5,8-dihydroxy-2-methoxy-6-methyl-7-(2-oxopropyl)naphthalene-1,4-dione",
+          "totalScore": 54,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5-[(6-ethynyl-7H-purin-2-yl)amino]-1,3-dihydroindol-2-one",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "7-[(6-ethynyl-7H-purin-2-yl)amino]-1,3-dihydroindol-2-one",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "3,9-dihydroxy-6H-chromeno[4,3-b]quinoline-7-carbonitrile",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": true
+        }
+      ],
+      "status": "active",
+      "seconds": 15
+    },
+    {
+      "id": "erythromycin",
+      "name": "エリスロマイシン (erythromycin)",
+      "expectedFormula": "C37H67NO13",
+      "formulaLevel": "strict",
+      "formulaRank": 13,
+      "extraFormulaRank": null,
+      "formulaCount": 29,
+      "candidateCount": 34,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 88,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [
+        "[1H] 候補構造のメチル基13個のうち3個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+        "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(脂肪族 H1)"
+      ],
+      "top": {
+        "name": "(3R,4S,5S,6R,7R,9R,11R,12R,13S,14R)-6-[(2S,3R,4S,6R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-14-ethyl-7,12,13-trihydroxy-4-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-3,5,7,9,11,13-hexamethyl-oxacyclotetradecane-2,10-dione",
+        "formula": "C37H67NO13",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 88,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CCC1C(C(C(C(=O)C(CC(C(C(C(C(C(=O)O1)C)OC2CC(C(C(O2)C)O)(C)OC)C)OC3C(C(CC(O3)C)N(C)C)O)(C)O)C)C)O)(C)O",
+        "issues": [
+          "[1H] 候補構造のメチル基13個のうち3個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(脂肪族 H1)"
+        ]
+      },
+      "bestWrong": {
+        "name": "(4S,9S,10R,11R,13R)-10-[(3R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-11-hydroxy-8-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-1,7,9,11,13-pentamethyl-4-(2-methylsulfanylethyl)-1,5-diazacyclotetradecane-2,6-dione",
+        "formula": "C36H67N3O10S",
+        "totalScore": 90,
+        "scores": {
+          "MS": 80,
+          "1H": 91,
+          "13C": 94,
+          "HSQC": 100
+        },
+        "smiles": "CC1CC(C(C(O1)OC2C(C(C(C(=O)NC(CC(=O)N(CC(CC2(C)O)C)C)CCSC)C)OC3CC(C(C(O3)C)O)(C)OC)C)O)N(C)C",
+        "issues": [
+          "[1H] 積分値の合計: 入力62H / 候補は炭素上63H + OH・NH等4H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造のメチル基12個のうち2個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(脂肪族 H1)",
+          "[13C] ¹³C化学シフト: 36本中35本を割り当て可能。割り当て先のないピーク: δ11.153"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(3R,4S,5S,6R,7R,9R,11R,12R,13S,14R)-6-[(2S,3R,4S,6R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-14-ethyl-7,12,13-trihydroxy-4-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-3,5,7,9,11,13-hexamethyl-oxacyclotetradecane-2,10-dione",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(4S,9S,10R,11R,13R)-10-[(3R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-11-hydroxy-8-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-1,7,9,11,13-pentamethyl-4-(2-methylsulfanylethyl)-1,5-diazacyclotetradecane-2,6-dione",
+          "totalScore": 90,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3R,4S,5S,6R,7R,9R,11R,12R,13S,14R)-14-ethyl-12,13-dihydroxy-4-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-6-[(2S,3R,4S,6R)-3-hydroxy-6-methyl-4-(methylamino)oxan-2-yl]oxy-7-methoxy-3,5,7,9,11,13-hexamethyl-oxacyclotetradecane-2,10-dione",
+          "totalScore": 90,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(2R,3S,4R,5R,8R,10R,11R,12S,13S,14R)-11-[(2S,3R,4S,6R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-2-ethyl-3,4-dihydroxy-10-methoxy-3,5,8,10,12,14-hexamethyl-7,15-dioxo-1-oxa-6-azacyclopentadec-13-yl] 3-[2-hydroxyethyl(methyl)amino]propanoate",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "6-[4-[3-hydroxy-3-[[6-hydroxy-5-(1-hydroxyethylamino)-6-[[3-hydroxy-3-[[3-hydroxy-3-[[3-hydroxy-3-(propylamino)propyl]amino]propyl]amino]propyl]amino]hexyl]amino]propyl]cyclohexyl]-3,5,6,7,8,8a-hexahydro-1H-[1,3]oxazolo[3,4-a]pyridin-1-ol",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3S,6R,7S,8R,10R,11R,12S,13S,14R)-3-(aminomethyl)-11-[(2S,3R,4S,6R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-7-hydroxy-13-[(2R,4R,5S,6S)-5-hydroxy-4-methoxy-4,6-dimethyloxan-2-yl]oxy-10-methoxy-4,6,8,10,12,14-hexamethyl-1-oxa-4-azacyclopentadecan-15-one",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "ethyl 3-[3-[(2R,3S,4R,5R,8R,10R,11R,12S,13S,14R)-11-[(2S,3R,4S,6R)-4-(dimethylamino)-3-hydroxy-6-methyloxan-2-yl]oxy-2-ethyl-3,4,10,13-tetrahydroxy-3,5,8,10,12,14-hexamethyl-15-oxo-1-oxa-6-azacyclopentadec-6-yl]propylamino]propanoate",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "tert-butyl N-[3,5-dihydroxy-2-[2-hydroxy-3-[3-[[2-hydroxy-4-[(2-methylpropan-2-yl)oxycarbonylamino]butyl]amino]-6-propyloxan-2-yl]-4,6-dimethylcyclohexyl]oxy-6-(hydroxymethyl)oxan-4-yl]carbamate",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "tert-butyl 2-[[2-[[3-[2-[2-(2-aminoethoxy)ethoxy]ethoxy]-1-hydroxypropyl]amino]-6-[(2-methylpropan-2-yl)oxycarbonylamino]hexanoyl]amino]-6-(hexanoylamino)hexanoate",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "18-[[(2S)-1,1-dihydroxy-5-oxo-5-[2-[2-[2-oxo-2-[2-[2-(2-oxopropoxy)ethoxy]ethylamino]ethoxy]ethoxy]ethylamino]pentan-2-yl]amino]-18-oxooctadecanoic acid",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 65
+    },
+    {
+      "id": "ethyl-acetate",
+      "name": "酢酸エチル (ethyl acetate)",
+      "expectedFormula": "C4H8O2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 16,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "酢酸エチル (ethyl acetate)",
+        "formula": "C4H8O2",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC(=O)OCC",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "propyl formate",
+        "formula": "C4H8O2",
+        "totalScore": 84,
+        "scores": {
+          "MS": 80,
+          "1H": 75,
+          "13C": 100
+        },
+        "smiles": "CCCOC=O",
+        "issues": [
+          "[1H] ¹H化学シフト: 8H分中7H分を割り当て可能。割り当て先のないピーク: δ1.25",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(アルデヒド/ホルミル H1)"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "酢酸エチル (ethyl acetate)",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "ethyl acetate",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "propyl formate",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "propan-2-yl formate",
+          "totalScore": 84,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-hydroxybutan-2-one",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "methyl propanoate",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-methylpropanoic acid",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "butanoic acid",
+          "totalScore": 63,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-hydroxybutan-2-one",
+          "totalScore": 63,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-hydroxybutan-2-one",
+          "totalScore": 63,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 3
+    },
+    {
+      "id": "glutathione",
+      "name": "グルタチオン(還元型) (glutathione)",
+      "expectedFormula": "C10H17N3O6S",
+      "formulaLevel": "strict",
+      "formulaRank": 4,
+      "extraFormulaRank": null,
+      "formulaCount": 21,
+      "candidateCount": 37,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 95,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100,
+        "HMBC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(2S)-2-amino-5-[[(2R)-1-(carboxymethylamino)-1-oxo-3-sulfanylpropan-2-yl]amino]-5-oxopentanoic acid",
+        "formula": "C10H17N3O6S",
+        "totalScore": 95,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100,
+          "HMBC": 100
+        },
+        "isCorrect": true,
+        "smiles": "C(CC(=O)NC(CS)C(=O)NCC(=O)O)C(C(=O)O)N",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(2R)-2-acetamido-3-(1,4-dimethoxy-1,4-dioxobutan-2-yl)sulfanylpropanoic acid",
+        "formula": "C11H17NO7S",
+        "totalScore": 82,
+        "scores": {
+          "MS": 80,
+          "1H": 25,
+          "13C": 98,
+          "HSQC": 100,
+          "HMBC": 100
+        },
+        "smiles": "CC(=O)NC(CSC(CC(=O)OC)C(=O)OC)C(=O)O",
+        "issues": [
+          "[1H] 積分値の合計: 入力10H / 候補は炭素上15H + OH・NH等2H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造のメチル基3個のうち2個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] 候補構造の炭素上のHのうち5個が、どのピークにも対応しません(S-CH等1 / ベンジル/アリル/α-カルボニル H2 / O-CH2)",
+          "[13C] ¹³Cシグナル数(10本)は候補構造の炭素環境(11種類)より1本少ないですが、候補の第四級炭素(4種類)が観測されていないとすれば説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(2S)-2-amino-5-[[(2R)-1-(carboxymethylamino)-1-oxo-3-sulfanylpropan-2-yl]amino]-5-oxopentanoic acid",
+          "totalScore": 95,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(2R)-2-[[(4S)-4-azaniumyl-4-carboxybutanoyl]amino]-3-(carboxymethylamino)-3-oxopropane-1-thiolate",
+          "totalScore": 95,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(2S)-2-azaniumyl-5-[[(2R)-1-(carboxymethylamino)-1-oxo-3-sulfanylpropan-2-yl]amino]-5-oxopentanoate",
+          "totalScore": 95,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(2R)-2-acetamido-3-(1,4-dimethoxy-1,4-dioxobutan-2-yl)sulfanylpropanoic acid",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1,3-dimethyl-7-(2-morpholin-4-yl-2-oxoethyl)purine-2,6-dione",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2S)-2-[[(2S)-2-[[(2S)-2-amino-4-methylsulfanylbutanoyl]amino]propanoyl]amino]-3-hydroxypropanoic acid",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5R)-5-(azidomethyl)-3-(3-oxo-4H-pyrazino[2,3-b][1,4]thiazin-6-yl)-1,3-oxazolidin-2-one",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-methylsulfonyl-3-(oxolan-2-ylmethylcarbamoyl)-1-propan-2-ylurea",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[1-methoxypropan-2-yl-(4-methylthiophen-3-yl)amino]-2-oxoethanesulfonic acid",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-[(2R,3R,4R,5S,6R)-4,5-dihydroxy-6-(hydroxymethyl)-2-propoxyoxan-3-yl]-1-methyl-1-nitrosourea",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 57
+    },
+    {
+      "id": "luteolin",
+      "name": "ルテオリン (luteolin)",
+      "expectedFormula": "C15H10O6",
+      "formulaLevel": "strict",
+      "formulaRank": 2,
+      "extraFormulaRank": null,
+      "formulaCount": 5,
+      "candidateCount": 30,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 3,
+      "tiedWith": 9,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "13-amino-8-oxo-11,12,16-triazatetracyclo[7.7.0.02,7.011,15]hexadeca-1(16),2,4,6,9,12,14-heptaene-10,14-dicarbonitrile",
+        "formula": "C15H6N6O",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": false,
+        "smiles": "C1=CC=C2C(=C1)C3=NC4=C(C(=NN4C(=C3C2=O)C#N)N)C#N",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "13-amino-8-oxo-11,12,16-triazatetracyclo[7.7.0.02,7.011,15]hexadeca-1(16),2,4,6,9,12,14-heptaene-10,14-dicarbonitrile",
+        "formula": "C15H6N6O",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "C1=CC=C2C(=C1)C3=NC4=C(C(=NN4C(=C3C2=O)C#N)N)C#N",
+        "issues": []
+      },
+      "stage": "1位だが9件と同点",
+      "candidatesTop10": [
+        {
+          "name": "13-amino-8-oxo-11,12,16-triazatetracyclo[7.7.0.02,7.011,15]hexadeca-1(16),2,4,6,9,12,14-heptaene-10,14-dicarbonitrile",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-(4-cyanophenyl)-5-oxo-4H-imidazo[4,5-b]pyridine-6,7-dicarbonitrile",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(3,4-dihydroxyphenyl)-5,7-dihydroxychromen-4-one",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "3,5,7-trihydroxy-2-(4-hydroxyphenyl)chromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(3,4-dihydroxyphenyl)-3,7-dihydroxychromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(2,4-dihydroxyphenyl)-5,7-dihydroxychromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5,6,7-trihydroxy-2-(4-hydroxyphenyl)chromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-(2,4-dihydroxyphenyl)-5,7-dihydroxychromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,10-dioxo-2,9-diazatetracyclo[6.6.2.04,16.011,15]hexadeca-1(14),4(16),5,7,11(15),12-hexaene-6,13-dicarbonitrile",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "12-oxo-11,16-dioxatetracyclo[8.7.0.02,7.013,17]heptadeca-1(10),2,4,6,8,13(17),14-heptaene-14,15-dicarbonitrile",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 21
+    },
+    {
+      "id": "maleic-anhydride",
+      "name": "無水マレイン酸 (maleic anhydride)",
+      "expectedFormula": "C4H2O3",
+      "formulaLevel": "strict",
+      "formulaRank": 4,
+      "extraFormulaRank": null,
+      "formulaCount": 5,
+      "candidateCount": 29,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 3,
+      "tiedWith": 2,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(E)-3-nitroprop-2-enenitrile",
+        "formula": "C3H2N2O2",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 98
+        },
+        "isCorrect": false,
+        "smiles": "C(=C[N+](=O)[O-])C#N",
+        "issues": [
+          "[13C] ¹³Cシグナル数(2本)は候補構造の炭素環境(3種類)より1本少ないですが、候補の第四級炭素(1種類)が観測されていないとすれば説明できます"
+        ]
+      },
+      "bestWrong": {
+        "name": "(E)-3-nitroprop-2-enenitrile",
+        "formula": "C3H2N2O2",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 98
+        },
+        "smiles": "C(=C[N+](=O)[O-])C#N",
+        "issues": [
+          "[13C] ¹³Cシグナル数(2本)は候補構造の炭素環境(3種類)より1本少ないですが、候補の第四級炭素(1種類)が観測されていないとすれば説明できます"
+        ]
+      },
+      "stage": "1位だが2件と同点",
+      "candidatesTop10": [
+        {
+          "name": "(E)-3-nitroprop-2-enenitrile",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1,3,4-oxadiazin-2-one",
+          "totalScore": 91,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "furan-2,5-dione",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "3-hydroxycyclobut-3-ene-1,2-dione",
+          "totalScore": 90,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-oxidotetrazin-1-ium",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "imidazole-2,4-dione",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1H-pyrazole-4,5-dione",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(2-hydroxyethynoxy)ethynol",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5-methyl-1,2-oxazol-3-amine",
+          "totalScore": 70,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1H-imidazol-5-ylmethanol",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 15
+    },
+    {
+      "id": "neohesperidin",
+      "name": "ネオヘスペリジン (neohesperidin)",
+      "expectedFormula": "C28H34O15",
+      "formulaLevel": "strict",
+      "formulaRank": 10,
+      "extraFormulaRank": null,
+      "formulaCount": 51,
+      "candidateCount": 38,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 2,
+      "tiedWith": 1,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(2S)-5-hydroxy-2-(3-hydroxy-4-methoxyphenyl)-7-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-[[(2R,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxymethyl]oxan-2-yl]oxy-2,3-dihydrochromen-4-one",
+        "formula": "C28H34O15",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": false,
+        "smiles": "CC1C(C(C(C(O1)OCC2C(C(C(C(O2)OC3=CC(=C4C(=O)CC(OC4=C3)C5=CC(=C(C=C5)OC)O)O)O)O)O)O)O)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(2S)-5-hydroxy-2-(3-hydroxy-4-methoxyphenyl)-7-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-[[(2R,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxymethyl]oxan-2-yl]oxy-2,3-dihydrochromen-4-one",
+        "formula": "C28H34O15",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "CC1C(C(C(C(O1)OCC2C(C(C(C(O2)OC3=CC(=C4C(=O)CC(OC4=C3)C5=CC(=C(C=C5)OC)O)O)O)O)O)O)O)O",
+        "issues": []
+      },
+      "stage": "1位だが1件と同点",
+      "candidatesTop10": [
+        {
+          "name": "(2S)-5-hydroxy-2-(3-hydroxy-4-methoxyphenyl)-7-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-[[(2R,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxymethyl]oxan-2-yl]oxy-2,3-dihydrochromen-4-one",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2S)-7-[(2S,3R,4S,5S,6R)-4,5-dihydroxy-6-(hydroxymethyl)-3-[(2S,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxyoxan-2-yl]oxy-5-hydroxy-2-(3-hydroxy-4-methoxyphenyl)-2,3-dihydrochromen-4-one",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "trimethyl (1S,9R,15S)-14-(4-nitrophenyl)sulfonyl-8-prop-2-enyl-8,12,14-triazatetracyclo[7.7.0.01,13.02,7]hexadeca-2,4,6,10,12-pentaene-10,11,15-tricarboxylate",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(2R,3R,4S,5R,6S)-4,5-diacetyloxy-6-naphthalen-2-ylsulfanyl-3-[(2S,3R,4S,5R,6R)-3,4,5-trihydroxy-6-(hydroxymethyl)oxan-2-yl]oxyoxan-2-yl]methyl acetate",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[1-[(2S,3S,5R)-2-(hydroxymethyl)-5-(5-methyl-2,4-dioxopyrimidin-1-yl)oxolan-3-yl]triazol-4-yl]methyl 2-(5,11-dioxoindeno[1,2-c]isoquinolin-6-yl)acetate",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-[(1S)-1-cyclopropylethyl]-6-[4-methyl-2-[[6-(2-oxo-1,3-oxazolidin-3-yl)-2-pyridinyl]amino]-1,3-thiazol-5-yl]-N-(oxetan-3-yl)-3-oxo-1H-isoindole-4-sulfonamide",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6R,7R)-3-(acetyloxymethyl)-7-[[2-[1-(4-methoxyphenyl)-2-(4-nitrophenyl)-4-oxoazetidin-3-yl]acetyl]amino]-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylic acid",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4-nitrophenyl)methyl 2-[(2S,3S)-3-[[2-[(4-ethyl-2,3-dioxopiperazine-1-carbonyl)amino]-2-phenylacetyl]amino]-2-methyl-4-oxoazetidin-1-yl]oxyacetate",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "ethyl 3-[7-(hydroxymethyl)-4-[(2S,3R,4S,5S,6R)-3,4,5-triacetyloxy-6-(acetyloxymethyl)oxan-2-yl]oxy-1-benzothiophen-2-yl]propanoate",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-butoxy-6-[6,7-dimethoxy-4-(methoxymethoxy)-3-oxo-1H-2-benzothiophen-5-yl]-4,5-dimethoxy-7-(methoxymethoxy)-3H-2-benzothiophen-1-one",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 69
+    },
+    {
+      "id": "nicotine",
+      "name": "ニコチン (nicotine)",
+      "expectedFormula": "C10H14N2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 2,
+      "candidateCount": 28,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 1,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "ニコチン (nicotine)",
+        "formula": "C10H14N2",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CN1CCCC1c1cccnc1",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "3-(pyrrolidin-1-ylmethyl)pyridine",
+        "formula": "C10H14N2",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "smiles": "C1CCN(C1)CC2=CN=CC=C2",
+        "issues": []
+      },
+      "stage": "1位だが1件と同点",
+      "candidatesTop10": [
+        {
+          "name": "ニコチン (nicotine)",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "3-[(2S)-1-methylpyrrolidin-2-yl]pyridine",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "3-(pyrrolidin-1-ylmethyl)pyridine",
+          "totalScore": 93,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-pyrrolidin-1-ylaniline",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(2,3-dihydro-1H-indol-3-yl)ethanamine",
+          "totalScore": 89,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3-[(2S)-piperidin-2-yl]pyridine",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-(cyclopropylmethyl)-4-methoxybenzene",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-phenylpiperazine",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "6-methoxy-1,2,3,4-tetrahydronaphthalene",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(E)-N-methyl-4-pyridin-3-ylbut-3-en-1-amine",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 5
+    },
+    {
+      "id": "parthenolide",
+      "name": "パルテノリド (parthenolide)",
+      "expectedFormula": "C15H20O3",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 22,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 89,
+      "correctScores": {
+        "MS": 80,
+        "1H": 90,
+        "13C": 100,
+        "HSQC": 89
+      },
+      "correctIssues": [
+        "[1H] ¹H化学シフト: 20H分中19H分を割り当て可能。割り当て先のないピーク: δ1.117",
+        "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(O-CH1)",
+        "[HSQC] HSQC: 相関のある¹³C 9本中8本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+        "[HSQC] H6(δ2.9128) ↔ C7(δ65.098): 典型的な範囲から少し外れるCHでのみ説明できます"
+      ],
+      "top": {
+        "name": "(1S,2S,4R,7E,11S)-4,8-dimethyl-12-methylidene-3,14-dioxatricyclo[9.3.0.02,4]tetradec-7-en-13-one",
+        "formula": "C15H20O3",
+        "totalScore": 89,
+        "scores": {
+          "MS": 80,
+          "1H": 90,
+          "13C": 100,
+          "HSQC": 89
+        },
+        "isCorrect": true,
+        "smiles": "CC1=CCCC2(C(O2)C3C(CC1)C(=C)C(=O)O3)C",
+        "issues": [
+          "[1H] ¹H化学シフト: 20H分中19H分を割り当て可能。割り当て先のないピーク: δ1.117",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(O-CH1)",
+          "[HSQC] HSQC: 相関のある¹³C 9本中8本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H6(δ2.9128) ↔ C7(δ65.098): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "bestWrong": {
+        "name": "(3aS,5aS,8R,8aR,9aR)-8-hydroxy-8-methyl-1,5-dimethylidene-3a,4,5a,6,7,8a,9,9a-octahydroazuleno[6,5-b]furan-2-one",
+        "formula": "C15H20O3",
+        "totalScore": 86,
+        "scores": {
+          "MS": 80,
+          "1H": 90,
+          "13C": 87,
+          "HSQC": 89
+        },
+        "smiles": "CC1(CCC2C1CC3C(CC2=C)OC(=O)C3=C)O",
+        "issues": [
+          "[1H] ¹H化学シフト: 20H分中19H分を割り当て可能。割り当て先のないピーク: δ1.117",
+          "[1H] 候補構造の炭素上のHのうち1個が、どのピークにも対応しません(アルケン H1)",
+          "[13C] ¹³C化学シフト: 15本中14本を割り当て可能。割り当て先のないピーク: δ61.1903",
+          "[HSQC] HSQC: 相関のある¹³C 9本中8本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H6(δ2.9128) ↔ C7(δ65.098): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(1S,2S,4R,7E,11S)-4,8-dimethyl-12-methylidene-3,14-dioxatricyclo[9.3.0.02,4]tetradec-7-en-13-one",
+          "totalScore": 89,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(3aS,5aS,8R,8aR,9aR)-8-hydroxy-8-methyl-1,5-dimethylidene-3a,4,5a,6,7,8a,9,9a-octahydroazuleno[6,5-b]furan-2-one",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "7-methyl-3-methylidene-6-(3-oxobutyl)-4,7,8,8a-tetrahydro-3aH-cyclohepta[b]furan-2-one",
+          "totalScore": 85,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "6-hydroxy-5a-methyl-3,9-dimethylidene-3a,4,5,6,7,8,9a,9b-octahydrobenzo[g][1]benzofuran-2-one",
+          "totalScore": 83,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5,10,15-trimethyl-4,9,13-trioxatetracyclo[10.3.0.03,5.08,10]pentadeca-1(12),14-diene",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1R,5S,8R,9S,12R,14R)-8,12-dimethyl-4-methylidene-2,13-dioxatetracyclo[7.5.0.01,5.012,14]tetradecan-3-one",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(4aS,8aR,9aS)-9a-hydroxy-3,8a-dimethyl-5-methylidene-4,4a,6,7,8,9-hexahydrobenzo[f][1]benzofuran-2-one",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1S,5R)-1,5-dihydroxy-2,2,5,7-tetramethylspiro[1H-indene-6,1'-cyclopropane]-4-one",
+          "totalScore": 74,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3aR,4R,6E,10E,11aR)-4-hydroxy-6,10-dimethyl-3-methylidene-3a,4,5,8,9,11a-hexahydrocyclodeca[b]furan-2-one",
+          "totalScore": 74,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(E)-1-(4-hydroxy-3-methoxyphenyl)oct-4-en-3-one",
+          "totalScore": 68,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 6
+    },
+    {
+      "id": "quinidine",
+      "name": "キニジン (quinidine)",
+      "expectedFormula": "C20H24N2O2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 6,
+      "candidateCount": 36,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 95,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100,
+        "HMBC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(R)-[(2S,4S,5R)-5-ethenyl-1-azabicyclo[2.2.2]octan-2-yl]-(6-methoxyquinolin-4-yl)methanol",
+        "formula": "C20H24N2O2",
+        "totalScore": 95,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100,
+          "HMBC": 100
+        },
+        "isCorrect": true,
+        "smiles": "COC1=CC2=C(C=CN=C2C=C1)C(C3CC4CCN3CC4C=C)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(3R,4S)-4-tert-butylsulfanyl-1,5-diphenylpent-1-yn-3-ol",
+        "formula": "C21H24OS",
+        "totalScore": 67,
+        "scores": {
+          "MS": 80,
+          "1H": 33,
+          "13C": 90,
+          "HSQC": 83,
+          "HMBC": 52
+        },
+        "smiles": "CC(C)(C)SC(CC1=CC=CC=C1)C(C#CC2=CC=CC=C2)O",
+        "issues": [
+          "[1H] 候補構造のメチル基3個のうち3個は、シフト範囲内に積分3H以上のピークが無く、1本のピークとして説明できません(メチル基の3Hは必ず等価)",
+          "[1H] ¹H化学シフト: 24H分中18H分を割り当て可能。割り当て先のないピーク: δ4.686, δ3.847, δ2.736",
+          "[1H] 候補構造の炭素上のHのうち6個が、どのピークにも対応しません(脂肪族 H3 / 芳香族 H3)",
+          "[13C] ¹³C化学シフト: 20本中19本を割り当て可能。割り当て先のないピーク: δ21.186",
+          "[HSQC] HSQC: 相関のある¹³C 12本中10本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H8(δ5.031) ↔ C10(δ114.498): 典型的な範囲から少し外れるCHでのみ説明できます",
+          "[HMBC] HMBC: 5件中2.6件分を、候補構造の2–3結合(相関ごとの指定があればその範囲)で説明できます",
+          "[HMBC] H10(δ3.847) → C1(δ157.609): 2–3結合では説明できず、4JCH等(稀に観測される範囲)でのみ説明できます",
+          "[HMBC] H7(δ5.558) → C9(δ118.468): 2–3結合では説明できず、4JCH等(稀に観測される範囲)でのみ説明できます",
+          "[HMBC] H7(δ5.558) → C7(δ126.617): 2–3結合では説明できず、4JCH等(稀に観測される範囲)でのみ説明できます",
+          "[HMBC] H7(δ5.558) → C2(δ148.04): 2–3結合では説明できず、4JCH等(稀に観測される範囲)でのみ説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(R)-[(2S,4S,5R)-5-ethenyl-1-azabicyclo[2.2.2]octan-2-yl]-(6-methoxyquinolin-4-yl)methanol",
+          "totalScore": 95,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(3R,4S)-4-tert-butylsulfanyl-1,5-diphenylpent-1-yn-3-ol",
+          "totalScore": 67,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-[1-phenyl-2-(2-propoxyphenyl)ethyl]piperazine",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "1-[(3-methoxyphenyl)methyl]-4-(3-phenylpropyl)piperazine",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "(8S,10S,13S,14S)-17-(2-hydroxyacetyl)-10,13-dimethyl-6,7,8,12,14,15-hexahydrocyclopenta[a]phenanthren-3-one",
+          "totalScore": 73,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "4-[(E)-2-(3-tert-butyl-4-methoxyphenyl)prop-1-enyl]benzoic acid",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "10-(3-piperidin-1-ylpropyl)phenothiazine",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "10-[2-(1-methylpiperidin-2-yl)ethyl]phenothiazine",
+          "totalScore": 66,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "10-[(1-ethylpiperidin-3-yl)methyl]phenothiazine",
+          "totalScore": 65,
+          "isCorrect": false,
+          "excluded": true
+        },
+        {
+          "name": "2,4-dicyclohexyl-6-methoxyquinazoline",
+          "totalScore": 65,
+          "isCorrect": false,
+          "excluded": true
+        }
+      ],
+      "status": "active",
+      "seconds": 17
+    },
+    {
+      "id": "rutin",
+      "name": "ルチン (rutin)",
+      "expectedFormula": "C27H30O16",
+      "formulaLevel": "strict",
+      "formulaRank": 6,
+      "extraFormulaRank": null,
+      "formulaCount": 34,
+      "candidateCount": 36,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "2-(3,4-dihydroxyphenyl)-5,7-dihydroxy-3-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-[[(2R,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxymethyl]oxan-2-yl]oxychromen-4-one",
+        "formula": "C27H30O16",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC1C(C(C(C(O1)OCC2C(C(C(C(O2)OC3=C(OC4=CC(=CC(=C4C3=O)O)O)C5=CC(=C(C=C5)O)O)O)O)O)O)O)O",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "(6S,7R)-3-(carbamoyloxymethyl)-7-[[2-[(7,8-dihydroxy-4-oxochromene-3-carbonyl)amino]-2-phenylacetyl]amino]-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylic acid",
+        "formula": "C27H22N4O11S",
+        "totalScore": 77,
+        "scores": {
+          "MS": 80,
+          "1H": 82,
+          "13C": 63,
+          "HSQC": 80
+        },
+        "smiles": "C1C(=C(N2C(S1)C(C2=O)NC(=O)C(C3=CC=CC=C3)NC(=O)C4=COC5=C(C4=O)C=CC(=C5O)O)C(=O)O)COC(=O)N",
+        "issues": [
+          "[1H] 候補構造の炭素上のHのうち2個が、どのピークにも対応しません(芳香族 H2)",
+          "[13C] ¹³C化学シフト: 27本中22本を割り当て可能。割り当て先のないピーク: δ70.3458, δ70.0924, δ69.6981, δ68.0085, δ66.8591",
+          "[HSQC] HSQC: 相関のある¹³C 5本中4本を、同時に別々のCH炭素(シフト範囲が合うもの)へ割り当てられます",
+          "[HSQC] H18(δ0.9974) ↔ C27(δ17.581): 典型的な範囲から少し外れるCHでのみ説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "2-(3,4-dihydroxyphenyl)-5,7-dihydroxy-3-[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-[[(2R,3R,4R,5R,6S)-3,4,5-trihydroxy-6-methyloxan-2-yl]oxymethyl]oxan-2-yl]oxychromen-4-one",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "(6S,7R)-3-(carbamoyloxymethyl)-7-[[2-[(7,8-dihydroxy-4-oxochromene-3-carbonyl)amino]-2-phenylacetyl]amino]-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylic acid",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6S,7R)-3-(carbamoyloxymethyl)-7-[[2-[(6,7-dihydroxy-4-oxochromene-3-carbonyl)amino]-2-phenylacetyl]amino]-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylic acid",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2S)-2-[[(2R)-2-[4-[[4-(4-azidobenzoyl)piperazine-1-carbonyl]amino]phenyl]-2-carboxyethyl]carbamoylamino]pentanedioic acid",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2S)-2-[[(1S)-2-[4-[[4-(4-azidobenzoyl)piperazine-1-carbonyl]amino]phenyl]-1-carboxyethyl]carbamoylamino]pentanedioic acid",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2R,3R)-2-[3,4,5-trihydroxy-2-[2,3,4-trihydroxy-6-[(2R,3R)-3,5,7-trihydroxy-3,4-dihydro-2H-chromen-2-yl]phenyl]phenyl]-3,4-dihydro-2H-chromene-3,5,7-triol",
+          "totalScore": 77,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2S,5R)-N-ethyl-3,4-dihydroxy-5-[6-[[3-[(4-methoxyanilino)-methylidene-oxo-lambda6-sulfanyl]phenyl]carbamoylamino]purin-9-yl]oxolane-2-carboxamide",
+          "totalScore": 75,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5S,5aR,8aR,9R)-9-(4-hydroxy-3,5-dimethoxyphenyl)-5-[[(2S,3R,4S,5S,6R)-3,4,5-trihydroxy-6-(hydroxymethyl)oxan-2-yl]disulfanyl]-5a,6,8a,9-tetrahydro-5H-[2]benzofuro[5,6-f][1,3]benzodioxol-8-one",
+          "totalScore": 74,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(2R,3R)-2-(3,4,5-trihydroxyphenyl)-8-[(2R,3S,4S)-3,5,7-trihydroxy-2-(3,4,5-trihydroxyphenyl)-3,4-dihydro-2H-chromen-4-yl]-3,4-dihydro-2H-chromene-3,5,7-triol",
+          "totalScore": 74,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(6S)-3-(acetyloxymethyl)-7-[[2-[[3-(furan-2-ylmethylideneamino)-2-oxoimidazolidine-1-carbonyl]amino]-2-phenylacetyl]amino]-8-oxo-5-thia-1-azabicyclo[4.2.0]oct-2-ene-2-carboxylic acid",
+          "totalScore": 72,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 48
+    },
+    {
+      "id": "simvastatin",
+      "name": "シンバスタチン (simvastatin)",
+      "expectedFormula": "C25H38O5",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 9,
+      "candidateCount": 35,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 93,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "[(1S,3R,7S,8S,8aR)-8-[2-[(2R,4R)-4-hydroxy-6-oxooxan-2-yl]ethyl]-3,7-dimethyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2,2-dimethylbutanoate",
+        "formula": "C25H38O5",
+        "totalScore": 93,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "CCC(C)(C)C(=O)OC1CC(C=C2C1C(C(C=C2)C)CCC3CC(CC(=O)O3)O)C",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "trans-(1R,3S,5Z)-5-[(2E)-2-[(1S,3aS,7aS)-1-[(1S)-1-(3-hydroxy-3-methylbutoxy)ethyl]-7a-methyl-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylidenecyclohexane-1,3-diol",
+        "formula": "C26H42O4",
+        "totalScore": 85,
+        "scores": {
+          "MS": 80,
+          "1H": 85,
+          "13C": 76,
+          "HSQC": 100
+        },
+        "smiles": "CC(C1CCC2C1(CCCC2=CC=C3CC(CC(C3=C)O)O)C)OCCC(C)(C)O",
+        "issues": [
+          "[1H] 積分値の合計: 入力37H / 候補は炭素上39H + OH・NH等3H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] 候補構造の炭素上のHのうち3個が、どのピークにも対応しません(O-CH3)",
+          "[13C] ¹³C化学シフト: 25本中22本を割り当て可能。割り当て先のないピーク: δ176.6077, δ170.2086, δ9.1624"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "[(1S,3R,7S,8S,8aR)-8-[2-[(2R,4R)-4-hydroxy-6-oxooxan-2-yl]ethyl]-3,7-dimethyl-1,2,3,7,8,8a-hexahydronaphthalen-1-yl] 2,2-dimethylbutanoate",
+          "totalScore": 93,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "trans-(1R,3S,5Z)-5-[(2E)-2-[(1S,3aS,7aS)-1-[(1S)-1-(3-hydroxy-3-methylbutoxy)ethyl]-7a-methyl-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylidenecyclohexane-1,3-diol",
+          "totalScore": 85,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "bis(7-methyloctyl) benzene-1,2-dicarboxylate",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "dinonyl benzene-1,2-dicarboxylate",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[(Z)-1-methoxy-3-methylpentadec-6-enyl]-1,3,4,5-tetrahydro-2,1,5-benzothiadiazepine",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-O-decyl 1-O-octyl benzene-1,2-dicarboxylate",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-(4-methylphenyl)sulfinyl-2-oxaspiro[4.14]nonadecan-3-one",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(3R,5Z)-5-[(2E)-2-[(1R,3aS,7aR)-1-[(2R)-6-hydroxy-6-methylheptan-2-yl]-7a-methyl-2,3,3a,5,6,7-hexahydro-1H-inden-4-ylidene]ethylidene]-4-methylidenethian-3-ol",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "8-(7-octyl-3,11-dithiatricyclo[6.3.0.02,6]undeca-1(8),2(6),4,9-tetraen-7-yl)octan-1-ol",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,7-dimethyloct-6-enyl 4-(1-adamantylcarbamoylamino)butanoate",
+          "totalScore": 79,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 30
+    },
+    {
+      "id": "smtp-7",
+      "name": "SMTP-7",
+      "expectedFormula": "C51H68N2O10",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 24,
+      "candidateCount": 32,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 91,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(2S)-2,5-bis[(2R,3S)-2-[(3E)-4,8-dimethylnona-3,7-dienyl]-3,5-dihydroxy-2-methyl-7-oxo-4,9-dihydro-3H-pyrano[2,3-e]isoindol-8-yl]pentanoic acid",
+        "formula": "C51H68N2O10",
+        "totalScore": 91,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 100
+        },
+        "isCorrect": true,
+        "smiles": "CC(=CCCC(=CCCC1(C(CC2=C(C=C3C(=C2O1)CN(C3=O)CCCC(C(=O)O)N4CC5=C6C(=C(C=C5C4=O)O)CC(C(O6)(C)CCC=C(C)CCC=C(C)C)O)O)O)C)C)C",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "[12-ethoxyimino-15,16-bis(4-hydroxybutyl)-10-naphthalen-2-ylsulfanyl-9-prop-2-enoxy-8-oxatetracyclo[7.7.1.02,7.013,17]heptadeca-2(7),3,5,13-tetraen-4-yl] N-dodecylcarbamate",
+        "formula": "C52H72N2O7S",
+        "totalScore": 87,
+        "scores": {
+          "MS": 80,
+          "1H": 86,
+          "13C": 98
+        },
+        "smiles": "CCCCCCCCCCCCNC(=O)OC1=CC2=C(C=C1)OC3(C(CC(=NOCC)C4=CC(C(C2C43)CCCCO)CCCCO)SC5=CC6=CC=CC=C6C=C5)OCC=C",
+        "issues": [
+          "[1H] 積分値の合計: 入力68H / 候補は炭素上69H + OH・NH等3H(OH・NHは観測されなくてもよいとして判定)",
+          "[1H] ¹H化学シフト: 68H分中67H分を割り当て可能。割り当て先のないピーク: δ1.15",
+          "[1H] 候補構造の炭素上のHのうち5個が、どのピークにも対応しません(芳香族 H5)",
+          "[13C] ¹³Cシグナル数(51本)は候補構造の炭素環境(52種類)より1本少ないですが、候補の第四級炭素(10種類)が観測されていないとすれば説明できます"
+        ]
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(2S)-2,5-bis[(2R,3S)-2-[(3E)-4,8-dimethylnona-3,7-dienyl]-3,5-dihydroxy-2-methyl-7-oxo-4,9-dihydro-3H-pyrano[2,3-e]isoindol-8-yl]pentanoic acid",
+          "totalScore": 91,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "[12-ethoxyimino-15,16-bis(4-hydroxybutyl)-10-naphthalen-2-ylsulfanyl-9-prop-2-enoxy-8-oxatetracyclo[7.7.1.02,7.013,17]heptadeca-2(7),3,5,13-tetraen-4-yl] N-dodecylcarbamate",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "benzyl 6-[[8-[3-[4-[9-[[6-[(2-methylpropan-2-yl)oxy]-6-oxohexyl]amino]-2,9-dioxononoxy]phenyl]phenyl]-8-oxooctanoyl]amino]hexanoate",
+          "totalScore": 82,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[15,16-bis(4-hydroxybutyl)-12-[(2-methylpropan-2-yl)oxyimino]-4-(2-phenylsulfanylethoxy)-9-prop-2-enoxy-8-oxatetracyclo[7.7.1.02,7.013,17]heptadeca-2(7),3,5,13-tetraen-10-yl]-2-(3-methoxyphenyl)-N-propylacetamide",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-[1-cyclohexyl-2-[2-[[[4-[6-[4,4-dimethyl-2-[1-[3-methyl-2-(methylamino)hexanoyl]pyrrolidin-2-yl]-1H-quinazolin-7-yl]-1-oxo-2,2a,7,7a-tetrahydrocyclobuta[a]inden-3-yl]-2-iminobut-3-ynylidene]amino]methyl]pyrrolidin-1-yl]-2-oxoethyl]acetamide",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[3-methyl-4-[4-(13-prop-2-enoyloxytridecoxy)benzoyl]oxyphenyl] 4-(13-prop-2-enoyloxytridecoxy)benzoate",
+          "totalScore": 81,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1R)-4-[(1R,3aS,5aS,5bR,11aS,13aR)-3a-[2-(1,1-dioxo-1,4-thiazinan-4-yl)ethylamino]-5a-ethenyl-5b,8,8,11a-tetramethyl-1-prop-1-en-2-yl-1,2,3,4,5,6,7,7a,11,11b,12,13,13a,13b-tetradecahydrocyclopenta[a]chrysen-9-yl]-1-[(E)-2-[(3-carbamoyl-2-pyridinyl)oxy]ethenyl]cyclohex-3-ene-1-carboxylic acid",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(1R)-4-[(1R,3aS,5aS,5bR,11aS,13aR)-3a-[2-(1,1-dioxo-1,4-thiazinan-4-yl)ethylamino]-5a-ethenyl-5b,8,8,11a-tetramethyl-1-prop-1-en-2-yl-1,2,3,4,5,6,7,7a,11,11b,12,13,13a,13b-tetradecahydrocyclopenta[a]chrysen-9-yl]-1-[1-[(3-carbamoyl-2-pyridinyl)oxy]ethenyl]cyclohex-3-ene-1-carboxylic acid",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,4,5-trihydroxy-6-[2-[(6Z,9Z,12Z,15Z)-octadeca-6,9,12,15-tetraenoyl]oxy-3-[(12Z,15Z,18Z,21Z)-tetracosa-12,15,18,21-tetraenoyl]oxypropoxy]oxane-2-carboxylic acid",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[(1R,2R,4S,6S,7S,8R,10S,11S,12R,14S,16S,17R,18R)-6,7-dihydroxy-4,18-dimethyl-5-oxo-14-phenyl-17-[(E)-3-phenylprop-2-enoyl]oxy-16-prop-1-en-2-yl-9,13,15,19-tetraoxahexacyclo[12.4.1.01,11.02,6.08,10.012,16]nonadecan-8-yl]methyl hexadecanoate",
+          "totalScore": 80,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 65
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { countDistinctCarbonEnvironments } from "../../moleculeGraph";
+import { countCarbonTypesByEquivalence, countDistinctCarbonEnvironments } from "../../moleculeGraph";
 import {
   expectedCarbonRange,
   inRange,
@@ -54,10 +54,19 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
       // 判定モデルの粗さやシグナルの偶然の重なりの可能性もあるため、
       // ハード制約にはせず、差が大きいほどソフトスコアを下げるに留める。
       const diff = uniqueEnvironments - peaks.length;
-      countScore = Math.max(0, 1 - diff / Math.max(uniqueEnvironments, 1));
+      // 第四級炭素(Hを持たない)はNOE増強が無く緩和も遅いため、¹³Cで弱く
+      // 観測されないことがよくある。不足分が候補の第四級炭素の環境数以内なら、
+      // 「第四級炭素が観測されていない」で説明できるので減点を小さくする。
+      const quaternaryEnvironments = countCarbonTypesByEquivalence(candidateGraph)?.cq ?? 0;
+      const explainedByQuaternary = diff <= quaternaryEnvironments;
+      countScore = explainedByQuaternary
+        ? Math.max(0.7, 1 - 0.05 * diff)
+        : Math.max(0, 1 - diff / Math.max(uniqueEnvironments, 1));
       details.push({
-        status: diff <= 1 ? "partial" : "mismatch",
-        summary: `¹³Cシグナル数(${peaks.length}本)が、候補構造で対称性を考慮しても見積もられる最少種類数(${uniqueEnvironments}種類)より少ないです。シグナルの偶然の重なりの可能性はありますが、差が大きいほど整合性は低くなります。`,
+        status: diff <= 1 || explainedByQuaternary ? "partial" : "mismatch",
+        summary: explainedByQuaternary
+          ? `¹³Cシグナル数(${peaks.length}本)は候補構造の炭素環境(${uniqueEnvironments}種類)より${diff}本少ないですが、候補の第四級炭素(${quaternaryEnvironments}種類)が観測されていないとすれば説明できます`
+          : `¹³Cシグナル数(${peaks.length}本)が、候補構造で対称性を考慮しても見積もられる最少種類数(${uniqueEnvironments}種類)より少なく、第四級炭素の未観測だけでは説明できません。`,
       });
     }
   }

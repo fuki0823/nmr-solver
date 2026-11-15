@@ -1,0 +1,168 @@
+{
+  "id": "cortisone",
+  "name": "コルチゾン (cortisone)",
+  "categories": [
+    "ステロイド",
+    "カルボニル化合物",
+    "立体化学が複雑な化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 222786,
+    "molecularFormula": "C21H28O5",
+    "smiles": "CC12CCC(=O)C=C1CCC3C2C(=O)CC4(C3CCC4(C(=O)CO)O)C",
+    "inchiKey": "MFYSYFVPBJMHGN-ZPOLXVRWSA-N"
+  },
+  "conditions": {
+    "solvent": "acetone",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC",
+      "2D [1H,13C]-HMBC",
+      "2D [1H,1H]-COSY"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000663 (cortisone). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000663",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 360.4,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        5.636,
+        1
+      ],
+      [
+        4.609,
+        1
+      ],
+      [
+        4.225,
+        1
+      ],
+      [
+        2.463,
+        4
+      ],
+      [
+        2.311,
+        4
+      ],
+      [
+        2.148,
+        2
+      ],
+      [
+        2.042,
+        2
+      ],
+      [
+        1.921,
+        2
+      ],
+      [
+        1.735,
+        2
+      ],
+      [
+        1.489,
+        1
+      ],
+      [
+        1.426,
+        3
+      ],
+      [
+        1.322,
+        1
+      ],
+      [
+        0.601,
+        3
+      ]
+    ],
+    "c13": [
+      212.496,
+      210.272,
+      198.674,
+      169.317,
+      124.849,
+      89.133,
+      67.829,
+      62.897,
+      51.881,
+      51.027,
+      50.629,
+      39.033,
+      37.339,
+      35.422,
+      35.422,
+      35.255,
+      34.293,
+      33.308,
+      23.897,
+      17.555,
+      16.102
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C8"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C13"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H11",
+        "to": "C20"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H13",
+        "to": "C21"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H13",
+        "to": "C9"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H13",
+        "to": "C6"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 222786 が一致。",
+    "¹³C 21本(帰属炭素数) / 分子式の炭素数 21。",
+    "¹H 積分合計 27H(帰属された水素の数、うち炭素上 26H) / 分子式の水素数 28。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 6/20(帰属で対応付け), HMBC 2/4(帰属で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが25個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

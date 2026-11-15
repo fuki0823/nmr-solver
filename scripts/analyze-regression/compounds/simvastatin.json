@@ -1,0 +1,258 @@
+{
+  "id": "simvastatin",
+  "name": "シンバスタチン (simvastatin)",
+  "categories": [
+    "天然物誘導体",
+    "多環式化合物",
+    "立体化学が複雑な化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 54454,
+    "molecularFormula": "C25H38O5",
+    "smiles": "CCC(C)(C)C(=O)OC1CC(C=C2C1C(C(C=C2)C)CCC3CC(CC(=O)O3)O)C",
+    "inchiKey": "RYMZZMVNJRMUDD-HGQWONQESA-N"
+  },
+  "conditions": {
+    "solvent": "DMSO",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001273 (Simvastatin). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001273",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 418.6,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        5.9647,
+        1
+      ],
+      [
+        5.782,
+        1
+      ],
+      [
+        5.5038,
+        1
+      ],
+      [
+        5.2093,
+        1
+      ],
+      [
+        4.47,
+        1
+      ],
+      [
+        4.1021,
+        1
+      ],
+      [
+        2.626,
+        1
+      ],
+      [
+        2.3969,
+        1
+      ],
+      [
+        2.3809,
+        1
+      ],
+      [
+        2.3605,
+        1
+      ],
+      [
+        2.2994,
+        1
+      ],
+      [
+        1.9716,
+        1
+      ],
+      [
+        1.8208,
+        1
+      ],
+      [
+        1.7659,
+        1
+      ],
+      [
+        1.7029,
+        1
+      ],
+      [
+        1.6343,
+        1
+      ],
+      [
+        1.5887,
+        1
+      ],
+      [
+        1.4808,
+        2
+      ],
+      [
+        1.2999,
+        2
+      ],
+      [
+        1.2696,
+        1
+      ],
+      [
+        1.0567,
+        6
+      ],
+      [
+        1.0221,
+        3
+      ],
+      [
+        0.8408,
+        3
+      ],
+      [
+        0.767,
+        3
+      ]
+    ],
+    "c13": [
+      176.6077,
+      170.2086,
+      133.0064,
+      131.4959,
+      129.1669,
+      128.2448,
+      75.8566,
+      67.5957,
+      61.2499,
+      42.4091,
+      38.5347,
+      36.5412,
+      36.1969,
+      35.2905,
+      32.4999,
+      32.4135,
+      32.0557,
+      30.0997,
+      26.715,
+      24.4931,
+      24.4432,
+      23.6947,
+      22.7996,
+      13.6267,
+      9.1624
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C3"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C8"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C9"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H7",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H17",
+        "to": "C13"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H16",
+        "to": "C14"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H14",
+        "to": "C14"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H13",
+        "to": "C17"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H12",
+        "to": "C17"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H19",
+        "to": "C22"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H22",
+        "to": "C23"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H23",
+        "to": "C24"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H24",
+        "to": "C25"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 54454 が一致。",
+    "¹³C 25本(帰属炭素数) / 分子式の炭素数 25。",
+    "¹H 積分合計 37H(帰属された水素の数、うち炭素上 37H) / 分子式の水素数 38。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 16/24(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが8個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

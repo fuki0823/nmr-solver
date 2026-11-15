@@ -41,6 +41,11 @@ export interface CandidateEvaluation {
   results: ValidationResult[];
   /** 0-100。あくまで内部的な指標であり確率ではない("Match Score"として表示する) */
   totalScore: number;
+  /**
+   * 丸める前の総合スコア(0-1)。順位付けはこちらで行う。整数に丸めた値で比べると、
+   * 実際には差がある候補同士が見かけ上同点になる(例: 0.5点差が両方91点になる)。
+   */
+  rawScore: number;
   confidence: Confidence;
   structureImageSmiles: string;
   /**
@@ -81,7 +86,8 @@ export async function evaluateCandidate(
     weightTotal += weight;
     evaluatedMethods++;
   }
-  const totalScore = weightTotal > 0 ? Math.round((weightedSum / weightTotal) * 100) : 0;
+  const rawScore = weightTotal > 0 ? weightedSum / weightTotal : 0;
+  const totalScore = Math.round(rawScore * 100);
 
   const confidence: Confidence =
     evaluatedMethods >= 4 ? "high" : evaluatedMethods >= 2 ? "medium" : "low";
@@ -130,6 +136,7 @@ export async function evaluateCandidate(
     candidate,
     results,
     totalScore,
+    rawScore,
     confidence,
     structureImageSmiles: candidate.smiles,
     excluded,
@@ -154,6 +161,6 @@ export async function rankCandidates(
   // できる状態を保つ)。
   return evaluations.sort((a, b) => {
     if (a.excluded !== b.excluded) return a.excluded ? 1 : -1;
-    return b.totalScore - a.totalScore;
+    return b.rawScore - a.rawScore;
   });
 }

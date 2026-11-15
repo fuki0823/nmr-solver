@@ -1,0 +1,108 @@
+{
+  "id": "aminopenicillanic-acid",
+  "name": "6-アミノペニシラン酸 (6-APA)",
+  "categories": [
+    "含硫黄化合物",
+    "複素環化合物",
+    "含窒素化合物",
+    "カルボニル化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 11082,
+    "molecularFormula": "C8H12N2O3S",
+    "smiles": "CC1(C(N2C(S1)C(C2=O)N)C(=O)O)C",
+    "inchiKey": "NGHVIOIJCVXTGV-ALEPSDHESA-N"
+  },
+  "conditions": {
+    "solvent": "D2O",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC",
+      "2D [1H,13C]-HMBC"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000312 (6-aminopenicillanic). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000312",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 216.26,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        5.4948,
+        1
+      ],
+      [
+        4.5819,
+        1
+      ],
+      [
+        4.1676,
+        1
+      ],
+      [
+        1.6121,
+        3
+      ],
+      [
+        1.5162,
+        3
+      ]
+    ],
+    "c13": [
+      182.6121,
+      177.6665,
+      75.3481,
+      71.1638,
+      66.4621,
+      63.03,
+      33.3993,
+      29.2323
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C4"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C3"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C8"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 11082 が一致。",
+    "¹³C 8本(帰属炭素数) / 分子式の炭素数 8。",
+    "¹H 積分合計 9H(帰属された水素の数、うち炭素上 9H) / 分子式の水素数 12。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 5/5(帰属で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが8個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "id": "glutathione",
+  "name": "グルタチオン(還元型) (glutathione)",
+  "categories": [
+    "ペプチド・アミノ酸誘導体",
+    "含硫黄化合物",
+    "含窒素化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 124886,
+    "molecularFormula": "C10H17N3O6S",
+    "smiles": "C(CC(=O)NC(CS)C(=O)NCC(=O)O)C(C(=O)O)N",
+    "inchiKey": "RWSXRVCMGQZWBV-WDSKDSINSA-N"
+  },
+  "conditions": {
+    "solvent": "D2O",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H, 0.5 mM",
+      "1D 1H, 2.0 mM",
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC",
+      "2D [1H,13C]-HMBC",
+      "2D [1H,1H]-COSY",
+      "2D [1H,13C]-HSQC SW small"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000185 (L_glutathione_reduced). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000185",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 307.33,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        4.557,
+        1
+      ],
+      [
+        3.766,
+        3
+      ],
+      [
+        2.943,
+        2
+      ],
+      [
+        2.548,
+        2
+      ],
+      [
+        2.158,
+        2
+      ]
+    ],
+    "c13": [
+      179.1,
+      177.716,
+      176.831,
+      174.509,
+      58.43,
+      56.79,
+      46.049,
+      34.025,
+      28.886,
+      28.269
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C8"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C9"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C10"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C8"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C9"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H2",
+        "to": "C1"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H2",
+        "to": "C4"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H3",
+        "to": "C4"
+      },
+      {
+        "kind": "HMBC",
+        "from": "H3",
+        "to": "C5"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 124886 が一致。",
+    "¹³C 10本(帰属炭素数) / 分子式の炭素数 10。",
+    "¹H 積分合計 10H(帰属された水素の数、うち炭素上 10H) / 分子式の水素数 17。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 8/8(帰属で対応付け), HMBC 4/4(帰属で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが3個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

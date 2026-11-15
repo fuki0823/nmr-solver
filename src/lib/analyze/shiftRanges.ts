@@ -181,8 +181,9 @@ export function expectedCarbonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
     const kind = e.aromatic ? "芳香族" : "アルケン";
     // 下限: カルボニルのβ位で遮蔽されるエノール型C-O(フラボノール3-O-配糖体のC3 δ133前後)まで含める
     if (e.singleO > 0) return { lo: 125, hi: 172, label: `${kind} C-O` };
+    // 下限: 窒素が付いても電子豊富な位置の炭素(プリンのC5 δ107-110、エナミンのβ側等)はδ100付近まで下がる
     if (e.singleN > 0 || e.aromaticToHetero) {
-      return { lo: 110, hi: 170, label: `${kind} C-N` };
+      return { lo: 100, hi: 170, label: `${kind} C-N` };
     }
     // 下限: 2つのOR/OHにオルト・パラ位で挟まれた電子豊富な芳香族CH(5,7-ジヒドロキシ
     // フラボノイドのC6/C8 δ93-99等)やエノールエーテルのβ炭素はδ90前後まで下がる。
@@ -191,9 +192,13 @@ export function expectedCarbonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
 
   // sp3
   if (e.singleO >= 2) return { lo: 85, hi: 120, label: "アセタール" };
+  // N・S を含むヘテロ原子2置換のsp3炭素(N,O-アセタール、アミナール、N,S-アミナール
+  // (ペナム環のC5 δ67-71)、チオアセタール等)。アセタールより高磁場側に広く分布する。
+  if (singleHetero >= 2) return { lo: 45, hi: 100, label: "ヘテロ原子2置換 sp3" };
   if (e.singleO === 1) return { lo: 45, hi: 92, label: "sp3 C-O" };
   if (e.singleN > 0) return { lo: 25, hi: 75, label: "sp3 C-N" };
-  if (e.singleOtherHetero > 0) return { lo: 5, hi: 60, label: "sp3 C-S等" };
+  // 上限: S上の第四級炭素(ペナム環のC2(CH3)2 δ63等)は60を超える
+  if (e.singleOtherHetero > 0) return { lo: 5, hi: 72, label: "sp3 C-S等" };
   return { lo: -5, hi: 60, label: "脂肪族" };
 }
 
@@ -209,12 +214,15 @@ export function expectedProtonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
   if (e.doubleToO) return { lo: 7.8, hi: 10.8, label: "アルデヒド/ホルミル H" };
   if (e.doubleToN) return { lo: 6.5, hi: 9.5, label: "CH=N" };
   if (e.triple) return { lo: 1.7, hi: 3.4, label: "アルキン H" };
-  // 芳香族Hとアルケン Hは範囲が大きく異なる(アルケン Hはδ5前後が多く、
-  // 芳香族Hはフェノールのオルト位等でもδ6前後より低磁場)ため分けて扱う。
-  if (e.aromatic) return { lo: 5.9, hi: 9.6, label: "芳香族 H" };
+  // 芳香族Hとアルケン Hは範囲が大きく異なる(アルケン Hはδ5前後が多い)ため分けて扱う。
+  // 芳香族Hの下限: OHが3つ付いた環(フロログルシノール型、エピカテキンのH6/H8
+  // δ5.7-5.9)のように強く電子供与された芳香族CHはδ5.5付近まで下がる。
+  if (e.aromatic) return { lo: 5.5, hi: 9.6, label: "芳香族 H" };
   if (e.doubleToC) return { lo: 4.4, hi: 8.0, label: "アルケン H" };
 
   if (e.singleO >= 2) return { lo: 4.2, hi: 6.4, label: "アセタール H" };
+  // N・Sを含むヘテロ原子2置換のCH(ペナム環のC5-H δ5.5等)
+  if (e.singleO + e.singleN + e.singleOtherHetero >= 2) return { lo: 3.8, hi: 6.4, label: "ヘテロ原子2置換 CH" };
   if (e.singleO === 1) return { lo: 3.0, hi: 5.7, label: "O-CH" };
   if (e.singleN > 0) return { lo: 2.0, hi: 4.6, label: "N-CH" };
   if (e.singleOtherHetero > 0) return { lo: 1.7, hi: 3.6, label: "S-CH等" };

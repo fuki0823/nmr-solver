@@ -1,0 +1,133 @@
+{
+  "id": "nicotine",
+  "name": "ニコチン (nicotine)",
+  "categories": [
+    "アルカロイド",
+    "複素環化合物",
+    "含窒素化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 89594,
+    "molecularFormula": "C10H14N2",
+    "smiles": "CN1CCCC1C2=CN=CC=C2",
+    "inchiKey": "SNICXCGAKADSCV-JTQLQIEISA-N"
+  },
+  "conditions": {
+    "solvent": "D2O",
+    "frequency": "400 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000105 (nicotine). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000105",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 162.23,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        8.661,
+        1
+      ],
+      [
+        8.634,
+        1
+      ],
+      [
+        8.049,
+        1
+      ],
+      [
+        7.596,
+        1
+      ],
+      [
+        4.417,
+        1
+      ],
+      [
+        3.802,
+        1
+      ],
+      [
+        3.311,
+        1
+      ],
+      [
+        2.744,
+        3
+      ],
+      [
+        2.585,
+        2
+      ],
+      [
+        2.335,
+        2
+      ]
+    ],
+    "c13": [
+      152.955,
+      151.814,
+      139.977,
+      132.286,
+      127.616,
+      72.388,
+      58.779,
+      40.915,
+      33.077,
+      24.219
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C1"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C2"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C3"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H8",
+        "to": "C8"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 89594 が一致。",
+    "¹³C 10本(帰属炭素数) / 分子式の炭素数 10。",
+    "¹H 積分合計 14H(帰属された水素の数、うち炭素上 14H) / 分子式の水素数 14。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 6/11(帰属で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが8個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

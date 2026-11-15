@@ -1,0 +1,196 @@
+{
+  "id": "parthenolide",
+  "name": "パルテノリド (parthenolide)",
+  "categories": [
+    "テルペノイド",
+    "天然物",
+    "カルボニル化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 7251185,
+    "molecularFormula": "C15H20O3",
+    "smiles": "CC1=CCCC2(C(O2)C3C(CC1)C(=C)C(=O)O3)C",
+    "inchiKey": "KTEXNACQROZXEV-PVLRGYAZSA-N"
+  },
+  "conditions": {
+    "solvent": "DMSO",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001294 (Parthenolide). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001294",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 248.32,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        6.1164,
+        1
+      ],
+      [
+        5.791,
+        1
+      ],
+      [
+        5.2493,
+        1
+      ],
+      [
+        4.0526,
+        1
+      ],
+      [
+        2.9611,
+        1
+      ],
+      [
+        2.9128,
+        1
+      ],
+      [
+        2.368,
+        1
+      ],
+      [
+        2.2178,
+        1
+      ],
+      [
+        2.1243,
+        1
+      ],
+      [
+        2.1081,
+        1
+      ],
+      [
+        2.0593,
+        1
+      ],
+      [
+        2.0269,
+        1
+      ],
+      [
+        1.7466,
+        1
+      ],
+      [
+        1.6572,
+        3
+      ],
+      [
+        1.2104,
+        3
+      ],
+      [
+        1.117,
+        1
+      ]
+    ],
+    "c13": [
+      169.2126,
+      139.9201,
+      134.4528,
+      124.346,
+      120.5819,
+      81.9828,
+      65.098,
+      61.1903,
+      46.2915,
+      40.3803,
+      35.7732,
+      29.4445,
+      23.5628,
+      16.75,
+      16.5083
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C4"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C5"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C9"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H8",
+        "to": "C10"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H16",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H12",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H13",
+        "to": "C12"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H11",
+        "to": "C13"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H7",
+        "to": "C13"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 7251185 が一致。",
+    "¹³C 15本(帰属炭素数) / 分子式の炭素数 15。",
+    "¹H 積分合計 20H(帰属された水素の数、うち炭素上 20H) / 分子式の水素数 20。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 12/16(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが10個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}
