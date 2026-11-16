@@ -38,8 +38,10 @@
   },
   "input": {
     "ms": {
-      "molecularWeight": 399.4,
-      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+      "measuredMz": 400.176,
+      "ionAdduct": "[M+H]+",
+      "massTolerancePpm": 5,
+      "note": "高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 399.16818752 から [M+H]+ の m/z 400.1755 を計算し、測定誤差として +1.3 ppm を加えた。許容誤差 5 ppm。"
     },
     "h1": [
       [

@@ -57,15 +57,24 @@ export interface FormulaCandidate {
 }
 
 /** 一般的なESI/APCIアダクトの質量差(neutral = measuredMz - delta) */
+/** 電子の質量(Da)。イオンの m/z は、付加・脱離した原子の質量から電子の出入りを補正する */
+const ELECTRON_MASS = 0.000549;
+
+/**
+ * 一般的なESI/APCIアダクトの質量差(neutral = measuredMz - delta)。
+ * 陽イオンは電子を1個失い、陰イオンは1個得るので、原子の質量に ∓電子質量 を補正する
+ * (例: Na+ = Na原子 22.989770 − 0.000549)。分子量800付近で約0.7 ppmの差になる。
+ */
 export const ADDUCT_MASS_DELTA: Record<string, number> = {
-  "[M+H]+": 1.007276,
-  "[M+Na]+": 22.989770,
-  "[M+K]+": 38.963708,
-  "[M+NH4]+": 18.033823,
-  "[M-H]-": -1.007276,
-  "[M+Cl]-": 34.968853 + 0.000549, // Cl- 相当(電子質量分は簡略化のため無視)
-  "[M]+": 0,
-  "[M]-": 0,
+  "[M+H]+": 1.007825 - ELECTRON_MASS, // プロトン 1.007276
+  "[M+Na]+": 22.98977 - ELECTRON_MASS,
+  "[M+K]+": 38.963707 - ELECTRON_MASS,
+  "[M+NH4]+": 14.003074 + 4 * 1.007825 - ELECTRON_MASS,
+  "[M-H]-": -1.007825 + ELECTRON_MASS,
+  "[M+Cl]-": 34.968853 + ELECTRON_MASS,
+  "[M+HCOO]-": 12.0 + 1.007825 + 2 * 15.994915 + ELECTRON_MASS,
+  "[M]+": -ELECTRON_MASS,
+  "[M]-": ELECTRON_MASS,
 };
 
 /** 測定m/zとアダクトから、中性分子のexact massを逆算する */
