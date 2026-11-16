@@ -1,0 +1,175 @@
+{
+  "id": "camphor-dept",
+  "name": "カンファー (camphor) — DEPT(完全)",
+  "categories": [
+    "多環式化合物",
+    "カルボニル化合物",
+    "テルペノイド",
+    "DEPT 入り"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 2537,
+    "molecularFormula": "C10H16O",
+    "smiles": "CC1(C2CCC1(C(=O)C2)C)C",
+    "inchiKey": "DSSYKIVIOFKYAU-UHFFFAOYSA-N"
+  },
+  "conditions": {
+    "solvent": "Chloroform-d",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001230 (Camphor). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001230",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 152.23,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        2.3528,
+        1
+      ],
+      [
+        2.0911,
+        1
+      ],
+      [
+        1.9506,
+        1
+      ],
+      [
+        1.8511,
+        1
+      ],
+      [
+        1.6726,
+        1
+      ],
+      [
+        1.4067,
+        1
+      ],
+      [
+        1.3419,
+        1
+      ],
+      [
+        0.9566,
+        3
+      ],
+      [
+        0.9172,
+        3
+      ],
+      [
+        0.8428,
+        3
+      ]
+    ],
+    "c13": [
+      [
+        219.8218,
+        "C"
+      ],
+      [
+        57.709,
+        "C"
+      ],
+      [
+        46.7954,
+        "C"
+      ],
+      [
+        43.2936,
+        "CH2"
+      ],
+      [
+        43.0116,
+        "CH"
+      ],
+      [
+        29.8916,
+        "CH2"
+      ],
+      [
+        27.0316,
+        "CH2"
+      ],
+      [
+        19.7778,
+        "CH3"
+      ],
+      [
+        19.1403,
+        "CH3"
+      ],
+      [
+        9.2534,
+        "CH3"
+      ]
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C6"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H7",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H10",
+        "to": "C8"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H8",
+        "to": "C9"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H9",
+        "to": "C10"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 2537 が一致。",
+    "¹³C 10本(帰属炭素数) / 分子式の炭素数 10。",
+    "¹H 積分合計 16H(帰属された水素の数、うち炭素上 16H) / 分子式の水素数 16。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 7/10(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが14個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。",
+    "多重度: BMRB bmse001230 の 1D ¹H ピークリストの記載(±0.01 ppm で一意に対応するもの)を 10本中0本に付けた。",
+    "DEPT(完全): BMRB bmse001230 の DEPT-90(強度あり)・DEPT-135(符号あり)を通常の読み方で解釈し、10本中10本に種類を付けた(C×3, CH2×3, CH×1, CH3×3)。実測 HSQC と矛盾する判定は緩めてある。元データ camphor との比較用。"
+  ]
+}

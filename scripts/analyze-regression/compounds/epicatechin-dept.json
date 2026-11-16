@@ -1,0 +1,186 @@
+{
+  "id": "epicatechin-dept",
+  "name": "(-)-エピカテキン (epicatechin) — DEPT(完全)",
+  "categories": [
+    "フラボノイド",
+    "立体化学が複雑な化合物",
+    "天然物",
+    "DEPT 入り"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 72276,
+    "molecularFormula": "C15H14O6",
+    "smiles": "C1C(C(OC2=CC(=CC(=C21)O)O)C3=CC(=C(C=C3)O)O)O",
+    "inchiKey": "PFTAWBLQPZVEMU-UKRRQHHQSA-N"
+  },
+  "conditions": {
+    "solvent": "DMSO",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001255 ((-)-Epicatechin). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001255",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 290.27,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        6.8684,
+        1
+      ],
+      [
+        6.64,
+        1
+      ],
+      [
+        6.631,
+        1
+      ],
+      [
+        5.8636,
+        1
+      ],
+      [
+        5.687,
+        1
+      ],
+      [
+        4.711,
+        1
+      ],
+      [
+        3.9761,
+        1
+      ],
+      [
+        2.6547,
+        1
+      ],
+      [
+        2.4565,
+        1
+      ]
+    ],
+    "c13": [
+      [
+        156.3854,
+        "C"
+      ],
+      [
+        156.08,
+        "C"
+      ],
+      [
+        155.6342,
+        "C"
+      ],
+      [
+        144.345,
+        "C"
+      ],
+      [
+        144.2971,
+        "C"
+      ],
+      [
+        130.4586,
+        "C"
+      ],
+      [
+        117.7941,
+        "CH"
+      ],
+      [
+        114.7295,
+        "CH"
+      ],
+      [
+        114.5917,
+        "CH"
+      ],
+      [
+        98.3158,
+        "C"
+      ],
+      [
+        94.8733,
+        "CH"
+      ],
+      [
+        93.9069,
+        "CH"
+      ],
+      [
+        77.9034,
+        "CH"
+      ],
+      [
+        64.7502,
+        "CH"
+      ],
+      [
+        28.0849,
+        "CH2"
+      ]
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C12"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C13"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H7",
+        "to": "C14"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H9",
+        "to": "C15"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H8",
+        "to": "C15"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 72276 が一致。",
+    "¹³C 15本(帰属炭素数) / 分子式の炭素数 15。",
+    "¹H 積分合計 9H(帰属された水素の数、うち炭素上 9H) / 分子式の水素数 14。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 6/9(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが2個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。",
+    "多重度: BMRB bmse001255 の 1D ¹H ピークリストの記載(±0.01 ppm で一意に対応するもの)を 9本中0本に付けた。",
+    "DEPT(完全): BMRB bmse001255 の DEPT-90(強度あり)・DEPT-135(符号あり)を通常の読み方で解釈し、15本中15本に種類を付けた(C×7, CH×7, CH2×1)。実測 HSQC と矛盾する判定は緩めてある。元データ epicatechin との比較用。"
+  ]
+}

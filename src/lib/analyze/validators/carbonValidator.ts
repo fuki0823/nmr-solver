@@ -78,8 +78,20 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
   // 「CH/CH3」のような集合も含めて、H 数のあらゆる組み合わせ S について
   //   (表記が S に含まれるピークの本数) ≤ (H 数が S に含まれる炭素原子の数)
   // を確かめる(2部マッチングが成り立つための必要条件)。
+  //
+  // ただしハード制約には、直接観測で決まる種類だけを使う。DEPT の「C」(DEPT-135 に
+  // 出ない)と「CH3」(DEPT-135 で正だが DEPT-90 に出ない)は「出ていない」ことからの
+  // 推論で、弱いピークの検出漏れで誤ることがある(実測データでルチン・シンバスタチンの
+  // 糖やCHを C と判定し、正解を除外した)。そのため本数の判定では C は制約なし、CH3 は
+  // CH/CH3 として扱い、C・CH3 の誤りはピーク割当(ソフトスコア)の減点に任せる。
   const carbonTypes = peaks.map((p) => parseCarbonType(p.carbonType));
-  const typedPeaks = carbonTypes.filter((t): t is number[] => t != null);
+  const typedPeaks = carbonTypes
+    .map((t) => {
+      if (t == null || (t.length === 1 && t[0] === 0)) return null;
+      if (t.length === 1 && t[0] === 3) return [1, 3];
+      return t;
+    })
+    .filter((t): t is number[] => t != null);
   const carbonAtomsAll = candidateGraph.atoms.filter((a) => a.element === "C");
   if (typedPeaks.length > 0) {
     for (let mask = 1; mask < 16; mask++) {

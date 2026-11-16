@@ -1,0 +1,131 @@
+{
+  "id": "biotin-dept",
+  "name": "ビオチン (biotin) — DEPT(完全)",
+  "categories": [
+    "含硫黄化合物",
+    "複素環化合物",
+    "含窒素化合物",
+    "DEPT 入り"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 171548,
+    "molecularFormula": "C10H16N2O3S",
+    "smiles": "C1C2C(C(S1)CCCCC(=O)O)NC(=O)N2",
+    "inchiKey": "YBJHBAHKTGYVGT-ZKWXMUAHSA-N"
+  },
+  "conditions": {
+    "solvent": "D2O",
+    "frequency": "400 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000227 (biotin). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000227",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 244.31,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        4.6,
+        1
+      ],
+      [
+        4.43,
+        1
+      ],
+      [
+        3.35,
+        1
+      ],
+      [
+        2.995,
+        1
+      ],
+      [
+        2.77,
+        1
+      ],
+      [
+        2.185,
+        2
+      ],
+      [
+        1.712,
+        1
+      ],
+      [
+        1.597,
+        3
+      ],
+      [
+        1.41,
+        2
+      ]
+    ],
+    "c13": [
+      [
+        186.53,
+        "C"
+      ],
+      [
+        168.12,
+        "C"
+      ],
+      [
+        64.73,
+        "CH"
+      ],
+      [
+        62.99,
+        "CH"
+      ],
+      [
+        58.09,
+        "CH"
+      ],
+      [
+        42.48,
+        "CH2"
+      ],
+      [
+        40.06,
+        "CH2"
+      ],
+      [
+        31.018,
+        "CH2"
+      ],
+      [
+        30.43,
+        "CH2"
+      ],
+      [
+        28.42,
+        "CH2"
+      ]
+    ],
+    "correlations": []
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 171548 が一致。",
+    "¹³C 10本(帰属炭素数) / 分子式の炭素数 10。",
+    "¹H 積分合計 13H(帰属された水素の数、うち炭素上 13H) / 分子式の水素数 16。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 0/22(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが2個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。",
+    "多重度: BMRB bmse000227 の 1D ¹H ピークリストの記載(±0.01 ppm で一意に対応するもの)を 9本中0本に付けた。",
+    "DEPT(完全): BMRB bmse000227 の DEPT-90(強度あり)・DEPT-135(符号あり)を通常の読み方で解釈し、10本中10本に種類を付けた(C×2, CH×3, CH2×5)。実測 HSQC と矛盾する判定は緩めてある。元データ biotin との比較用。"
+  ]
+}

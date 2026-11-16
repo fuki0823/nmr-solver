@@ -123,7 +123,14 @@ export function multiplicitiesFor(frames, shifts, tolerance = 0.01) {
  *  - DEPT-90 の漏れ込み: 最大強度の3割未満のピークは無視する。強度の記録が無い DEPT-90 は使わない。
  * 同じシフトの炭素が複数ある場合や、結果が矛盾する場合は undefined(判定に使わない)。
  */
-export function carbonTypesFor(frames, carbonShifts, tolerance = 0.08) {
+export function carbonTypesFor(frames, carbonShifts, tolerance = 0.08, options = {}) {
+  // options.full: DEPT-90 の強度と DEPT-135 の符号の両方がある場合に限り、化学者が通常行う
+  //   完全な読み方(DEPT-90 に無い正のピーク → CH3、DEPT-135 に無い → C)をする。
+  // options.protonated[i]: 同じエントリの実測 HSQC で、i 番目の炭素に H が付いていると
+  //   分かっているか。C と判定したのに HSQC の相関があれば、検出漏れとみなして判定を緩める。
+  // options.hsqcHydrogens[i]: HSQC で i 番目の炭素に相関する ¹H の積分(1つに決まる場合)。
+  //   CH3 と判定したのに 3H 未満なら、DEPT-90 の検出漏れとみなして CH/CH3 に緩める。
+  const { full = false, protonated = [], hsqcHydrogens = [] } = options;
   const deptPeaks = (pattern) => {
     const frame = frames.find((f) => pattern.test(f.tags["_Spectral_peak_list.Experiment_name"] ?? ""));
     if (!frame) return null;
@@ -203,10 +210,17 @@ export function carbonTypesFor(frames, carbonShifts, tolerance = 0.08) {
     const signs = new Set(hits135[i].map((p) => (p.intensity == null ? null : Math.sign(p.intensity) * flip)));
     if (signs.size > 1) return undefined;
     const sign = hits135[i].length ? [...signs][0] : undefined;
+    const canReadFully = full && d90 != null && d135.every((p) => p.intensity != null);
     if (hits90[i].length > 0) return sign === -1 ? undefined : "CH";
-    if (hits135[i].length === 0) return undefined;
+    if (hits135[i].length === 0) {
+      if (!canReadFully) return undefined;
+      return protonated[i] ? "CH/CH2/CH3" : "C";
+    }
     if (sign === -1) return "CH2";
-    if (sign === 1) return "CH/CH3";
+    if (sign === 1) {
+      if (!canReadFully) return "CH/CH3";
+      return hsqcHydrogens[i] != null && hsqcHydrogens[i] < 3 ? "CH/CH3" : "CH3";
+    }
     return "CH/CH2/CH3";
   });
 }

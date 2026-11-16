@@ -1,0 +1,163 @@
+{
+  "id": "luteolin-dept",
+  "name": "ルテオリン (luteolin) — DEPT(完全)",
+  "categories": [
+    "フラボノイド",
+    "芳香族化合物",
+    "天然物",
+    "DEPT 入り"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 5280445,
+    "molecularFormula": "C15H10O6",
+    "smiles": "C1=CC(=C(C=C1C2=CC(=O)C3=C(C=C(C=C3O2)O)O)O)O",
+    "inchiKey": "IQPNAANSBPBGFQ-UHFFFAOYSA-N"
+  },
+  "conditions": {
+    "solvent": "DMSO",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001276 (Luteolin). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001276",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "molecularWeight": 286.24,
+      "note": "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。"
+    },
+    "h1": [
+      [
+        7.4258,
+        1
+      ],
+      [
+        7.4073,
+        1
+      ],
+      [
+        6.8991,
+        1
+      ],
+      [
+        6.684,
+        1
+      ],
+      [
+        6.454,
+        1
+      ],
+      [
+        6.2018,
+        1
+      ]
+    ],
+    "c13": [
+      [
+        181.661,
+        "C"
+      ],
+      [
+        164.3292,
+        "C"
+      ],
+      [
+        163.8808,
+        "C"
+      ],
+      [
+        161.4904,
+        "C"
+      ],
+      [
+        157.3156,
+        "C"
+      ],
+      [
+        149.7881,
+        "C"
+      ],
+      [
+        145.769,
+        "C"
+      ],
+      [
+        121.4498,
+        "C"
+      ],
+      [
+        119.0148,
+        "CH"
+      ],
+      [
+        116.0162,
+        "CH"
+      ],
+      [
+        113.3309,
+        "CH"
+      ],
+      [
+        103.6391,
+        "C"
+      ],
+      [
+        102.8435,
+        "CH"
+      ],
+      [
+        98.8793,
+        "CH"
+      ],
+      [
+        93.8813,
+        "CH"
+      ]
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C10"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H4",
+        "to": "C13"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C14"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C15"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 5280445 が一致。",
+    "¹³C 15本(帰属炭素数) / 分子式の炭素数 15。",
+    "¹H 積分合計 6H(帰属された水素の数、うち炭素上 6H) / 分子式の水素数 10。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 4/6(座標で対応付け)。",
+    "多重度: BMRB bmse001276 の 1D ¹H ピークリストの記載(±0.01 ppm で一意に対応するもの)を 6本中0本に付けた。",
+    "DEPT(完全): BMRB bmse001276 の DEPT-90(強度あり)・DEPT-135(符号あり)を通常の読み方で解釈し、15本中15本に種類を付けた(C×9, CH×6)。実測 HSQC と矛盾する判定は緩めてある。元データ luteolin との比較用。"
+  ]
+}
