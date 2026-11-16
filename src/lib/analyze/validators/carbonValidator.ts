@@ -6,6 +6,8 @@ import {
   shiftConsistencyScore,
 } from "../shiftRanges";
 import { formatCarbonType, parseCarbonType } from "../dept";
+import { predictAromaticCarbons } from "../prediction/aromaticIncrements";
+import { minCostAssignment } from "../prediction/assignment";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
 export function carbonValidator(context: ValidationContext): ValidationResult {
@@ -160,6 +162,44 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
     });
   }
 
+  // 3. 予測シフトとの一致(置換基加成則で予測できる炭素のみ。詳細は prediction/)。
+  // シフト範囲・DEPT の条件を満たす組み合わせの中で、予測値とのずれの合計が最小になる
+  // ようにピークを炭素へ割り当て(ハンガリアン法)、予測のある炭素の平均のずれ(MAD)で
+  // 評価する。予測の無い炭素へのコストは典型的な誤差 3 ppm とし、割り当てを偏らせない。
+  const predictionAll = predictAromaticCarbons(candidateGraph);
+  const predicted = carbons.map((a) => predictionAll[a.index]);
+  let predictionScore: number | null = null;
+  if (predicted.some((p) => p != null) && sortedPeaks.length <= carbons.length) {
+    const DEFAULT_COST = 3;
+    const INFEASIBLE = 1000;
+    const cost = sortedPeaks.map((p, i) =>
+      carbons.map((a, j) => {
+        const feasible =
+          inRange(p.shift, ranges[j]) && (sortedTypes[i] == null || sortedTypes[i]!.includes(a.attachedH ?? 0));
+        if (!feasible) return INFEASIBLE;
+        return predicted[j] != null ? Math.min(Math.abs(p.shift - predicted[j]!), 15) : DEFAULT_COST;
+      }),
+    );
+    const assign = minCostAssignment(cost);
+    const deviations: { obs: number; pred: number; dev: number }[] = [];
+    assign.forEach((j, i) => {
+      if (j < 0 || cost[i][j] >= INFEASIBLE || predicted[j] == null) return;
+      deviations.push({ obs: sortedPeaks[i].shift, pred: predicted[j]!, dev: Math.abs(sortedPeaks[i].shift - predicted[j]!) });
+    });
+    if (deviations.length >= 3) {
+      const mad = deviations.reduce((s, d) => s + d.dev, 0) / deviations.length;
+      // 加成則の典型的な誤差(約 2 ppm)までは満点、それを超えると下げる
+      predictionScore = Math.exp(-Math.max(0, mad - 2) / 3);
+      const worst = [...deviations].sort((a, b) => b.dev - a.dev).slice(0, 3);
+      details.push({
+        status: mad <= 3 ? "match" : mad <= 5 ? "partial" : "mismatch",
+        summary: `予測シフト(芳香環の置換基加成則): 予測できる炭素${deviations.length}本の平均のずれ ${mad.toFixed(1)} ppm(ずれの大きいもの: ${worst
+          .map((d) => `δ${d.obs} ↔ 予測${d.pred}`)
+          .join(", ")})`,
+      });
+    }
+  }
+
   // 範囲ごとの内訳(参考表示)。候補構造の炭素がどの種類に何個あるか。
   const labelCounts = new Map<string, number>();
   for (const r of ranges) labelCounts.set(r.label, (labelCounts.get(r.label) ?? 0) + 1);
@@ -172,7 +212,13 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
 
   // 本数の一致は同じ分子式の候補同士ではほぼ差が出ないため、構造の違いが
   // 表れる化学シフトの整合性を2倍に重み付けする。
-  const score = hardReject ? 0 : (countScore + 2 * shiftScore) / 3;
+  // 予測シフトがあれば、範囲による判定と同じ重みで加える(同じ分子式の異性体を区別する
+  // 主な手がかりになるため)。
+  const score = hardReject
+    ? 0
+    : predictionScore != null
+      ? (countScore + 2 * shiftScore + 2 * predictionScore) / 5
+      : (countScore + 2 * shiftScore) / 3;
   const status = hardReject ? "mismatch" : score >= 0.8 ? "match" : score >= 0.4 ? "partial" : "mismatch";
 
   return { method: "13C", status, score, details };

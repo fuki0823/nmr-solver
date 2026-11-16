@@ -258,7 +258,14 @@ async function testQuercetinVsNContainingCounterCandidate(page) {
     );
     const carbon = quercetinEval.results.find((r) => r.method === "13C");
     const hsqc = quercetinEval.results.find((r) => r.method === "HSQC");
-    check("quercetin: 13C status is match", carbon?.status === "match", carbon?.status);
+    // このクエルセチンの¹³C値は旧判定方式の境界に合わせた人工値(C=O δ195 等)で、
+    // 実在のシフトではないため、予測シフトとの一致(ソフトスコア)は問わない。
+    // 確かめるのは「¹³Cでハード制約違反にならない」ことだけ。
+    check(
+      "quercetin: 13C raises no hard constraint",
+      !carbon?.details.some((d) => d.hardConstraint && d.status === "mismatch"),
+      carbon?.status,
+    );
     check("quercetin: HSQC status is match", hsqc?.status === "match", hsqc?.status);
   }
 

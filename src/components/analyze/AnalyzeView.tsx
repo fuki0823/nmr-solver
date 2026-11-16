@@ -16,6 +16,7 @@ import { runAnalysis } from "@/lib/analyze/runAnalysis";
 import { analyzeSmiles, inchiKeyOf } from "@/lib/analyze/ketcherService";
 import { couplingPartners } from "@/lib/analyze/multiplicity";
 import { expectedProtonRange } from "@/lib/analyze/shiftRanges";
+import { predictAromaticCarbons } from "@/lib/analyze/prediction/aromaticIncrements";
 
 // 開発/テスト用フック: 本番ビルドではNODE_ENVチェックによりdead-code
 // eliminationで消える。Playwrightから解析処理を直接呼び出すために
@@ -28,6 +29,12 @@ if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
     evaluateCandidate,
     runAnalysis,
     inchiKeyOf,
+    // 芳香環の炭素の予測シフト(置換基加成則の確認用)
+    async predictCarbons(smiles: string) {
+      const graph = await analyzeSmiles(smiles);
+      const pred = predictAromaticCarbons(graph);
+      return graph.atoms.map((a, i) => ({ atom: i, element: a.element, h: a.attachedH, pred: pred[i] })).filter((x) => x.pred != null);
+    },
     // 原子ごとのHのシフト範囲・カップリング相手の数(多重度判定の確認用)
     async protonModel(smiles: string) {
       const graph = await analyzeSmiles(smiles);
