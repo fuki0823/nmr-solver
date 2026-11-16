@@ -52,7 +52,7 @@ export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
         </select>
       </label>
       <label className="flex flex-col gap-1 text-sm text-stone-700">
-        Molecular Weight(概算のみの場合)
+        Molecular Weight(平均分子量)
         <input
           type="number"
           step="0.01"
