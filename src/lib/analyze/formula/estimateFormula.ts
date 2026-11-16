@@ -90,7 +90,7 @@ function hydrogenOk(f: FormulaCandidate, protonTotal: number, deptMin = 0): bool
   if (deptMin > 0 && f.counts.H < deptMin - 1) return false;
   if (protonTotal <= 0) return true;
   const tol = hydrogenTolerance(protonTotal);
-  const exchangeableMax = f.counts.O + 2 * f.counts.N + f.counts.S;
+  const exchangeableMax = (f.counts.O ?? 0) + 2 * (f.counts.N ?? 0) + (f.counts.S ?? 0);
   return f.counts.H >= protonTotal - tol && f.counts.H <= protonTotal + exchangeableMax + tol;
 }
 

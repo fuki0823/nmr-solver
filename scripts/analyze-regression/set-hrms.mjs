@@ -26,6 +26,8 @@ const ADDUCT_BY_ID = {
   "aminopenicillanic-acid": "[M-H]-",
   rutin: "[M+Na]+",
   neohesperidin: "[M+Na]+",
+  triclosan: "[M-H]-",
+  "tetrabromobisphenol-a": "[M-H]-",
 };
 
 function errorPpm(id) {
@@ -49,11 +51,18 @@ for (const file of readdirSync(DIR).filter((f) => f.endsWith(".json"))) {
   const exact = mono + ADDUCT[adduct];
   const err = errorPpm(baseId);
   const measured = Math.round(exact * (1 + err / 1e6) * 10000) / 10000;
+  // C・H・N・O・S 以外の元素は「含まれうる元素」として指定する。Cl・Br は MS の同位体
+  // パターンで分かる。F・I・P は同位体では分からないので、¹⁹F/³¹P NMR 等で分かっている想定。
+  const extra = ["Cl", "Br", "F", "I", "P"].filter((e) => new RegExp(`${e}(?![a-z])`).test(data.structure.molecularFormula));
+  const elementNote = extra.length
+    ? ` 含まれうる元素として ${extra.join("・")} を指定した(${extra.some((e) => e === "Cl" || e === "Br") ? "Cl・Br は同位体パターンで分かる想定" : ""}${extra.some((e) => ["F", "I", "P"].includes(e)) ? `${extra.some((e) => e === "Cl" || e === "Br") ? "、" : ""}F・I・P は ¹⁹F/³¹P NMR 等で分かっている想定` : ""})。`
+    : "";
   data.input.ms = {
     measuredMz: measured,
     ionAdduct: adduct,
     massTolerancePpm: 5,
-    note: `高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 ${mono} から ${adduct} の m/z ${exact.toFixed(4)} を計算し、測定誤差として ${err >= 0 ? "+" : ""}${err} ppm を加えた。許容誤差 5 ppm。`,
+    ...(extra.length ? { elements: extra } : {}),
+    note: `高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 ${mono} から ${adduct} の m/z ${exact.toFixed(4)} を計算し、測定誤差として ${err >= 0 ? "+" : ""}${err} ppm を加えた。許容誤差 5 ppm。${elementNote}`,
   };
   const json = JSON.stringify(data, null, 2) + "\n";
   writeFileSync(path, raw.includes("\r\n") ? json.replace(/\n/g, "\r\n") : json);

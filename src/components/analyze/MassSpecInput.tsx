@@ -1,7 +1,7 @@
 "use client";
 
 import type { MassSpecData } from "@/lib/analyze/types";
-import { ADDUCT_MASS_DELTA } from "@/lib/analyze/formula/massToFormulaCandidates";
+import { ADDUCT_MASS_DELTA, OPTIONAL_ELEMENTS } from "@/lib/analyze/formula/massToFormulaCandidates";
 
 interface MassSpecInputProps {
   value: MassSpecData;
@@ -9,6 +9,14 @@ interface MassSpecInputProps {
 }
 
 const ADDUCTS = Object.keys(ADDUCT_MASS_DELTA);
+
+const ELEMENT_HINT: Record<string, string> = {
+  Cl: "M+2 が M の約1/3(Cl 1個)",
+  Br: "M+2 が M とほぼ同じ強さ(Br 1個)",
+  F: "¹⁹F NMR 等で確認",
+  I: "質量欠損が大きい",
+  P: "³¹P NMR 等で確認",
+};
 
 export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
   return (
@@ -92,6 +100,32 @@ export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
           入力するとppm指定より優先されます。精密質量(HRMS)が無い場合のみ使用してください。
         </span>
       </label>
+      <fieldset className="flex flex-col gap-2 text-sm text-stone-700 sm:col-span-2">
+        <legend className="mb-1">C・H・N・O・S 以外に含まれうる元素</legend>
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          {OPTIONAL_ELEMENTS.map((el) => {
+            const checked = value.elements?.includes(el) ?? false;
+            return (
+              <label key={el} className="flex items-center gap-1.5" title={ELEMENT_HINT[el]}>
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={(e) => {
+                    const next = new Set(value.elements ?? []);
+                    if (e.target.checked) next.add(el);
+                    else next.delete(el);
+                    onChange({ ...value, elements: next.size ? [...next] : undefined });
+                  }}
+                />
+                {el}
+              </label>
+            );
+          })}
+        </div>
+        <span className="text-xs text-stone-500">
+          チェックした元素だけを分子式の探索に加えます。Cl・Br は MS の同位体パターン(Cl: M+2 が M の約1/3、Br: M+2 が M とほぼ同じ)で判断できます。不要な元素まで加えると候補が大幅に増え、探索にも時間がかかります。
+        </span>
+      </fieldset>
     </div>
   );
 }

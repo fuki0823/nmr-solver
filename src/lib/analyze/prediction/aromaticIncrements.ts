@@ -50,6 +50,17 @@ const INC: Record<string, Increment> = {
 
 const BENZENE = 128.5;
 
+/**
+ * オルト位の置換基どうしの相互作用の補正(加成則からのずれ)。
+ * OH・OR の付いた炭素の隣にハロゲンがあると、加成則は ipso を高く見積もりすぎる。
+ * 値は 2-ハロフェノールの C1 の実測と加成則の差(2-クロロ 151.4/155.6、2-ブロモ 152.3/158.8、
+ * 2-ヨード 155.0/165.3)。両隣にあれば2回足す(2,6-ジブロモ体の C1 ≈ 149)。
+ */
+const ORTHO_CORRECTION: Record<string, Record<string, number>> = {
+  OH: { Cl: -4.2, Br: -6.5, I: -10.3 },
+  OR: { Cl: -4.2, Br: -6.5, I: -10.3 },
+};
+
 /** 6員の全炭素芳香環(ベンゼン環)を列挙する。原子の並びは環をたどる順。 */
 function benzeneRings(graph: MoleculeGraph): number[][] {
   const aromatic = findAromaticAtoms(graph);
@@ -119,9 +130,12 @@ function classify(graph: MoleculeGraph, ringAtom: number, sub: number, aromatic:
   }
   if (nbrs.some(([n, o]) => o === 3 && graph.atoms[n].element === "N")) return "CN";
   if (nbrs.some(([, o]) => o === 2 || o === 4)) return "VINYL";
-  if (nbrs.some(([n]) => ["O", "N", "S", "F", "Cl", "Br", "I"].includes(graph.atoms[n].element))) return "CH2X";
-  const carbonNbrs = nbrs.filter(([n]) => graph.atoms[n].element === "C").length;
-  return ["CH3", "CH2R", "CHR2", "CR3"][Math.min(carbonNbrs, 3)];
+  // sp3 炭素の置換基は、付いている重原子の数(炭素・ヘテロ原子を問わない)で分類する。
+  // ipso の増分は主に置換の度合いで決まり、例えば第三級アルコール C(OH)R2 は CR3 に近い
+  // (ハロペリドールの C4 を CH2X 扱いすると ipso を約10 ppm 低く予測した)。
+  // 置換基が1つで、それがヘテロ原子なら CH2X(CH2OH 等)。
+  if (nbrs.length === 1 && ["O", "N", "S", "F", "Cl", "Br", "I"].includes(graph.atoms[nbrs[0][0]].element)) return "CH2X";
+  return ["CH3", "CH2R", "CHR2", "CR3"][Math.min(nbrs.length, 3)];
 }
 
 /** 各原子の予測 ¹³C シフト(ベンゼン環の炭素以外は null) */
@@ -144,6 +158,12 @@ export function predictAromaticCarbons(graph: MoleculeGraph): (number | null)[] 
       ring.forEach((_, j) => {
         const d = Math.min(Math.abs(j - k), 6 - Math.abs(j - k)); // 0=ipso 1=ortho 2=meta 3=para
         for (const s of subsAt[j]) shift += INC[s as string][d];
+        // この炭素(ipso)の置換基と、隣の炭素の置換基との相互作用
+        if (d === 1) {
+          for (const own of subsAt[k]) {
+            for (const other of subsAt[j]) shift += ORTHO_CORRECTION[own as string]?.[other as string] ?? 0;
+          }
+        }
       });
       result[atom] = Math.round(shift * 10) / 10;
     });

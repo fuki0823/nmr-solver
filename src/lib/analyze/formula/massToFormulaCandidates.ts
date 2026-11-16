@@ -1,56 +1,81 @@
 /**
  * 質量(MS)から分子式候補を生成するモジュール。完全にrule-based(AI不使用)。
  *
- * 手法: C/H/N/O/Sの妥当な範囲を総当たりし、
+ * 手法: C/H と、指定された元素(既定 N/O/S。Cl/Br/F/I/P はユーザーが指定した場合のみ)の
+ * 妥当な範囲を総当たりし、
  *  - 目標質量との誤差が許容範囲内
- *  - DBE(不飽和度) = C - H/2 + N/2 + 1 が0以上の整数
- * を満たす組み合わせのみを候補として返す(質量分析の分子式決定で広く
- * 使われる古典的な手法の簡易版。DFTによるshift予測等とは無関係)。
+ *  - 不飽和度 DBE = C + 1 + (N + P − H − ハロゲン)/2 が0以上の整数
+ *  - 元素比が既知化合物の範囲内(Seven Golden Rules)
+ * を満たす組み合わせのみを候補として返す。H の数は残りの質量から決める。
  */
 
 import { checkElementRatios } from "./elementRatios";
 
-const MONOISOTOPIC_MASS = {
+const MONOISOTOPIC_MASS: Record<string, number> = {
   H: 1.007825,
   C: 12.0,
   N: 14.003074,
   O: 15.994915,
   S: 31.972071,
-} as const;
+  P: 30.973762,
+  F: 18.998403,
+  Cl: 34.968853,
+  Br: 78.918338,
+  I: 126.904473,
+};
 
 /**
  * 平均原子量(IUPAC標準原子量の慣用値)。カタログやPubChemの
  * "Molecular Weight"(例: ダウノルビシン 527.52)は平均分子量のため、
  * 分子量しか分からない場合はこちらで分子式を探索する。
  */
-const AVERAGE_MASS = {
+const AVERAGE_MASS: Record<string, number> = {
   H: 1.008,
   C: 12.011,
   N: 14.007,
   O: 15.999,
   S: 32.06,
-} as const;
+  P: 30.974,
+  F: 18.998,
+  Cl: 35.45,
+  Br: 79.904,
+  I: 126.904,
+};
 
 export type MassKind = "monoisotopic" | "average";
 
-// 一般的な有機小分子・天然物を想定した既定の探索範囲。
-export interface FormulaSearchBounds {
-  maxCarbon: number;
-  maxNitrogen: number;
-  maxOxygen: number;
-  maxSulfur: number;
-}
-
-export const DEFAULT_FORMULA_SEARCH_BOUNDS: FormulaSearchBounds = {
-  maxCarbon: 60,
-  maxNitrogen: 8,
-  maxOxygen: 20,
-  maxSulfur: 4,
+/** H 以外で探索する元素の上限(質量でさらに打ち切る) */
+const MAX_COUNT: Record<string, number> = {
+  N: 15,
+  O: 40,
+  S: 4,
+  P: 3,
+  F: 10,
+  Cl: 6,
+  Br: 4,
+  I: 4,
 };
+
+/** 既定で探索する元素(C・H 以外)。ハロゲンとリンは指定があった場合だけ探索する */
+export const DEFAULT_ELEMENTS = ["N", "O", "S"] as const;
+/** 指定できる追加の元素 */
+export const OPTIONAL_ELEMENTS = ["Cl", "Br", "F", "I", "P"] as const;
+
+const HALOGENS = new Set(["F", "Cl", "Br", "I"]);
+
+export interface FormulaSearchBounds {
+  /** 炭素数の下限(¹³C のピーク数が分かっていればその数。既定 1) */
+  minCarbon?: number;
+  /** 炭素数の上限(既定 150。バンコマイシン C66 などの大きな天然物を含める) */
+  maxCarbon?: number;
+  /** C・H 以外に探索する元素(既定 N, O, S) */
+  elements?: readonly string[];
+}
 
 export interface FormulaCandidate {
   formula: string;
-  counts: { C: number; H: number; N: number; O: number; S: number };
+  /** 元素ごとの個数(含まれない元素は 0 またはキーなし) */
+  counts: Record<string, number>;
   exactMass: number;
   massErrorPpm: number;
   degreeOfUnsaturation: number;
@@ -101,57 +126,71 @@ export interface MassTolerance {
 export function generateFormulaCandidates(
   targetMass: number,
   tolerance: MassTolerance | number = { ppm: 10 },
-  bounds: FormulaSearchBounds = DEFAULT_FORMULA_SEARCH_BOUNDS,
+  bounds: FormulaSearchBounds = {},
   massKind: MassKind = "monoisotopic",
 ): FormulaCandidate[] {
   const MASS = massKind === "average" ? AVERAGE_MASS : MONOISOTOPIC_MASS;
   const spec: MassTolerance = typeof tolerance === "number" ? { ppm: tolerance } : tolerance;
   const toleranceDa =
     spec.da != null ? spec.da : Math.max((targetMass * (spec.ppm ?? 10)) / 1e6, 0.003);
+  const elements = [...new Set(bounds.elements ?? DEFAULT_ELEMENTS)].filter((e) => MASS[e] != null && e !== "C" && e !== "H");
+  // 重い元素から先に回すと、質量による打ち切りが早く効く
+  elements.sort((a, b) => MASS[b] - MASS[a]);
+  const minC = Math.max(1, bounds.minCarbon ?? 1);
+  const maxC = Math.min(bounds.maxCarbon ?? 150, Math.floor(targetMass / MASS.C) + 1);
   const results: FormulaCandidate[] = [];
-  const maxC = Math.min(bounds.maxCarbon, Math.floor(targetMass / MASS.C) + 1);
+  const counts: Record<string, number> = {};
 
-  for (let c = 1; c <= maxC; c++) {
+  const finish = (massWithoutH: number) => {
+    const remainingForH = targetMass - massWithoutH;
+    if (remainingForH < -toleranceDa) return;
+    const h = Math.round(remainingForH / MASS.H);
+    if (h < 0) return;
+    const exactMass = massWithoutH + h * MASS.H;
+    const massError = exactMass - targetMass;
+    if (Math.abs(massError) > toleranceDa) return;
+    const c = counts.C;
+    const n = counts.N ?? 0;
+    const p = counts.P ?? 0;
+    const x = elements.filter((e) => HALOGENS.has(e)).reduce((sum, e) => sum + (counts[e] ?? 0), 0);
+    const dbe = c + 1 + (n + p - h - x) / 2;
+    if (!Number.isInteger(dbe) || dbe < 0) return;
+    // 極端に大きい DBE は非現実的な組成として除外
+    if (dbe > c + n + 1) return;
+    const full: Record<string, number> = { C: c, H: h };
+    for (const e of elements) full[e] = counts[e] ?? 0;
+    // 既知化合物にほぼ存在しない元素比(Seven Golden Rules の extended 範囲外)は除外
+    if (checkElementRatios(full).level === "implausible") return;
+    results.push({
+      formula: formatFormula(full),
+      counts: full,
+      exactMass: Math.round(exactMass * 10000) / 10000,
+      massErrorPpm: Math.round((massError / targetMass) * 1e6 * 100) / 100,
+      degreeOfUnsaturation: dbe,
+    });
+  };
+
+  // 元素を1つずつ再帰的に増やす。質量が目標を超えたら打ち切る
+  const recurse = (index: number, mass: number) => {
+    if (index === elements.length) {
+      finish(mass);
+      return;
+    }
+    const el = elements[index];
+    for (let k = 0; k <= (MAX_COUNT[el] ?? 0); k++) {
+      const m = mass + k * MASS[el];
+      if (m - toleranceDa > targetMass) break;
+      counts[el] = k;
+      recurse(index + 1, m);
+    }
+    counts[el] = 0;
+  };
+
+  for (let c = minC; c <= maxC; c++) {
     const massC = c * MASS.C;
     if (massC - toleranceDa > targetMass) break;
-
-    for (let n = 0; n <= bounds.maxNitrogen; n++) {
-      const massCN = massC + n * MASS.N;
-      if (massCN - toleranceDa > targetMass) break;
-
-      for (let o = 0; o <= bounds.maxOxygen; o++) {
-        const massCNO = massCN + o * MASS.O;
-        if (massCNO - toleranceDa > targetMass) break;
-
-        for (let s = 0; s <= bounds.maxSulfur; s++) {
-          const massWithoutH = massCNO + s * MASS.S;
-          const remainingForH = targetMass - massWithoutH;
-          if (remainingForH < -toleranceDa) break;
-
-          const h = Math.round(remainingForH / MASS.H);
-          if (h < 0) continue;
-
-          const exactMass = massWithoutH + h * MASS.H;
-          const massError = exactMass - targetMass;
-          if (Math.abs(massError) > toleranceDa) continue;
-
-          const dbe = c - h / 2 + n / 2 + 1;
-          if (!Number.isInteger(dbe) || dbe < 0) continue;
-          // 極端に大きい/小さいDBEは非現実的な組成として除外
-          if (dbe > c + n + 1) continue;
-          // 既知化合物にほぼ存在しない元素比(Seven Golden Rules の extended 範囲外)は除外
-          if (checkElementRatios({ C: c, H: h, N: n, O: o, S: s }).level === "implausible") continue;
-
-          results.push({
-            formula: formatFormula({ C: c, H: h, N: n, O: o, S: s }),
-            counts: { C: c, H: h, N: n, O: o, S: s },
-            exactMass: Math.round(exactMass * 10000) / 10000,
-            massErrorPpm: Math.round((massError / targetMass) * 1e6 * 100) / 100,
-            degreeOfUnsaturation: dbe,
-          });
-        }
-      }
-    }
+    counts.C = c;
+    recurse(0, massC);
   }
 
   return results.sort(
@@ -159,8 +198,9 @@ export function generateFormulaCandidates(
   );
 }
 
+/** Hill 記法(C, H の後はアルファベット順。PubChem と同じ) */
 function formatFormula(counts: Record<string, number>): string {
-  const order = ["C", "H", "N", "O", "S"];
+  const order = ["C", "H", ...Object.keys(counts).filter((e) => e !== "C" && e !== "H").sort()];
   const parts: string[] = [];
   for (const el of order) {
     const n = counts[el] ?? 0;

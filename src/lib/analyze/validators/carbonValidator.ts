@@ -1,4 +1,9 @@
-import { countCarbonTypesByEquivalence, countDistinctCarbonEnvironments } from "../../moleculeGraph";
+import {
+  computeEquivalenceClasses,
+  countCarbonTypesByEquivalence,
+  countDistinctCarbonEnvironments,
+} from "../../moleculeGraph";
+import { maxBipartiteMatching } from "../shiftRanges";
 import {
   expectedCarbonRange,
   inRange,
@@ -147,11 +152,43 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
     return j != null && j >= 0 && rangeCost[i][j] < BLOCKED ? j : -1;
   });
   const softMismatches = matchLeft.filter((j, i) => j >= 0 && rangeCost[i][j] === SOFT).length;
+
+  // 対称性: 小数3桁以上の精度で値が完全に一致するピークの組は、等価な炭素(分子の対称性)に
+  // よるものと考えられる。候補構造の等価な炭素の組(組の大きさ以上)に1対1で対応付けられない
+  // 組は、偶然の一致を仮定する必要があるので、半分の重みの不一致として数える。
+  // 小数2桁以下のデータでは偶然の一致がよくある(例: SMTP-7 の 26.62 ×2)ので判定しない。
+  const decimals = (x: number) => (String(x).split(".")[1] ?? "").length;
+  let unexplainedDuplicates = 0;
+  if (peaks.some((p) => decimals(p.shift) >= 3)) {
+    const counts = new Map<number, number>();
+    for (const p of peaks) counts.set(p.shift, (counts.get(p.shift) ?? 0) + 1);
+    const groups = [...counts.entries()].filter(([, n]) => n >= 2);
+    if (groups.length > 0) {
+      const ranks = computeEquivalenceClasses(candidateGraph);
+      const classSize = new Map<number, number>();
+      for (const a of candidateGraph.atoms) {
+        if (a.element === "C") classSize.set(ranks[a.index], (classSize.get(ranks[a.index]) ?? 0) + 1);
+      }
+      const classes = [...classSize.values()].filter((n) => n >= 2);
+      const matched = maxBipartiteMatching(groups.length, classes.length, (g, c) => classes[c] >= groups[g][1]).filter(
+        (c) => c >= 0,
+      ).length;
+      unexplainedDuplicates = groups.length - matched;
+      if (unexplainedDuplicates > 0) {
+        details.push({
+          status: "partial",
+          summary: `対称性: 値が完全に一致するピークの組(${groups.length}組)のうち${unexplainedDuplicates}組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)`,
+        });
+      }
+    }
+  }
   const unmatched = sortedPeaks.filter((_, i) => matchLeft[i] < 0);
   const matchedCount = sortedPeaks.length - unmatched.length;
   const shiftScore =
     sortedPeaks.length > 0
-      ? shiftConsistencyScore((unmatched.length + 0.5 * softMismatches) / sortedPeaks.length)
+      ? shiftConsistencyScore(
+          (unmatched.length + 0.5 * softMismatches + 0.5 * unexplainedDuplicates) / sortedPeaks.length,
+        )
       : 0;
   if (softMismatches > 0) {
     details.push({

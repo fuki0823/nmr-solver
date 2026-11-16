@@ -1,0 +1,363 @@
+{
+  "timestamp": "2026-11-16T07:05:57.046Z",
+  "baseUrl": "http://localhost:3000",
+  "results": [
+    {
+      "id": "haloperidol",
+      "name": "ハロペリドール (haloperidol)",
+      "expectedFormula": "C21H23ClFNO2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 3,
+      "candidateCount": 30,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 1,
+      "correctScore": 98,
+      "correctScores": {
+        "MS": 100,
+        "1H": 100,
+        "13C": 93,
+        "HSQC": 100
+      },
+      "correctIssues": [
+        "[13C] 対称性: 値が完全に一致するピークの組(4組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)"
+      ],
+      "top": {
+        "name": "4-[4-(4-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+        "formula": "C21H23ClFNO2",
+        "totalScore": 98,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 93,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "C1CN(CCC1(C2=CC=C(C=C2)Cl)O)CCCC(=O)C3=CC=C(C=C3)F",
+        "issues": [
+          "[13C] 対称性: 値が完全に一致するピークの組(4組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)"
+        ]
+      },
+      "bestWrong": {
+        "name": "4-[4-(2-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+        "formula": "C21H23ClFNO2",
+        "totalScore": 98,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 93,
+          "HSQC": 100
+        },
+        "smiles": "C1CN(CCC1(C2=CC=CC=C2Cl)O)CCCC(=O)C3=CC=C(C=C3)F",
+        "issues": [
+          "[13C] 対称性: 値が完全に一致するピークの組(4組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)"
+        ]
+      },
+      "stage": "1位だが1件と同点",
+      "candidatesTop10": [
+        {
+          "name": "4-[4-(4-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+          "totalScore": 98,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "4-[4-(2-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+          "totalScore": 98,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[4-(3-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+          "totalScore": 98,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[4-(4-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(3-fluorophenyl)butan-1-one",
+          "totalScore": 97,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[4-(4-chlorophenyl)-4-hydroxypiperidin-1-yl]-1-(2-fluorophenyl)butan-1-one",
+          "totalScore": 97,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "1-(4-chlorophenyl)-4-[4-(4-fluorophenyl)-4-hydroxypiperidin-1-yl]butan-1-one",
+          "totalScore": 96,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-[3-(4-chlorophenyl)-3-(hydroxymethyl)pyrrolidin-1-yl]-1-(4-fluorophenyl)butan-1-one",
+          "totalScore": 94,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "(5-chloro-2-fluorophenyl)-[3-(hydroxymethyl)-3-[(2-methylphenyl)methyl]piperidin-1-yl]methanone",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "N-(4,5-dihydro-1,3-thiazol-2-yl)-2-(4-propylphenyl)quinoline-4-carboxamide",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "[4-[(4-chlorophenyl)methyl]-1-[(4-methylsulfanylphenyl)methyl]piperidin-4-yl]methanol",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 14
+    },
+    {
+      "id": "tetrabromobisphenol-a",
+      "name": "テトラブロモビスフェノールA (TBBPA)",
+      "expectedFormula": "C15H12Br4O2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 14,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 4,
+      "position": 4,
+      "tiedWith": 2,
+      "correctScore": 87,
+      "correctScores": {
+        "MS": 100,
+        "1H": 100,
+        "13C": 56
+      },
+      "correctIssues": [
+        "[13C] 対称性: 値が完全に一致するピークの組(5組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)",
+        "[13C] 予測シフト(芳香環の置換基加成則): 予測できる炭素12本の平均のずれ 7.0 ppm(ずれの大きいもの: δ130.347 ↔ 予測112.1, δ130.347 ↔ 予測112.1, δ130.347 ↔ 予測112.1)"
+      ],
+      "top": {
+        "name": "2,3-dibromo-4-[2-(2,3-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+        "formula": "C15H12Br4O2",
+        "totalScore": 88,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 57
+        },
+        "isCorrect": false,
+        "smiles": "CC(C)(C1=C(C(=C(C=C1)O)Br)Br)C2=C(C(=C(C=C2)O)Br)Br",
+        "issues": [
+          "[13C] 対称性: 値が完全に一致するピークの組(5組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)",
+          "[13C] 予測シフト(芳香環の置換基加成則): 予測できる炭素12本の平均のずれ 6.5 ppm(ずれの大きいもの: δ144.294 ↔ 予測113.3, δ144.294 ↔ 予測113.3, δ109.773 ↔ 予測148.8)"
+        ]
+      },
+      "bestWrong": {
+        "name": "2,3-dibromo-4-[2-(2,3-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+        "formula": "C15H12Br4O2",
+        "totalScore": 88,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 57
+        },
+        "smiles": "CC(C)(C1=C(C(=C(C=C1)O)Br)Br)C2=C(C(=C(C=C2)O)Br)Br",
+        "issues": [
+          "[13C] 対称性: 値が完全に一致するピークの組(5組)のうち2組は、候補構造の等価な炭素では説明できません(偶然の一致を仮定する必要があります)",
+          "[13C] 予測シフト(芳香環の置換基加成則): 予測できる炭素12本の平均のずれ 6.5 ppm(ずれの大きいもの: δ144.294 ↔ 予測113.3, δ144.294 ↔ 予測113.3, δ109.773 ↔ 予測148.8)"
+        ]
+      },
+      "stage": "順位付けで逆転(下記のスコア比較を参照)",
+      "candidatesTop10": [
+        {
+          "name": "2,3-dibromo-4-[2-(2,3-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,4-dibromo-2-[2-(2,3-dibromo-6-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,5-dibromo-4-[2-(2,6-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,6-dibromo-4-[2-(3,5-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 87,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "2,6-dibromo-3-[2-(2,4-dibromo-3-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,4-dibromo-6-[2-(3,5-dibromo-2-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,5-dibromo-4-[2-(2,5-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 87,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,3,5,6-tetrabromo-4-[2-(4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 86,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,6-dibromo-4-[2-(2,5-dibromo-4-hydroxyphenyl)propan-2-yl]phenol",
+          "totalScore": 85,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,3-dibromo-1-[(2,3-dibromo-4-methylphenoxy)methoxy]-4-methylbenzene",
+          "totalScore": 76,
+          "isCorrect": false,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 2
+    },
+    {
+      "id": "triclosan",
+      "name": "トリクロサン (triclosan)",
+      "expectedFormula": "C12H7Cl3O2",
+      "formulaLevel": "strict",
+      "formulaRank": 1,
+      "extraFormulaRank": null,
+      "formulaCount": 1,
+      "candidateCount": 14,
+      "warnings": [],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 98,
+      "correctScores": {
+        "MS": 100,
+        "1H": 100,
+        "13C": 91,
+        "HSQC": 100
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "5-chloro-2-(2,4-dichlorophenoxy)phenol",
+        "formula": "C12H7Cl3O2",
+        "totalScore": 98,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 91,
+          "HSQC": 100
+        },
+        "isCorrect": true,
+        "smiles": "C1=CC(=C(C=C1Cl)O)OC2=C(C=C(C=C2)Cl)Cl",
+        "issues": []
+      },
+      "bestWrong": {
+        "name": "4-chloro-2-(2,4-dichlorophenoxy)phenol",
+        "formula": "C12H7Cl3O2",
+        "totalScore": 98,
+        "scores": {
+          "MS": 100,
+          "1H": 100,
+          "13C": 91,
+          "HSQC": 100
+        },
+        "smiles": "C1=CC(=C(C=C1Cl)OC2=C(C=C(C=C2)Cl)Cl)O",
+        "issues": []
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "5-chloro-2-(2,4-dichlorophenoxy)phenol",
+          "totalScore": 98,
+          "isCorrect": true,
+          "excluded": false
+        },
+        {
+          "name": "4-chloro-2-(2,4-dichlorophenoxy)phenol",
+          "totalScore": 98,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2-(2,3,4-trichlorophenoxy)phenol",
+          "totalScore": 95,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,3,4-trichloro-6-phenoxyphenol",
+          "totalScore": 95,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-(2,4,6-trichlorophenoxy)phenol",
+          "totalScore": 95,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "3,4,5-trichloro-2-phenoxyphenol",
+          "totalScore": 95,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "5-chloro-2-(3,4-dichlorophenoxy)phenol",
+          "totalScore": 95,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "2,3,6-trichloro-4-phenoxyphenol",
+          "totalScore": 94,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "naphthalen-2-yl 2,2,2-trichloroacetate",
+          "totalScore": 88,
+          "isCorrect": false,
+          "excluded": false
+        },
+        {
+          "name": "4-(2,4,6-trichlorophenyl)benzene-1,2-diol",
+          "totalScore": 78,
+          "isCorrect": false,
+          "excluded": true
+        }
+      ],
+      "status": "active",
+      "seconds": 2
+    }
+  ]
+}

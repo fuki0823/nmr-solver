@@ -1,0 +1,134 @@
+{
+  "id": "triclosan",
+  "name": "トリクロサン (triclosan)",
+  "categories": [
+    "含ハロゲン化合物",
+    "芳香族化合物"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 5564,
+    "molecularFormula": "C12H7Cl3O2",
+    "smiles": "C1=CC(=C(C=C1Cl)O)OC2=C(C=C(C=C2)Cl)Cl",
+    "inchiKey": "XEFQLINVKFYRCS-UHFFFAOYSA-N"
+  },
+  "conditions": {
+    "solvent": "Chloroform-d",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001192 (5-CHLORO-2-(2,4-DICHLOROPHENOXY)PHENOL). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001192",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "measuredMz": 286.9435,
+      "ionAdduct": "[M-H]-",
+      "massTolerancePpm": 5,
+      "elements": [
+        "Cl"
+      ],
+      "note": "高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 287.951163 から [M-H]- の m/z 286.9439 を計算し、測定誤差として -1.3 ppm を加えた。許容誤差 5 ppm。 含まれうる元素として Cl を指定した(Cl・Br は同位体パターンで分かる想定)。"
+    },
+    "h1": [
+      [
+        7.4853,
+        1
+      ],
+      [
+        7.2237,
+        1
+      ],
+      [
+        7.0718,
+        1
+      ],
+      [
+        6.9473,
+        1
+      ],
+      [
+        6.8102,
+        1
+      ],
+      [
+        6.6667,
+        1
+      ]
+    ],
+    "c13": [
+      150.371,
+      147.3132,
+      142.1006,
+      [
+        130.7103,
+        "CH"
+      ],
+      130.0887,
+      129.838,
+      [
+        128.2601,
+        "CH"
+      ],
+      126.2266,
+      [
+        120.7708,
+        "CH"
+      ],
+      [
+        120.6191,
+        "CH"
+      ],
+      [
+        118.0621,
+        "CH"
+      ],
+      [
+        116.9087,
+        "CH"
+      ]
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H1",
+        "to": "C4"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H2",
+        "to": "C7"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H6",
+        "to": "C11"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H3",
+        "to": "C12"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 5564 が一致。",
+    "¹³C 12本(帰属炭素数) / 分子式の炭素数 12。DEPT で種類を付けたもの 6本。",
+    "¹H 積分合計 6H(帰属された水素の数、うち炭素上 6H) / 分子式の水素数 7。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 4/6(座標で対応付け)。"
+  ]
+}

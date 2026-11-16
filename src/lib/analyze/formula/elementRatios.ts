@@ -18,6 +18,11 @@ const RANGES: Record<string, { common: [number, number]; extended: [number, numb
   O: { common: [0, 1.2], extended: [0, 3] },
   S: { common: [0, 0.8], extended: [0, 3] },
   P: { common: [0, 0.3], extended: [0, 2] },
+  F: { common: [0, 1.5], extended: [0, 6] },
+  Cl: { common: [0, 0.8], extended: [0, 2] },
+  Br: { common: [0, 0.5], extended: [0, 2] },
+  // I は Kind & Fiehn の表に無いため、Br に準じた控えめな値にしている
+  I: { common: [0, 0.5], extended: [0, 1] },
 };
 
 export interface RatioCheck {

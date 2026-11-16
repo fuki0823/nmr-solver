@@ -60,6 +60,12 @@ export interface MassSpecData {
    * が出せない低分解能MSデータ向け。指定時はmassTolerancePpmより優先される。
    */
   massToleranceDa?: number;
+  /**
+   * C・H・N・O・S 以外に含まれうる元素(例: ["Cl", "Br"])。MS の同位体パターン
+   * (Cl: M+2 が M の約1/3、Br: M+2 が M とほぼ同じ)などから判断して指定する。
+   * 指定した元素だけを分子式の探索に加える(全元素を常に探索すると候補が膨大になるため)。
+   */
+  elements?: string[];
 }
 
 export interface AnalysisInput {

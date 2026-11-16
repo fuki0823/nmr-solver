@@ -1,0 +1,83 @@
+{
+  "id": "tetrabromobisphenol-a",
+  "name": "テトラブロモビスフェノールA (TBBPA)",
+  "categories": [
+    "含ハロゲン化合物",
+    "芳香族化合物",
+    "対称性"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 6618,
+    "molecularFormula": "C15H12Br4O2",
+    "smiles": "CC(C)(C1=CC(=C(C(=C1)Br)O)Br)C2=CC(=C(C(=C2)Br)O)Br",
+    "inchiKey": "VEORPZCZECFIRK-UHFFFAOYSA-N"
+  },
+  "conditions": {
+    "solvent": "CDCl3",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D [1H,1H]-TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D [1H,13C]-HSQC",
+      "2D [1H,13C]-HMBC",
+      "2D [1H,1H]-COSY"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse000567 (tetrabromobisphenol_A). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse000567",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "measuredMz": 538.7498,
+      "ionAdduct": "[M-H]-",
+      "massTolerancePpm": 5,
+      "elements": [
+        "Br"
+      ],
+      "note": "高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 539.75708 から [M-H]- の m/z 538.7498 を計算し、測定誤差として +0 ppm を加えた。許容誤差 5 ppm。 含まれうる元素として Br を指定した(Cl・Br は同位体パターンで分かる想定)。"
+    },
+    "h1": [
+      [
+        7.292,
+        4,
+        "s"
+      ],
+      [
+        1.625,
+        6,
+        "s"
+      ]
+    ],
+    "c13": [
+      147.677,
+      147.677,
+      144.294,
+      144.294,
+      130.347,
+      130.347,
+      130.347,
+      130.347,
+      109.773,
+      109.773,
+      109.773,
+      109.773,
+      41.942,
+      30.716,
+      30.716
+    ],
+    "correlations": []
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 6618 が一致。",
+    "¹³C 15本(帰属炭素数) / 分子式の炭素数 15。DEPT で種類を付けたもの 0本。",
+    "¹H 積分合計 10H(帰属された水素の数、うち炭素上 10H) / 分子式の水素数 12。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 0/2(帰属で対応付け), HMBC 0/1(帰属で対応付け)。"
+  ]
+}

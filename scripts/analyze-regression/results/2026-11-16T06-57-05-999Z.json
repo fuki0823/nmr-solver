@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-11-16T06:57:05.999Z",
+  "baseUrl": "http://localhost:3000",
+  "results": [
+    {
+      "id": "vancomycin",
+      "name": "バンコマイシン (vancomycin)",
+      "expectedFormula": "C66H75Cl2N9O24",
+      "formulaLevel": "strict",
+      "formulaRank": 7,
+      "extraFormulaRank": null,
+      "formulaCount": 80,
+      "candidateCount": 1,
+      "warnings": [],
+      "correctInPool": false,
+      "rank": null,
+      "position": null,
+      "tiedWith": 0,
+      "correctScore": null,
+      "correctScores": null,
+      "correctIssues": [],
+      "top": null,
+      "stage": "E. 候補生成: 分子式(候補7番目)はあるが、正解構造が候補プール(1件)に含まれていない",
+      "candidatesTop10": [],
+      "status": "active",
+      "seconds": 49
+    }
+  ]
+}

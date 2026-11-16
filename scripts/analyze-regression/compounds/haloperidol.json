@@ -1,0 +1,164 @@
+{
+  "id": "haloperidol",
+  "name": "ハロペリドール (haloperidol)",
+  "categories": [
+    "含ハロゲン化合物",
+    "含窒素化合物",
+    "医薬品"
+  ],
+  "status": "active",
+  "structure": {
+    "pubchemCid": 3559,
+    "molecularFormula": "C21H23ClFNO2",
+    "smiles": "C1CN(CCC1(C2=CC=C(C=C2)Cl)O)CCCC(=O)C3=CC=C(C=C3)F",
+    "inchiKey": "LNEPOXFFQSENCJ-UHFFFAOYSA-N"
+  },
+  "conditions": {
+    "solvent": "DMSO",
+    "frequency": "500 MHz",
+    "temperature": "298 K",
+    "experiments": [
+      "1D 1H",
+      "2D 1H-1H TOCSY",
+      "1D 13C",
+      "1D DEPT90",
+      "1D DEPT135",
+      "2D 1H-13C HSQC",
+      "2D 1H-13C HSQC SW small",
+      "2D 1H-13C HMBC",
+      "2D 1H-1H COSY",
+      "2D 1H-13C HSQC-TOCSY-ADIA"
+    ]
+  },
+  "source": {
+    "type": "literature-database",
+    "citation": "BMRB bmse001206 (Haloperidol). https://bmrb.io/metabolomics/mol_summary/show_data.php?id=bmse001206",
+    "reliability": "BMRB代謝物データベースの純品の実測・帰属データ。"
+  },
+  "input": {
+    "ms": {
+      "measuredMz": 376.1482,
+      "ionAdduct": "[M+H]+",
+      "massTolerancePpm": 5,
+      "elements": [
+        "Cl",
+        "F"
+      ],
+      "note": "高分解能MSを模した理論値(実測値ではない): PubChem のモノアイソトピック質量 375.1401348 から [M+H]+ の m/z 376.1474 を計算し、測定誤差として +2.2 ppm を加えた。許容誤差 5 ppm。 含まれうる元素として Cl・F を指定した(Cl・Br は同位体パターンで分かる想定、F・I・P は ¹⁹F/³¹P NMR 等で分かっている想定)。"
+    },
+    "h1": [
+      [
+        8.0744,
+        2
+      ],
+      [
+        7.3707,
+        2
+      ],
+      [
+        7.3621,
+        2
+      ],
+      [
+        7.3448,
+        2
+      ],
+      [
+        2.9774,
+        2
+      ],
+      [
+        2.5723,
+        1
+      ],
+      [
+        2.3505,
+        2
+      ],
+      [
+        2.3136,
+        3
+      ],
+      [
+        1.8451,
+        2
+      ],
+      [
+        1.6634,
+        1
+      ],
+      [
+        1.4677,
+        3
+      ]
+    ],
+    "c13": [
+      198.1497,
+      165.6902,
+      149.1022,
+      133.8579,
+      [
+        130.7869,
+        "CH"
+      ],
+      [
+        130.7151,
+        "CH"
+      ],
+      130.5712,
+      127.5422,
+      127.5422,
+      126.6193,
+      126.6193,
+      [
+        115.561,
+        "CH"
+      ],
+      [
+        115.3883,
+        "CH"
+      ],
+      69.3918,
+      [
+        57.1684,
+        "CH2"
+      ],
+      48.7448,
+      48.7448,
+      37.644,
+      37.644,
+      [
+        35.5202,
+        "CH2"
+      ],
+      [
+        21.9459,
+        "CH2"
+      ]
+    ],
+    "correlations": [
+      {
+        "kind": "HSQC",
+        "from": "H7",
+        "to": "C15"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H5",
+        "to": "C20"
+      },
+      {
+        "kind": "HSQC",
+        "from": "H9",
+        "to": "C21"
+      }
+    ]
+  },
+  "notes": [
+    "構造照合: BMRBのInChI(分子式・接続層)とPubChem CID 3559 が一致。",
+    "¹³C 21本(帰属炭素数) / 分子式の炭素数 21。DEPT で種類を付けたもの 7本。",
+    "¹H 積分合計 22H(帰属された水素の数、うち炭素上 22H) / 分子式の水素数 23。",
+    "2D相関(一意に対応付けられたもののみ): HSQC 3/11(座標で対応付け)。",
+    "帰属の曖昧さコード(1以外)が付いたシフトが8個ある(値自体は実測値。どの原子かの帰属が入れ替わりうる)。"
+  ]
+}

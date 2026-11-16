@@ -30,6 +30,16 @@ if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
     evaluateCandidate,
     runAnalysis,
     inchiKeyOf,
+    // 分子グラフの概要(対応していない元素の確認用)
+    async graphInfo(smiles: string) {
+      const graph = await analyzeSmiles(smiles);
+      return {
+        formula: graph.formula,
+        hasUnsupportedElement: graph.hasUnsupportedElement,
+        elements: [...new Set(graph.atoms.map((a) => a.element))],
+        nullH: graph.atoms.filter((a) => a.attachedH == null).map((a) => a.element + a.index),
+      };
+    },
     // 芳香環の炭素の予測シフト(置換基加成則の確認用)
     async predictCarbons(smiles: string) {
       const graph = await analyzeSmiles(smiles);

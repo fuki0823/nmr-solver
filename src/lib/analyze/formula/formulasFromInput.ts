@@ -1,7 +1,9 @@
 import type { MassSpecData, SpectralPeak } from "../types";
 import {
+  DEFAULT_ELEMENTS,
   generateFormulaCandidates,
   neutralMassFromAdduct,
+  type FormulaSearchBounds,
   type MassKind,
 } from "./massToFormulaCandidates";
 import { estimateFormulas, type FormulaEstimate } from "./estimateFormula";
@@ -54,6 +56,13 @@ export function estimateFormulasFromInput(
       .reduce((sum, p) => sum + (p.integration ?? 0), 0),
   };
 
+  // 探索する元素: 既定の N/O/S に、ユーザーが指定した元素(Cl/Br/F/I/P)を加える。
+  // 炭素数は ¹³C のピーク数以上(1原子から2本のシグナルは出ない)なので、探索の下限にする。
+  const bounds: FormulaSearchBounds = {
+    elements: [...DEFAULT_ELEMENTS, ...(ms.elements ?? [])],
+    minCarbon: carbon.length > 0 ? carbon.length : 1,
+  };
+
   let monoMass: number | null = null;
   if (ms.exactMass != null) monoMass = ms.exactMass;
   else if (ms.measuredMz != null && ms.ionAdduct) {
@@ -64,7 +73,7 @@ export function estimateFormulasFromInput(
     const tolerance =
       ms.massToleranceDa != null ? { da: ms.massToleranceDa } : { ppm: ms.massTolerancePpm ?? 10 };
     return {
-      estimate: estimateFormulas(generateFormulaCandidates(monoMass, tolerance), nmr),
+      estimate: estimateFormulas(generateFormulaCandidates(monoMass, tolerance, bounds), nmr),
       massKind: "monoisotopic",
       targetMass: monoMass,
     };
@@ -75,7 +84,7 @@ export function estimateFormulasFromInput(
     const generated = generateFormulaCandidates(
       mw,
       { da: ms.massToleranceDa ?? averageMassToleranceDa(mw) },
-      undefined,
+      bounds,
       "average",
     );
     return { estimate: estimateFormulas(generated, nmr), massKind: "average", targetMass: mw };
