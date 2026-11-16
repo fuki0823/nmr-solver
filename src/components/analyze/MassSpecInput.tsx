@@ -105,25 +105,49 @@ export default function MassSpecInput({ value, onChange }: MassSpecInputProps) {
         <div className="flex flex-wrap gap-x-5 gap-y-2">
           {OPTIONAL_ELEMENTS.map((el) => {
             const checked = value.elements?.includes(el) ?? false;
+            const count = value.elementCounts?.[el];
+            const setCount = (n: number | undefined) => {
+              const next = { ...(value.elementCounts ?? {}) };
+              if (n == null) delete next[el];
+              else next[el] = n;
+              onChange({ ...value, elementCounts: Object.keys(next).length ? next : undefined });
+            };
             return (
-              <label key={el} className="flex items-center gap-1.5" title={ELEMENT_HINT[el]}>
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={(e) => {
-                    const next = new Set(value.elements ?? []);
-                    if (e.target.checked) next.add(el);
-                    else next.delete(el);
-                    onChange({ ...value, elements: next.size ? [...next] : undefined });
-                  }}
-                />
-                {el}
-              </label>
+              <div key={el} className="flex items-center gap-1.5">
+                <label className="flex items-center gap-1.5" title={ELEMENT_HINT[el]}>
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(e) => {
+                      const next = new Set(value.elements ?? []);
+                      if (e.target.checked) next.add(el);
+                      else next.delete(el);
+                      onChange({ ...value, elements: next.size ? [...next] : undefined });
+                    }}
+                  />
+                  {el}
+                </label>
+                {checked && (
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={count ?? ""}
+                    placeholder="数"
+                    onChange={(e) => {
+                      const n = parseInt(e.target.value, 10);
+                      setCount(Number.isNaN(n) || n < 1 ? undefined : n);
+                    }}
+                    className="w-14 rounded border border-stone-300 px-1.5 py-0.5 text-xs"
+                    aria-label={`${el} の数(分かっている場合)`}
+                  />
+                )}
+              </div>
             );
           })}
         </div>
         <span className="text-xs text-stone-500">
-          チェックした元素だけを分子式の探索に加えます。Cl・Br は MS の同位体パターン(Cl: M+2 が M の約1/3、Br: M+2 が M とほぼ同じ)で判断できます。不要な元素まで加えると候補が大幅に増え、探索にも時間がかかります。
+          チェックした元素だけを分子式の探索に加えます。不要な元素まで加えると候補が大幅に増え、探索にも時間がかかります。数が分かっていれば「数」に入れてください(空欄なら0個以上を探します)。Cl・Br の有無と数は MS の同位体パターンで判断できます: Cl 1個 → M+2 が M の約1/3、Cl 2個 → 約2/3、Br 1個 → M+2 が M とほぼ同じ、Br 2個 → M : M+2 : M+4 ≒ 1 : 2 : 1。分子量しか無い大きな分子では、数を指定しないと正しい分子式を絞り込めないことがあります。
         </span>
       </fieldset>
     </div>

@@ -70,6 +70,8 @@ export interface FormulaSearchBounds {
   maxCarbon?: number;
   /** C・H 以外に探索する元素(既定 N, O, S) */
   elements?: readonly string[];
+  /** 個数が分かっている元素(例: { Cl: 2 })。その元素はこの数に固定する */
+  fixedCounts?: Record<string, number>;
 }
 
 export interface FormulaCandidate {
@@ -177,7 +179,10 @@ export function generateFormulaCandidates(
       return;
     }
     const el = elements[index];
-    for (let k = 0; k <= (MAX_COUNT[el] ?? 0); k++) {
+    const fixed = bounds.fixedCounts?.[el];
+    const from = fixed ?? 0;
+    const to = fixed ?? MAX_COUNT[el] ?? 0;
+    for (let k = from; k <= to; k++) {
       const m = mass + k * MASS[el];
       if (m - toleranceDa > targetMass) break;
       counts[el] = k;

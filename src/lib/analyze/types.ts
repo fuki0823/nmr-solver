@@ -66,6 +66,12 @@ export interface MassSpecData {
    * 指定した元素だけを分子式の探索に加える(全元素を常に探索すると候補が膨大になるため)。
    */
   elements?: string[];
+  /**
+   * elements で指定した元素のうち、個数が分かっているもの(例: { Cl: 2 })。
+   * Cl・Br の数は MS の同位体パターンから分かる(Cl 1個: M+2 が M の約1/3、Cl 2個: 約2/3、
+   * Br 1個: M+2 が M とほぼ同じ、Br 2個: M:M+2:M+4 ≒ 1:2:1)。指定した元素はその数に固定して探索する。
+   */
+  elementCounts?: Record<string, number>;
 }
 
 export interface AnalysisInput {

@@ -60,6 +60,13 @@ export function estimateFormulasFromInput(
   // 炭素数は ¹³C のピーク数以上(1原子から2本のシグナルは出ない)なので、探索の下限にする。
   const bounds: FormulaSearchBounds = {
     elements: [...DEFAULT_ELEMENTS, ...(ms.elements ?? [])],
+    // 個数が指定されていれば(同位体パターンから分かる Cl・Br の数など)、その数に固定する。
+    // チェックされていない元素の個数指定は無視する。
+    fixedCounts: Object.fromEntries(
+      Object.entries(ms.elementCounts ?? {}).filter(
+        ([el, n]) => (ms.elements ?? []).includes(el) && Number.isInteger(n) && n >= 0,
+      ),
+    ),
     minCarbon: carbon.length > 0 ? carbon.length : 1,
   };
 

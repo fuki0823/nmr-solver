@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-16T07:14:22.428Z",
+  "timestamp": "2026-11-16T07:57:44.675Z",
   "baseUrl": "http://localhost:3000",
   "results": [
     {
@@ -126,7 +126,7 @@
         }
       ],
       "status": "active",
-      "seconds": 8
+      "seconds": 9
     },
     {
       "id": "artemisinin",
@@ -245,7 +245,7 @@
         }
       ],
       "status": "active",
-      "seconds": 3
+      "seconds": 5
     },
     {
       "id": "artemisinin-dept",
@@ -469,7 +469,7 @@
         }
       ],
       "status": "active",
-      "seconds": 6
+      "seconds": 7
     },
     {
       "id": "biotin-dept",
@@ -573,7 +573,7 @@
         }
       ],
       "status": "active",
-      "seconds": 2
+      "seconds": 1
     },
     {
       "id": "caffeine",
@@ -812,7 +812,7 @@
         }
       ],
       "status": "active",
-      "seconds": 3
+      "seconds": 4
     },
     {
       "id": "camphor-dept",
@@ -1173,7 +1173,7 @@
         }
       ],
       "status": "active",
-      "seconds": 4
+      "seconds": 5
     },
     {
       "id": "colchicine-dept",
@@ -1430,7 +1430,7 @@
         }
       ],
       "status": "active",
-      "seconds": 4
+      "seconds": 5
     },
     {
       "id": "daunorubicin-user-1",
@@ -1548,7 +1548,7 @@
         }
       ],
       "status": "active",
-      "seconds": 14
+      "seconds": 12
     },
     {
       "id": "daunorubicin-user-2",
@@ -1790,7 +1790,7 @@
         }
       ],
       "status": "active",
-      "seconds": 5
+      "seconds": 4
     },
     {
       "id": "epicatechin-dept",
@@ -2030,7 +2030,7 @@
         }
       ],
       "status": "active",
-      "seconds": 15
+      "seconds": 17
     },
     {
       "id": "ethyl-acetate",
@@ -2145,7 +2145,7 @@
         }
       ],
       "status": "active",
-      "seconds": 3
+      "seconds": 2
     },
     {
       "id": "glutathione",
@@ -2263,7 +2263,7 @@
         }
       ],
       "status": "active",
-      "seconds": 16
+      "seconds": 15
     },
     {
       "id": "haloperidol",
@@ -2273,8 +2273,10 @@
       "formulaRank": 1,
       "extraFormulaRank": null,
       "formulaCount": 3,
-      "candidateCount": 30,
-      "warnings": [],
+      "candidateCount": 20,
+      "warnings": [
+        "PubChemで分子式 C22H21N3OS の検索に失敗しました(PubChem request failed (500))。この分子式の候補は含まれていません。"
+      ],
       "correctInPool": true,
       "rank": 1,
       "position": 1,
@@ -2371,20 +2373,20 @@
           "excluded": false
         },
         {
-          "name": "N-(4,5-dihydro-1,3-thiazol-2-yl)-2-(4-propylphenyl)quinoline-4-carboxamide",
-          "totalScore": 87,
+          "name": "[4-[(4-chlorophenyl)methyl]-1-[(4-methylsulfanylphenyl)methyl]piperidin-4-yl]methanol",
+          "totalScore": 86,
           "isCorrect": false,
           "excluded": false
         },
         {
-          "name": "[4-[(4-chlorophenyl)methyl]-1-[(4-methylsulfanylphenyl)methyl]piperidin-4-yl]methanol",
+          "name": "N-(2-chlorophenyl)-3-(2-naphthalen-1-ylcyclopenten-1-yl)propanamide",
           "totalScore": 86,
           "isCorrect": false,
           "excluded": false
         }
       ],
       "status": "active",
-      "seconds": 9
+      "seconds": 98
     },
     {
       "id": "luteolin",
@@ -2499,7 +2501,7 @@
         }
       ],
       "status": "active",
-      "seconds": 6
+      "seconds": 4
     },
     {
       "id": "luteolin-dept",
@@ -2728,7 +2730,7 @@
         }
       ],
       "status": "active",
-      "seconds": 12
+      "seconds": 13
     },
     {
       "id": "neohesperidin",
@@ -2849,7 +2851,7 @@
         }
       ],
       "status": "active",
-      "seconds": 18
+      "seconds": 19
     },
     {
       "id": "nicotine",
@@ -2967,7 +2969,7 @@
         }
       ],
       "status": "active",
-      "seconds": 2
+      "seconds": 3
     },
     {
       "id": "parthenolide",
@@ -3336,7 +3338,7 @@
         }
       ],
       "status": "active",
-      "seconds": 4
+      "seconds": 3
     },
     {
       "id": "rutin",
@@ -3461,7 +3463,7 @@
         }
       ],
       "status": "active",
-      "seconds": 24
+      "seconds": 20
     },
     {
       "id": "rutin-dept",
@@ -3708,7 +3710,7 @@
         }
       ],
       "status": "active",
-      "seconds": 5
+      "seconds": 4
     },
     {
       "id": "simvastatin-dept",
@@ -3948,7 +3950,7 @@
         }
       ],
       "status": "active",
-      "seconds": 61
+      "seconds": 59
     },
     {
       "id": "tetrabromobisphenol-a",
@@ -4184,7 +4186,7 @@
         }
       ],
       "status": "active",
-      "seconds": 2
+      "seconds": 3
     },
     {
       "id": "vancomycin",
@@ -4230,7 +4232,55 @@
         }
       ],
       "status": "active",
-      "seconds": 45
+      "seconds": 43
+    },
+    {
+      "id": "vancomycin-mw",
+      "name": "バンコマイシン (vancomycin) — 平均分子量のみ",
+      "expectedFormula": "C66H75Cl2N9O24",
+      "formulaLevel": "strict",
+      "formulaRank": 13,
+      "extraFormulaRank": null,
+      "formulaCount": 44,
+      "candidateCount": 1,
+      "warnings": [
+        "PubChemで分子式 C67H67Cl2N11O22 の検索に失敗しました(PubChem request failed (500))。この分子式の候補は含まれていません。"
+      ],
+      "correctInPool": true,
+      "rank": 1,
+      "position": 1,
+      "tiedWith": 0,
+      "correctScore": 88,
+      "correctScores": {
+        "MS": 80,
+        "1H": 100,
+        "13C": 89
+      },
+      "correctIssues": [],
+      "top": {
+        "name": "(1S,2R,18R,19R,22S,25R,28R,40S)-48-[(2S,3R,4S,5S,6R)-3-[(2S,4S,5S,6S)-4-amino-5-hydroxy-4,6-dimethyloxan-2-yl]oxy-4,5-dihydroxy-6-(hydroxymethyl)oxan-2-yl]oxy-22-(2-amino-2-oxoethyl)-5,15-dichloro-2,18,32,35,37-pentahydroxy-19-[[(2R)-4-methyl-2-(methylamino)pentanoyl]amino]-20,23,26,42,44-pentaoxo-7,13-dioxa-21,24,27,41,43-pentazaoctacyclo[26.14.2.23,6.214,17.18,12.129,33.010,25.034,39]pentaconta-3,5,8(48),9,11,14,16,29(45),30,32,34(39),35,37,46,49-pentadecaene-40-carboxylic acid",
+        "formula": "C66H75Cl2N9O24",
+        "totalScore": 88,
+        "scores": {
+          "MS": 80,
+          "1H": 100,
+          "13C": 89
+        },
+        "isCorrect": true,
+        "smiles": "CC1C(C(CC(O1)OC2C(C(C(OC2OC3=C4C=C5C=C3OC6=C(C=C(C=C6)C(C(C(=O)NC(C(=O)NC5C(=O)NC7C8=CC(=C(C=C8)O)C9=C(C=C(C=C9O)O)C(NC(=O)C(C(C1=CC(=C(O4)C=C1)Cl)O)NC7=O)C(=O)O)CC(=O)N)NC(=O)C(CC(C)C)NC)O)Cl)CO)O)O)(C)N)O",
+        "issues": []
+      },
+      "stage": "OK(単独1位)",
+      "candidatesTop10": [
+        {
+          "name": "(1S,2R,18R,19R,22S,25R,28R,40S)-48-[(2S,3R,4S,5S,6R)-3-[(2S,4S,5S,6S)-4-amino-5-hydroxy-4,6-dimethyloxan-2-yl]oxy-4,5-dihydroxy-6-(hydroxymethyl)oxan-2-yl]oxy-22-(2-amino-2-oxoethyl)-5,15-dichloro-2,18,32,35,37-pentahydroxy-19-[[(2R)-4-methyl-2-(methylamino)pentanoyl]amino]-20,23,26,42,44-pentaoxo-7,13-dioxa-21,24,27,41,43-pentazaoctacyclo[26.14.2.23,6.214,17.18,12.129,33.010,25.034,39]pentaconta-3,5,8(48),9,11,14,16,29(45),30,32,34(39),35,37,46,49-pentadecaene-40-carboxylic acid",
+          "totalScore": 88,
+          "isCorrect": true,
+          "excluded": false
+        }
+      ],
+      "status": "active",
+      "seconds": 135
     }
   ]
 }
