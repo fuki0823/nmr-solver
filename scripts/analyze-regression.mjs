@@ -36,13 +36,18 @@ const compounds = readdirSync(COMPOUND_DIR)
 function toAnalysisInput(c) {
   const { note: _note, ...ms } = c.input.ms ?? {};
   const peaks = [
-    ...(c.input.h1 ?? []).map(([shift, integration], i) => ({
+    ...(c.input.h1 ?? []).map(([shift, integration, multiplicity], i) => ({
       id: `H${i + 1}`,
       nucleus: "1H",
       shift,
       integration,
+      ...(multiplicity ? { multiplicity } : {}),
     })),
-    ...(c.input.c13 ?? []).map((shift, i) => ({ id: `C${i + 1}`, nucleus: "13C", shift })),
+    ...(c.input.c13 ?? []).map((entry, i) => {
+      // ¹³C は数値、または [シフト, DEPT の種類]
+      const [shift, carbonType] = Array.isArray(entry) ? entry : [entry, undefined];
+      return { id: `C${i + 1}`, nucleus: "13C", shift, ...(carbonType ? { carbonType } : {}) };
+    }),
   ];
   return { ms, peaks, correlations: c.input.correlations ?? [] };
 }

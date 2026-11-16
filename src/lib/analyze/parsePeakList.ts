@@ -1,3 +1,5 @@
+import { parseCarbonType } from "./dept";
+
 /**
  * 貼り付けられたテキストからピークリストを読み取る。
  *
@@ -18,6 +20,30 @@
 export interface ParsedPeak {
   shift: number;
   integration?: number;
+  /** ¹Hのみ: 多重度("s", "d", "dd", "br s" など)。行中に見つからなければ undefined */
+  multiplicity?: string;
+  /** ¹³Cのみ: DEPT 等の炭素の種類("C", "CH", "CH2", "CH3", "CH/CH3" など) */
+  carbonType?: string;
+}
+
+const MULTIPLICITY_TOKEN = /^(s|d|t|q|m|p|dd|dt|td|tt|dq|qd|ddd|ddt|dddd|quint|quin|pent|sext|sept|hept)$/i;
+
+/** 行から多重度を探す(例: "7.26 (2H, d, J = 8.0 Hz)" → "d"、"3.5 (br s, 1H)" → "br s") */
+function findMultiplicity(line: string): string | undefined {
+  const words = line
+    .replace(/J\s*=.*$/, "") // J値以降は見ない
+    .split(/[\s,;、，；()（）]+/)
+    .map((w) => w.replace(/\.$/, "").trim())
+    .filter(Boolean);
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i].toLowerCase();
+    if ((w === "br" || w === "brs") && i + 1 < words.length && MULTIPLICITY_TOKEN.test(words[i + 1])) {
+      return `br ${words[i + 1].toLowerCase()}`;
+    }
+    if (w === "brs") return "br s";
+    if (MULTIPLICITY_TOKEN.test(w)) return w;
+  }
+  return undefined;
 }
 
 const TOKEN_SPLIT = /[\s,;、，；]+/;
@@ -34,12 +60,40 @@ function strictNumber(token: string): number | null {
   return Number(normalized);
 }
 
+/**
+ * ¹³C: 数値の直後に炭素の種類の表記があれば、そのピークの種類として読む
+ * (例: "211.95 (C)", "75.0 CH", "56.6(CH3)", "35.9 t")。
+ * "(125 MHz" のように括弧が付いた数値はこれまで通りピークとして扱わない。
+ */
 export function parseCarbonList(text: string): ParsedPeak[] {
-  return text
-    .split(TOKEN_SPLIT)
-    .map(strictNumber)
-    .filter((n): n is number => n != null)
-    .map((shift) => ({ shift }));
+  const tokens = text.split(TOKEN_SPLIT).filter(Boolean);
+  const peaks: ParsedPeak[] = [];
+  const typeOf = (token: string | undefined) => {
+    if (!token) return undefined;
+    const stripped = token.replace(/^[(（]+|[)）]+$/g, "");
+    return parseCarbonType(stripped) ? stripped : undefined;
+  };
+  for (let i = 0; i < tokens.length; i++) {
+    const n = strictNumber(tokens[i]);
+    if (n != null) {
+      const type = typeOf(tokens[i + 1]);
+      if (type) i++;
+      peaks.push(type ? { shift: n, carbonType: type } : { shift: n });
+      continue;
+    }
+    // "56.6(CH3)" のように数値と種類が続けて書かれている場合
+    const glued = tokens[i].match(/^(\d+(?:\.\d+)?)[(（]([^)）]+)[)）]$/);
+    if (glued && parseCarbonType(glued[2])) peaks.push({ shift: Number(glued[1]), carbonType: glued[2] });
+  }
+  return peaks;
+}
+
+/** "5.13-5.01" のような範囲表記なら中央値を返す(重なった多重線の記載でよく使われる) */
+function rangeMidpoint(token: string): number | null {
+  const m = token.match(/^(\d+(?:\.\d+)?)\s*[-–−~〜]\s*(\d+(?:\.\d+)?)$/);
+  if (!m) return null;
+  const mid = (Number(m[1]) + Number(m[2])) / 2;
+  return Math.round(mid * 1000) / 1000;
 }
 
 export function parseProtonList(text: string): ParsedPeak[] {
@@ -47,9 +101,9 @@ export function parseProtonList(text: string): ParsedPeak[] {
   for (const line of text.split(/\r?\n/)) {
     const tokens = line.split(TOKEN_SPLIT).filter(Boolean);
     const numbers = tokens.map(strictNumber);
-    const shiftIndex = numbers.findIndex((n) => n != null);
+    const shiftIndex = tokens.findIndex((t, i) => numbers[i] != null || rangeMidpoint(t) != null);
     if (shiftIndex < 0) continue;
-    const shift = numbers[shiftIndex]!;
+    const shift = numbers[shiftIndex] ?? rangeMidpoint(tokens[shiftIndex])!;
 
     let integration: number | undefined;
     const hMatch = line.match(/(\d+)\s*H\b/);
@@ -68,7 +122,7 @@ export function parseProtonList(text: string): ParsedPeak[] {
         }
       }
     }
-    peaks.push({ shift, integration: integration ?? 1 });
+    peaks.push({ shift, integration: integration ?? 1, multiplicity: findMultiplicity(line) });
   }
   return peaks;
 }

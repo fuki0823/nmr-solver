@@ -5,6 +5,7 @@ import {
   type MassKind,
 } from "./massToFormulaCandidates";
 import { estimateFormulas, type FormulaEstimate } from "./estimateFormula";
+import { parseCarbonType } from "../dept";
 
 /**
  * Analyzeの入力(MS+¹H/¹³C)から分子式を推定する。
@@ -44,6 +45,10 @@ export function estimateFormulasFromInput(
   const nmr = {
     carbonPeakCount: carbon.length,
     carbonShifts: carbon.map((p) => p.shift),
+    carbonBoundHydrogenMin: carbon.reduce((sum, p) => {
+      const t = parseCarbonType(p.carbonType);
+      return sum + (t ? Math.min(...t) : 0);
+    }, 0),
     protonIntegralTotal: peaks
       .filter((p) => p.nucleus === "1H")
       .reduce((sum, p) => sum + (p.integration ?? 0), 0),

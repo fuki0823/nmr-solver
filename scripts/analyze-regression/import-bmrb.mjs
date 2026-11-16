@@ -8,12 +8,14 @@
 //    (重なっていても帰属上区別できる炭素は別々に記録する、という方針に合わせる)。
 //  - ¹H: 帰属済み化学シフトの水素を、同じシフト値ごとにまとめた本数を積分値とする
 //    (1D ¹HスペクトルのBMRB積分値は相対値で規格化されていないため使わない)。
+//    多重度は 1D ¹H ピークリストの記載から付ける(一意に対応するものだけ)。
 //  - HSQC / HMBC / COSY: 2Dピークリストのうち、両次元が原子に帰属されているピーク。
 //    帰属された原子を、上記の¹H/¹³Cピークへ対応付けて相関とする。
 //  - 構造・分子式・分子量: PubChem(CID指定)。BMRBのInChIと一致するかを照合する。
 // MSの実測値はBMRBに無いため、PubChemの平均分子量を「理論値」として入力に使う。
 
 import { writeFileSync } from "node:fs";
+import { carbonTypesFor, fetchBmrbEntry, loopRows, multiplicitiesFor } from "./bmrb-star.mjs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -25,76 +27,8 @@ if (!bmse || !id || !cidArg || !name) {
 const cid = Number(cidArg);
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "compounds", `${id}.json`);
 
-// ---- NMR-STAR の簡易パーサ(saveframe と loop だけを読む) ----
-function tokenize(line) {
-  return line.match(/'[^']*'|"[^"]*"|\S+/g)?.map((t) => t.replace(/^['"]|['"]$/g, "")) ?? [];
-}
-function parseStar(text) {
-  const frames = [];
-  let frame = null;
-  let pendingTag = null; // 値が次行以降(;...;のテキストブロック)にあるタグ
-  const lines = text.split(/\r?\n/);
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const trimmed = line.trim();
-    if (trimmed.startsWith(";")) {
-      // 複数行テキスト。直前のタグに値が無ければ、その値として扱う
-      const block = [trimmed.slice(1)];
-      i++;
-      while (i < lines.length && !lines[i].startsWith(";")) block.push(lines[i++]);
-      if (frame && pendingTag) frame.tags[pendingTag] = block.join("\n").trim();
-      pendingTag = null;
-      continue;
-    }
-    if (trimmed !== "") pendingTag = null;
-    if (/^save_\S+/.test(trimmed)) {
-      frame = { name: trimmed.slice(5), tags: {}, loops: [] };
-      frames.push(frame);
-      continue;
-    }
-    if (trimmed === "save_") {
-      frame = null;
-      continue;
-    }
-    if (!frame) continue;
-    if (trimmed === "loop_") {
-      const loop = { tags: [], rows: [] };
-      i++;
-      while (i < lines.length && lines[i].trim().startsWith("_")) {
-        loop.tags.push(lines[i].trim().split(/\s+/)[0]);
-        i++;
-      }
-      let buffer = [];
-      for (; i < lines.length; i++) {
-        const t = lines[i].trim();
-        if (t === "stop_") break;
-        if (t === "" || t.startsWith("#")) continue;
-        buffer.push(...tokenize(t));
-        while (buffer.length >= loop.tags.length) {
-          const row = {};
-          loop.tags.forEach((tag, k) => (row[tag] = buffer[k]));
-          loop.rows.push(row);
-          buffer = buffer.slice(loop.tags.length);
-        }
-      }
-      frame.loops.push(loop);
-      continue;
-    }
-    if (trimmed.startsWith("_")) {
-      const [tag, ...rest] = tokenize(trimmed);
-      frame.tags[tag] = rest.join(" ");
-      if (rest.length === 0) pendingTag = tag;
-    }
-  }
-  return frames;
-}
-const loopRows = (frames, firstTag) =>
-  frames.flatMap((f) => f.loops.filter((l) => l.tags.includes(firstTag)).flatMap((l) => l.rows));
-
 // ---- 取得 ----
-const strUrl = `https://bmrb.io/ftp/pub/bmrb/metabolomics/entry_directories/${bmse}/${bmse}.str`;
-const text = await (await fetch(strUrl)).text();
-const frames = parseStar(text);
+const frames = await fetchBmrbEntry(bmse);
 const pc = (
   await (
     await fetch(
@@ -136,10 +70,53 @@ for (const [a, b] of bonds) {
 // ¹³C: 1原子1本(シフト降順)
 const carbons = shifts.filter((s) => s.type === "C").sort((a, b) => b.val - a.val);
 const c13 = carbons.map((c) => c.val);
+// DEPT-90/135 の実測ピークから決めた炭素の種類(検出されたピークに基づくものだけ)
+const c13Types = carbonTypesFor(frames, c13);
 const carbonPeakIdOfAtom = Object.fromEntries(carbons.map((c, i) => [c.atom, `C${i + 1}`]));
 
 // ¹H: 同じシフト値の水素をまとめ、本数を積分値にする(シフト降順)
 const hydrogens = shifts.filter((s) => s.type === "H");
+
+// メチル基のHの帰属の補正。BMRBでは曖昧さコード付きの帰属で、1つのメチル基の
+// 3個のHに別々の値が入っていることがある(例: コルヒチンの4個のOCH3)。メチル基の
+// 3個のHは等価なので、必ず同じ値でなければならない。値を共有するメチル基の組ごとに、
+// 値の種類数とメチル基の数が一致すれば「どのメチルがどの値か」が曖昧なだけなので、
+// 各メチル基に値を1つずつ割り当てる。一致しなければ ¹H の帰属は信頼できないとする。
+const methylCarbons = Object.keys(atomTypes).filter(
+  (c) => atomTypes[c] === "C" && Object.values(heavyOf).filter((x) => x === c).length === 3,
+);
+const methylValues = new Map(methylCarbons.map((c) => [c, hydrogens.filter((h) => heavyOf[h.atom] === c)]));
+const scrambled = methylCarbons.filter((c) => new Set(methylValues.get(c).map((h) => h.val)).size > 1);
+let hydrogenAssignmentUnreliable = false;
+const methylFixNotes = [];
+const visited = new Set();
+for (const start of scrambled) {
+  if (visited.has(start)) continue;
+  // 値を共有するメチル基をまとめる
+  const component = [];
+  const queue = [start];
+  visited.add(start);
+  while (queue.length) {
+    const c = queue.pop();
+    component.push(c);
+    const vals = new Set(methylValues.get(c).map((h) => h.val));
+    for (const other of scrambled) {
+      if (visited.has(other)) continue;
+      if (methylValues.get(other).some((h) => vals.has(h.val))) {
+        visited.add(other);
+        queue.push(other);
+      }
+    }
+  }
+  const distinct = [...new Set(component.flatMap((c) => methylValues.get(c).map((h) => h.val)))].sort((a, b) => b - a);
+  if (distinct.length === component.length) {
+    component.forEach((c, i) => methylValues.get(c).forEach((h) => (h.val = distinct[i])));
+    methylFixNotes.push(`メチル基${component.length}個(${component.join(",")})のHに値 ${distinct.join(" / ")} が入れ替わって帰属されていたため、各メチル基に1つずつ割り当てた(どのメチルがどの値かは区別しない)。`);
+  } else {
+    hydrogenAssignmentUnreliable = true;
+    methylFixNotes.push(`メチル基${component.length}個のHに${distinct.length}種類の値が混在して帰属されており、メチル基ごとの値を復元できない。¹H の帰属は信頼できない。`);
+  }
+}
 const hGroups = new Map();
 for (const h of hydrogens) {
   const key = h.val.toFixed(3);
@@ -147,7 +124,9 @@ for (const h of hydrogens) {
   hGroups.get(key).atoms.push(h.atom);
 }
 const h1Groups = [...hGroups.values()].sort((a, b) => b.shift - a.shift);
-const h1 = h1Groups.map((g) => [g.shift, g.atoms.length]);
+// 多重度は 1D ¹H ピークリストの記載(±0.01 ppm で一意に対応するもの)を付ける
+const h1Multiplicity = multiplicitiesFor(frames, h1Groups.map((g) => g.shift));
+const h1 = h1Groups.map((g, i) => (h1Multiplicity[i] ? [g.shift, g.atoms.length, h1Multiplicity[i]] : [g.shift, g.atoms.length]));
 const protonPeakIdOfAtom = {};
 h1Groups.forEach((g, i) => g.atoms.forEach((a) => (protonPeakIdOfAtom[a] = `H${i + 1}`)));
 
@@ -258,8 +237,10 @@ const nC = formulaCount("C");
 const nH = formulaCount("H");
 const carbonBoundH = hydrogens.filter((h) => atomTypes[heavyOf[h.atom]] === "C").length;
 const checks = [
+  ...methylFixNotes,
+  ...(hydrogenAssignmentUnreliable ? ["このため ¹H と 2D 相関は入力に含めず、¹³C と分子量だけで評価する。"] : []),
   `構造照合: BMRBのInChI(分子式・接続層)とPubChem CID ${cid} が${structureMatches ? "一致" : "不一致"}。`,
-  `¹³C ${c13.length}本(帰属炭素数) / 分子式の炭素数 ${nC}。`,
+  `¹³C ${c13.length}本(帰属炭素数) / 分子式の炭素数 ${nC}。DEPT で種類を付けたもの ${c13Types.filter(Boolean).length}本。`,
   `¹H 積分合計 ${hydrogens.length}H(帰属された水素の数、うち炭素上 ${carbonBoundH}H) / 分子式の水素数 ${nH}。`,
   `2D相関(一意に対応付けられたもののみ): ${Object.entries(correlationStats).map(([k, v]) => `${k} ${v.used}/${v.peaks}(${v.method})`).join(", ") || "なし"}。`,
 ];
@@ -290,9 +271,10 @@ const record = {
   },
   input: {
     ms: { molecularWeight: Number(pc.MolecularWeight), note: "PubChemの平均分子量(構造から計算した理論値)。BMRBにMS実測値は無い。" },
-    h1,
-    c13,
-    correlations,
+    // ¹Hの帰属が信頼できない場合は、¹Hと(¹Hの帰属に依存する)2D相関を使わない
+    h1: hydrogenAssignmentUnreliable ? [] : h1,
+    c13: c13.map((s, i) => (c13Types[i] ? [s, c13Types[i]] : s)),
+    correlations: hydrogenAssignmentUnreliable ? [] : correlations,
   },
   notes: checks,
 };

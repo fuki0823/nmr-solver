@@ -5,6 +5,7 @@ import {
   shiftConsistencyScore,
   type ShiftRange,
 } from "../shiftRanges";
+import { couplingPartners, multiplicityCompatible, parseMultiplicity } from "../multiplicity";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
 export function protonValidator(context: ValidationContext): ValidationResult {
@@ -68,6 +69,16 @@ export function protonValidator(context: ValidationContext): ValidationResult {
   // そこで最初に、メチル基を「3H のかたまり」として、積分の残りが3以上ある
   // ピークへ割り当てる(ピークごとに floor(積分/3) 個まで)。
   const capacity = peaks.map((p) => Math.max(1, Math.round(p.integration ?? 1)));
+  // 多重度(入力があれば)も割当の条件に加える。シフト範囲に入っていても、
+  // 多重度と隣接原子のHの数が合わない原子には割り当てない(詳細は multiplicity.ts)。
+  // OH/NH上のHは交換の速さで見え方が変わるため判定しない。
+  const partners = couplingPartners(candidateGraph);
+  const parsedMult = peaks.map((p) => parseMultiplicity(p.multiplicity));
+  const multOk = (peakIndex: number, atomIndex: number) =>
+    candidateGraph.atoms[atomIndex].element !== "C" ||
+    multiplicityCompatible(parsedMult[peakIndex], partners[atomIndex]);
+  const fits = (peakIndex: number, slot: number) =>
+    inRange(peaks[peakIndex].shift, slots[slot]) && multOk(peakIndex, slotAtom[slot]);
   const methylAtoms = candidateGraph.atoms
     .filter((a) => a.element === "C" && a.attachedH === 3)
     .map((a) => a.index);
@@ -76,21 +87,40 @@ export function protonValidator(context: ValidationContext): ValidationResult {
     for (let k = 0; k < Math.floor(capacity[pi] / 3); k++) methylSlotsOfPeak.push(pi);
   });
   const methylRange = (atomIdx: number) => slots[slotAtom.indexOf(atomIdx)];
-  const methylMatch = maxBipartiteMatching(methylAtoms.length, methylSlotsOfPeak.length, (m, s) =>
-    inRange(peaks[methylSlotsOfPeak[s]].shift, methylRange(methylAtoms[m])),
-  );
+  // 多重度が明確なピーク(s/d/t/q…)へ先に置き、残ったメチル基だけを m・記載なしの
+  // ピークへ置く。順序を付けないと、メチル基が重なりピーク(m)に入り、本来入るべき
+  // 一重線(例: ステロイドのアンギュラーメチル)が余ってしまう。
   const placedMethylAtoms = new Set<number>();
-  methylMatch.forEach((s, m) => {
-    if (s < 0) return;
-    capacity[methylSlotsOfPeak[s]] -= 3;
-    placedMethylAtoms.add(methylAtoms[m]);
-  });
+  const usedMethylSlots = new Set<number>();
+  const isSpecific = (pi: number) => parsedMult[pi].kind === "singlet" || parsedMult[pi].kind === "pattern";
+  for (const specificOnly of [true, false]) {
+    const remainingMethyls = methylAtoms.filter((a) => !placedMethylAtoms.has(a));
+    const freeSlots = methylSlotsOfPeak
+      .map((pi, s) => ({ pi, s }))
+      .filter(({ pi, s }) => !usedMethylSlots.has(s) && (!specificOnly || isSpecific(pi)));
+    maxBipartiteMatching(
+      remainingMethyls.length,
+      freeSlots.length,
+      (m, k) =>
+        inRange(peaks[freeSlots[k].pi].shift, methylRange(remainingMethyls[m])) &&
+        multOk(freeSlots[k].pi, remainingMethyls[m]),
+    ).forEach((k, m) => {
+      if (k < 0) return;
+      usedMethylSlots.add(freeSlots[k].s);
+      capacity[freeSlots[k].pi] -= 3;
+      placedMethylAtoms.add(remainingMethyls[m]);
+    });
+  }
   const unplacedMethyls = methylAtoms.length - placedMethylAtoms.size;
 
-  // 残りの積分を「Hの単位」に展開する
+  // 残りの積分を「Hの単位」に展開する(各単位は元のピーク番号を持つ)
   const units: number[] = [];
+  const unitPeak: number[] = [];
   peaks.forEach((p, pi) => {
-    for (let k = 0; k < capacity[pi]; k++) units.push(p.shift);
+    for (let k = 0; k < capacity[pi]; k++) {
+      units.push(p.shift);
+      unitPeak.push(pi);
+    }
   });
   const methylUnits = 3 * placedMethylAtoms.size;
   // OH/NHのスロットは範囲が広く(δ0.5-16)何にでも合うため、同時に
@@ -103,7 +133,7 @@ export function protonValidator(context: ValidationContext): ValidationResult {
     .filter((j) => !slotIsHetero[j] && !placedMethylAtoms.has(slotAtom[j]));
   const heteroSlotIdx = slots.map((_, j) => j).filter((j) => slotIsHetero[j]);
   const matchLeft = maxBipartiteMatching(units.length, carbonSlotIdx.length, (i, k) =>
-    inRange(units[i], slots[carbonSlotIdx[k]]),
+    fits(unitPeak[i], carbonSlotIdx[k]),
   ).map((k) => (k >= 0 ? carbonSlotIdx[k] : -1));
   const leftover = matchLeft.map((j, i) => (j < 0 ? i : -1)).filter((i) => i >= 0);
   maxBipartiteMatching(leftover.length, heteroSlotIdx.length, (a, k) =>
@@ -158,6 +188,22 @@ export function protonValidator(context: ValidationContext): ValidationResult {
       )
         .map(([label, n]) => `${label}${n}`)
         .join(" / ")})`,
+    });
+  }
+
+  // 多重度が原因で説明できないピーク(シフト範囲内の炭素上Hはあるが、多重度が合わない)
+  const multiplicityConflicts = peaks.filter((p, pi) => {
+    if (parsedMult[pi].kind === "unknown") return false;
+    const carbonSlots = slots.map((_, j) => j).filter((j) => !slotIsHetero[j]);
+    return carbonSlots.some((j) => inRange(p.shift, slots[j])) && !carbonSlots.some((j) => fits(pi, j));
+  });
+  if (multiplicityConflicts.length > 0) {
+    details.push({
+      status: "mismatch",
+      summary: `多重度: ${multiplicityConflicts
+        .slice(0, 6)
+        .map((p) => `δ${p.shift}(${p.multiplicity})`)
+        .join(", ")} は、シフトの合うHはあるものの、隣接原子のHの数が多重度と合いません`,
     });
   }
 

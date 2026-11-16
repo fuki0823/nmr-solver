@@ -20,6 +20,13 @@ export interface SpectralPeak {
   shift: number;
   /** ¹Hのみ: プロトン数(積分値) */
   integration?: number;
+  /** ¹Hのみ: 多重度(例: "s", "d", "dd", "t", "q", "m", "br s")。未入力なら判定しない */
+  multiplicity?: string;
+  /**
+   * ¹³Cのみ: DEPT 等で分かった炭素の種類(例: "C", "CH", "CH2", "CH3", "CH/CH3", "CH2/CH3")。
+   * 未入力なら判定しない(詳細は dept.ts)。
+   */
+  carbonType?: string;
 }
 
 export type CorrelationKind = "COSY" | "HSQC" | "HMBC" | "NOESY";

@@ -5,6 +5,7 @@ import {
   maxBipartiteMatching,
   shiftConsistencyScore,
 } from "../shiftRanges";
+import { formatCarbonType, parseCarbonType } from "../dept";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
 export function carbonValidator(context: ValidationContext): ValidationResult {
@@ -71,6 +72,33 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
     }
   }
 
+  // 1b. DEPT(炭素の種類)の本数のハード制約。
+  // 種類ごとに、その種類と表記されたピークの本数が、候補構造でその H 数を持つ炭素原子の
+  // 数を超えることは物理的にあり得ない(1個の炭素から2本のシグナルは出ない)。
+  // 「CH/CH3」のような集合も含めて、H 数のあらゆる組み合わせ S について
+  //   (表記が S に含まれるピークの本数) ≤ (H 数が S に含まれる炭素原子の数)
+  // を確かめる(2部マッチングが成り立つための必要条件)。
+  const carbonTypes = peaks.map((p) => parseCarbonType(p.carbonType));
+  const typedPeaks = carbonTypes.filter((t): t is number[] => t != null);
+  const carbonAtomsAll = candidateGraph.atoms.filter((a) => a.element === "C");
+  if (typedPeaks.length > 0) {
+    for (let mask = 1; mask < 16; mask++) {
+      const set = [0, 1, 2, 3].filter((h) => mask & (1 << h));
+      const peakCount = typedPeaks.filter((t) => t.every((h) => set.includes(h))).length;
+      if (peakCount === 0) continue;
+      const atomCount = carbonAtomsAll.filter((a) => set.includes(a.attachedH ?? 0)).length;
+      if (peakCount > atomCount) {
+        hardReject = true;
+        details.push({
+          status: "mismatch",
+          hardConstraint: true,
+          summary: `DEPT: ${formatCarbonType(set)} のピークが${peakCount}本ありますが、候補構造の該当する炭素は${atomCount}個しかありません`,
+        });
+        break;
+      }
+    }
+  }
+
   // 2. 化学シフトの整合性。各ピークを「その局所構造なら出うる範囲」に
   // 入る炭素原子へ1対1で割り当て(最大マッチング)、割り当てられた割合で
   // 評価する。範囲は重なりを許しているため、キノンC=O(δ186)やフェノール
@@ -79,8 +107,14 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
   const carbons = candidateGraph.atoms.filter((a) => a.element === "C");
   const ranges = carbons.map((a) => expectedCarbonRange(candidateGraph, a));
   const sortedPeaks = [...peaks].sort((a, b) => b.shift - a.shift);
-  const matchLeft = maxBipartiteMatching(sortedPeaks.length, carbons.length, (i, j) =>
-    inRange(sortedPeaks[i].shift, ranges[j]),
+  // DEPT の種類があれば、H 数が合う炭素にだけ割り当てる
+  const sortedTypes = sortedPeaks.map((p) => parseCarbonType(p.carbonType));
+  const matchLeft = maxBipartiteMatching(
+    sortedPeaks.length,
+    carbons.length,
+    (i, j) =>
+      inRange(sortedPeaks[i].shift, ranges[j]) &&
+      (sortedTypes[i] == null || sortedTypes[i]!.includes(carbons[j].attachedH ?? 0)),
   );
   const unmatched = sortedPeaks.filter((_, i) => matchLeft[i] < 0);
   const matchedCount = sortedPeaks.length - unmatched.length;
@@ -96,6 +130,23 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
             .map((p) => `δ${p.shift}`)
             .join(", ")}${unmatched.length > 6 ? " ほか" : ""}`,
   });
+
+  // DEPT が原因で説明できないピーク(シフトの合う炭素はあるが、H 数が DEPT と合わない)
+  const deptConflicts = sortedPeaks.filter((p, i) => {
+    const t = sortedTypes[i];
+    if (t == null) return false;
+    const inRangeAtoms = carbons.filter((_, j) => inRange(p.shift, ranges[j]));
+    return inRangeAtoms.length > 0 && !inRangeAtoms.some((a) => t.includes(a.attachedH ?? 0));
+  });
+  if (deptConflicts.length > 0) {
+    details.push({
+      status: "mismatch",
+      summary: `DEPT: ${deptConflicts
+        .slice(0, 6)
+        .map((p) => `δ${p.shift}(${p.carbonType})`)
+        .join(", ")} は、シフトの合う炭素はあるものの、付いている H の数が DEPT と合いません`,
+    });
+  }
 
   // 範囲ごとの内訳(参考表示)。候補構造の炭素がどの種類に何個あるか。
   const labelCounts = new Map<string, number>();

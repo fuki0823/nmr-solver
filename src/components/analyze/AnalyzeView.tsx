@@ -13,7 +13,9 @@ import {
   type CandidateEvaluation,
 } from "@/lib/analyze/scoring/rankCandidates";
 import { runAnalysis } from "@/lib/analyze/runAnalysis";
-import { inchiKeyOf } from "@/lib/analyze/ketcherService";
+import { analyzeSmiles, inchiKeyOf } from "@/lib/analyze/ketcherService";
+import { couplingPartners } from "@/lib/analyze/multiplicity";
+import { expectedProtonRange } from "@/lib/analyze/shiftRanges";
 
 // 開発/テスト用フック: 本番ビルドではNODE_ENVチェックによりdead-code
 // eliminationで消える。Playwrightから解析処理を直接呼び出すために
@@ -26,6 +28,20 @@ if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
     evaluateCandidate,
     runAnalysis,
     inchiKeyOf,
+    // 原子ごとのHのシフト範囲・カップリング相手の数(多重度判定の確認用)
+    async protonModel(smiles: string) {
+      const graph = await analyzeSmiles(smiles);
+      const partners = couplingPartners(graph);
+      return graph.atoms
+        .filter((a) => a.element === "C" && (a.attachedH ?? 0) > 0)
+        .map((a) => ({
+          atom: a.index,
+          h: a.attachedH,
+          neighbors: a.heavyNeighbors.map(([n, o]) => `${graph.atoms[n].element}${n}(H${graph.atoms[n].attachedH ?? "?"},o${o})`).join(" "),
+          range: expectedProtonRange(graph, a),
+          ...partners[a.index],
+        }));
+    },
   };
 }
 import MassSpecInput from "./MassSpecInput";

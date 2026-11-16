@@ -3,6 +3,13 @@
 import { useState } from "react";
 import type { Nucleus, SpectralPeak } from "@/lib/analyze/types";
 import { parseCarbonList, parseProtonList } from "@/lib/analyze/parsePeakList";
+import { CARBON_TYPE_OPTIONS, formatCarbonType, parseCarbonType } from "@/lib/analyze/dept";
+
+/** "t" や "q" のような表記を "CH2" "CH3" にそろえる(解釈できなければ undefined) */
+function normalizeCarbonType(raw: string | undefined): string | undefined {
+  const set = parseCarbonType(raw);
+  return set ? formatCarbonType(set) : undefined;
+}
 
 interface PeakTableInputProps {
   nucleus: Nucleus;
@@ -54,6 +61,8 @@ export default function PeakTableInput({
         nucleus,
         shift: p.shift,
         integration: nucleus === "1H" ? (p.integration ?? 1) : undefined,
+        multiplicity: nucleus === "1H" ? p.multiplicity : undefined,
+        carbonType: nucleus === "13C" ? normalizeCarbonType(p.carbonType) : undefined,
       });
     }
     onChange(base);
@@ -90,8 +99,8 @@ export default function PeakTableInput({
         </summary>
         <p className="mt-2 text-xs text-stone-600">
           {nucleus === "1H"
-            ? "1行に1ピーク。「7.26」「7.26 2」「7.26 (2H, d, J = 8.0 Hz)」などの形式に対応(積分を省略すると1H)。"
-            : "化学シフトを改行・カンマ・空白区切りで貼り付けてください(例: 1行に1つずつ)。"}
+            ? "1行に1ピーク。「7.26」「7.26 2」「7.26 (2H, d, J = 8.0 Hz)」などの形式に対応(積分を省略すると1H)。多重度(s, d, t, q, dd, m, br s など)も読み取り、構造の判定に使います。「5.13-5.01 (6H, m)」のような範囲は中央値にします。"
+            : "化学シフトを改行・カンマ・空白区切りで貼り付けてください(例: 1行に1つずつ)。DEPTの結果は「75.0 (CH)」「35.9 CH2」「17.4 q」のように数値の直後に書くと読み取ります(C / CH / CH2 / CH3 / CH/CH3、オフレゾナンス表記の s / d / t / q)。"}
         </p>
         <textarea
           value={pasteText}
@@ -132,6 +141,8 @@ export default function PeakTableInput({
             <th className="w-16 py-1">id</th>
             <th className="py-1">δ (ppm)</th>
             {nucleus === "1H" && <th className="py-1">積分</th>}
+            {nucleus === "1H" && <th className="py-1">多重度</th>}
+            {nucleus === "13C" && <th className="py-1">DEPT</th>}
             <th className="w-10 py-1" />
           </tr>
         </thead>
@@ -174,6 +185,38 @@ export default function PeakTableInput({
                     className="w-16 rounded border border-stone-300 px-2 py-1"
                     aria-label={`${peak.id} の積分値`}
                   />
+                </td>
+              )}
+              {nucleus === "1H" && (
+                <td className="py-1 pr-2">
+                  <input
+                    type="text"
+                    defaultValue={peak.multiplicity ?? ""}
+                    placeholder="s, d, dd…"
+                    onBlur={(e) => {
+                      const value = e.target.value.trim();
+                      updateRow(peak.id, { multiplicity: value === "" ? undefined : value });
+                    }}
+                    className="w-20 rounded border border-stone-300 px-2 py-1"
+                    aria-label={`${peak.id} の多重度`}
+                  />
+                </td>
+              )}
+              {nucleus === "13C" && (
+                <td className="py-1 pr-2">
+                  <select
+                    defaultValue={peak.carbonType ?? ""}
+                    onChange={(e) => updateRow(peak.id, { carbonType: e.target.value || undefined })}
+                    className="rounded border border-stone-300 px-2 py-1"
+                    aria-label={`${peak.id} の炭素の種類(DEPT)`}
+                  >
+                    <option value="">(未入力)</option>
+                    {CARBON_TYPE_OPTIONS.map((o) => (
+                      <option key={o} value={o}>
+                        {o}
+                      </option>
+                    ))}
+                  </select>
                 </td>
               )}
               <td className="py-1">

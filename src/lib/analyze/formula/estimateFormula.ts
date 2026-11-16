@@ -33,6 +33,12 @@ export interface NmrCountConstraints {
   protonIntegralTotal: number;
   /** ¹³Cの化学シフト一覧(不飽和度の下限の見積もりに使う。省略可) */
   carbonShifts?: number[];
+  /**
+   * DEPT から分かる炭素上の H の数の下限(各ピークの H 数の最小値の合計)。
+   * 各ピークは少なくとも1個の炭素に対応するので、炭素上の H の総数はこれ以上になる。
+   * 0 なら DEPT 未入力。
+   */
+  carbonBoundHydrogenMin?: number;
 }
 
 /** sp2炭素とみなす¹³Cシフトの下限(ppm) */
@@ -79,15 +85,18 @@ function hydrogenTolerance(protonTotal: number): number {
   return Math.max(1, Math.round(protonTotal * 0.05));
 }
 
-function hydrogenOk(f: FormulaCandidate, protonTotal: number): boolean {
+function hydrogenOk(f: FormulaCandidate, protonTotal: number, deptMin = 0): boolean {
+  // DEPT の下限: 炭素上の H だけで deptMin 個以上ある(DEPT の読み違い1個分の余裕を持たせる)
+  if (deptMin > 0 && f.counts.H < deptMin - 1) return false;
   if (protonTotal <= 0) return true;
   const tol = hydrogenTolerance(protonTotal);
   const exchangeableMax = f.counts.O + 2 * f.counts.N + f.counts.S;
   return f.counts.H >= protonTotal - tol && f.counts.H <= protonTotal + exchangeableMax + tol;
 }
 
-function hydrogenPenalty(f: FormulaCandidate, protonTotal: number): number {
-  if (protonTotal <= 0) return 0;
+function hydrogenPenalty(f: FormulaCandidate, protonTotal: number, deptMin = 0): number {
+  // ¹H 積分が無ければ、DEPT の下限を観測された炭素上の H 数の目安として使う
+  if (protonTotal <= 0) return deptMin > 0 ? Math.max(0, f.counts.H - deptMin) * 0.5 : 0;
   const diff = f.counts.H - protonTotal;
   // 観測されない交換性Hの分だけ多いのは自然なので、不足側を重く見る
   return diff < 0 ? -diff * 2 : diff * 0.5;
@@ -101,6 +110,7 @@ export function estimateFormulas(
   const slack = options.carbonSlack ?? 2;
   const nC = nmr.carbonPeakCount;
   const nH = nmr.protonIntegralTotal;
+  const deptMin = nmr.carbonBoundHydrogenMin ?? 0;
   const minDbe = minUnsaturationFromCarbonShifts(nmr.carbonShifts ?? []);
 
   const toRanked = (f: FormulaCandidate): RankedFormula => ({
@@ -115,11 +125,11 @@ export function estimateFormulas(
       .sort(
         (a, b) =>
           (a.carbonExcess ?? 0) - (b.carbonExcess ?? 0) ||
-          hydrogenPenalty(a, nH) - hydrogenPenalty(b, nH) ||
+          hydrogenPenalty(a, nH, deptMin) - hydrogenPenalty(b, nH, deptMin) ||
           Math.abs(a.massErrorPpm) - Math.abs(b.massErrorPpm),
       );
 
-  if (nC <= 0 && nH <= 0) {
+  if (nC <= 0 && nH <= 0 && deptMin <= 0) {
     return { formulas: sortRanked(candidates), level: "massOnly", extraFormulas: [] };
   }
 
@@ -127,8 +137,8 @@ export function estimateFormulas(
   const carbonUpperOk = (f: FormulaCandidate) => nC <= 0 || f.counts.C <= nC + slack;
   const dbeOk = (f: FormulaCandidate) => f.degreeOfUnsaturation >= minDbe;
 
-  const strict = candidates.filter((f) => carbonLowerOk(f) && carbonUpperOk(f) && hydrogenOk(f, nH) && dbeOk(f));
-  const symmetry = candidates.filter((f) => carbonLowerOk(f) && hydrogenOk(f, nH) && dbeOk(f));
+  const strict = candidates.filter((f) => carbonLowerOk(f) && carbonUpperOk(f) && hydrogenOk(f, nH, deptMin) && dbeOk(f));
+  const symmetry = candidates.filter((f) => carbonLowerOk(f) && hydrogenOk(f, nH, deptMin) && dbeOk(f));
   if (strict.length > 0) {
     const beyondSlack = symmetry.filter((f) => !carbonUpperOk(f));
     return { formulas: sortRanked(strict), level: "strict", extraFormulas: sortRanked(beyondSlack) };
