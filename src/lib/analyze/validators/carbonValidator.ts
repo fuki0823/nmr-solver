@@ -2,11 +2,11 @@ import { countCarbonTypesByEquivalence, countDistinctCarbonEnvironments } from "
 import {
   expectedCarbonRange,
   inRange,
-  maxBipartiteMatching,
   shiftConsistencyScore,
 } from "../shiftRanges";
 import { formatCarbonType, parseCarbonType } from "../dept";
 import { predictAromaticCarbons } from "../prediction/aromaticIncrements";
+import { predictAliphaticCarbons } from "../prediction/aliphaticIncrements";
 import { minCostAssignment } from "../prediction/assignment";
 import type { ValidationContext, ValidationDetail, ValidationResult } from "./types";
 
@@ -123,17 +123,42 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
   const sortedPeaks = [...peaks].sort((a, b) => b.shift - a.shift);
   // DEPT の種類があれば、H 数が合う炭素にだけ割り当てる
   const sortedTypes = sortedPeaks.map((p) => parseCarbonType(p.carbonType));
-  const matchLeft = maxBipartiteMatching(
-    sortedPeaks.length,
-    carbons.length,
-    (i, j) =>
-      inRange(sortedPeaks[i].shift, ranges[j]) &&
-      (sortedTypes[i] == null || sortedTypes[i]!.includes(carbons[j].attachedH ?? 0)),
+  //
+  // DEPT の C(DEPT-135 に出ない)と CH3(DEPT-90 に出ない)は、本質的に「出ていない」ことからの
+  // 推論で、検出漏れで誤ることがある(シンバスタチンの実測 DEPT で CH を C と判定していた)。
+  // そのため割り当てでは C・CH3 を絶対条件にせず、合わない割り当ては半分の重みの不一致として
+  // 数える。直接観測で決まる CH・CH2・CH/CH3 は絶対条件のまま。
+  const SOFT = 1;
+  const BLOCKED = 1000;
+  const labelCost = (i: number, j: number): number => {
+    const t = sortedTypes[i];
+    const h = carbons[j].attachedH ?? 0;
+    if (t == null || t.includes(h)) return 0;
+    const inferredFromAbsence = t.length === 1 && (t[0] === 0 || t[0] === 3);
+    if (inferredFromAbsence && (t[0] === 0 || h === 1)) return SOFT; // C → 何でも可 / CH3 → CH なら可
+    return BLOCKED;
+  };
+  const rangeCost = sortedPeaks.map((p, i) =>
+    carbons.map((_, j) => (inRange(p.shift, ranges[j]) ? labelCost(i, j) : BLOCKED)),
   );
+  const rangeAssign = sortedPeaks.length <= carbons.length ? minCostAssignment(rangeCost) : [];
+  const matchLeft = sortedPeaks.map((_, i) => {
+    const j = rangeAssign[i];
+    return j != null && j >= 0 && rangeCost[i][j] < BLOCKED ? j : -1;
+  });
+  const softMismatches = matchLeft.filter((j, i) => j >= 0 && rangeCost[i][j] === SOFT).length;
   const unmatched = sortedPeaks.filter((_, i) => matchLeft[i] < 0);
   const matchedCount = sortedPeaks.length - unmatched.length;
   const shiftScore =
-    sortedPeaks.length > 0 ? shiftConsistencyScore(unmatched.length / sortedPeaks.length) : 0;
+    sortedPeaks.length > 0
+      ? shiftConsistencyScore((unmatched.length + 0.5 * softMismatches) / sortedPeaks.length)
+      : 0;
+  if (softMismatches > 0) {
+    details.push({
+      status: "partial",
+      summary: `DEPT: C・CH3 と表記されたピークのうち${softMismatches}本は、H 数の違う炭素にしか割り当てられません(C・CH3 は「出ていない」ことからの推論なので、半分の重みの不一致として扱います)`,
+    });
+  }
   details.push({
     status: unmatched.length === 0 ? "match" : unmatched.length <= 1 ? "partial" : "mismatch",
     summary:
@@ -166,38 +191,76 @@ export function carbonValidator(context: ValidationContext): ValidationResult {
   // シフト範囲・DEPT の条件を満たす組み合わせの中で、予測値とのずれの合計が最小になる
   // ようにピークを炭素へ割り当て(ハンガリアン法)、予測のある炭素の平均のずれ(MAD)で
   // 評価する。予測の無い炭素へのコストは典型的な誤差 3 ppm とし、割り当てを偏らせない。
-  const predictionAll = predictAromaticCarbons(candidateGraph);
-  const predicted = carbons.map((a) => predictionAll[a.index]);
+  // 予測の方式ごとに典型的な誤差が違うので、満点とするずれの上限を分ける
+  // (芳香環 2 ppm、sp3 炭素 4 ppm)。
+  const aromaticPred = predictAromaticCarbons(candidateGraph);
+  const aliphaticPred = predictAliphaticCarbons(candidateGraph);
+  const METHODS = {
+    aromatic: { label: "芳香環の置換基加成則", tolerance: 2 },
+    aliphatic: { label: "sp3炭素の加成則", tolerance: 4 },
+  } as const;
+  type Method = keyof typeof METHODS;
+  const predicted = carbons.map((a): { value: number; method: Method } | null =>
+    aromaticPred[a.index] != null
+      ? { value: aromaticPred[a.index]!, method: "aromatic" }
+      : aliphaticPred[a.index] != null
+        ? { value: aliphaticPred[a.index]!, method: "aliphatic" }
+        : null,
+  );
   let predictionScore: number | null = null;
   if (predicted.some((p) => p != null) && sortedPeaks.length <= carbons.length) {
     const DEFAULT_COST = 3;
     const INFEASIBLE = 1000;
+    // 1本の予測の大外れで割り当てや平均が引きずられないよう、ずれは 10 ppm で頭打ちにする
+    const MAX_DEVIATION = 10;
     const cost = sortedPeaks.map((p, i) =>
       carbons.map((a, j) => {
-        const feasible =
-          inRange(p.shift, ranges[j]) && (sortedTypes[i] == null || sortedTypes[i]!.includes(a.attachedH ?? 0));
-        if (!feasible) return INFEASIBLE;
-        return predicted[j] != null ? Math.min(Math.abs(p.shift - predicted[j]!), 15) : DEFAULT_COST;
+        if (rangeCost[i][j] >= BLOCKED) return INFEASIBLE;
+        // DEPT の C・CH3 と合わない割り当ては、予測のずれ 5 ppm 分の追加コストにする
+        const soft = rangeCost[i][j] === SOFT ? 5 : 0;
+        const pr = predicted[j];
+        // 誤差の大きい方式ほど、ずれを割り引いてコストにする(方式間で割り当てを偏らせない)
+        return (
+          soft +
+          (pr != null
+            ? Math.min(Math.abs(p.shift - pr.value), MAX_DEVIATION) * (2 / METHODS[pr.method].tolerance)
+            : DEFAULT_COST)
+        );
       }),
     );
     const assign = minCostAssignment(cost);
-    const deviations: { obs: number; pred: number; dev: number }[] = [];
+    const byMethod = new Map<Method, { obs: number; pred: number; dev: number }[]>();
     assign.forEach((j, i) => {
-      if (j < 0 || cost[i][j] >= INFEASIBLE || predicted[j] == null) return;
-      deviations.push({ obs: sortedPeaks[i].shift, pred: predicted[j]!, dev: Math.abs(sortedPeaks[i].shift - predicted[j]!) });
+      const pr = predicted[j];
+      if (j < 0 || cost[i][j] >= INFEASIBLE || pr == null) return;
+      const list = byMethod.get(pr.method) ?? [];
+      list.push({
+        obs: sortedPeaks[i].shift,
+        pred: pr.value,
+        dev: Math.min(Math.abs(sortedPeaks[i].shift - pr.value), MAX_DEVIATION),
+      });
+      byMethod.set(pr.method, list);
     });
-    if (deviations.length >= 3) {
+    // 点数は「各方式の典型的な誤差(tolerance)を超えたずれ」の合計から出し、観測ピークの
+    // 本数(どの候補でも同じ)で割る。予測できた炭素の数で平均すると、許容範囲内に収まる
+    // 炭素を多く持つ候補ほど有利になる偏りが生じた(ダウノルビシンで異性体が逆転した)。
+    let excess = 0;
+    let anyMethod = false;
+    for (const [method, deviations] of byMethod) {
+      if (deviations.length < 3) continue;
+      anyMethod = true;
+      const { label, tolerance } = METHODS[method];
       const mad = deviations.reduce((s, d) => s + d.dev, 0) / deviations.length;
-      // 加成則の典型的な誤差(約 2 ppm)までは満点、それを超えると下げる
-      predictionScore = Math.exp(-Math.max(0, mad - 2) / 3);
+      excess += deviations.reduce((s, d) => s + Math.max(0, d.dev - tolerance), 0);
       const worst = [...deviations].sort((a, b) => b.dev - a.dev).slice(0, 3);
       details.push({
-        status: mad <= 3 ? "match" : mad <= 5 ? "partial" : "mismatch",
-        summary: `予測シフト(芳香環の置換基加成則): 予測できる炭素${deviations.length}本の平均のずれ ${mad.toFixed(1)} ppm(ずれの大きいもの: ${worst
+        status: mad <= tolerance + 1 ? "match" : mad <= tolerance + 3 ? "partial" : "mismatch",
+        summary: `予測シフト(${label}): 予測できる炭素${deviations.length}本の平均のずれ ${mad.toFixed(1)} ppm(ずれの大きいもの: ${worst
           .map((d) => `δ${d.obs} ↔ 予測${d.pred}`)
           .join(", ")})`,
       });
     }
+    if (anyMethod) predictionScore = Math.exp(-excess / (2 * sortedPeaks.length));
   }
 
   // 範囲ごとの内訳(参考表示)。候補構造の炭素がどの種類に何個あるか。

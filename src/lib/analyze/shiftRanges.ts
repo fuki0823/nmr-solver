@@ -149,6 +149,16 @@ function localEnv(graph: MoleculeGraph, atom: AtomInfo): LocalEnv {
   return env;
 }
 
+/** O を含む3員環(エポキシド)の炭素か */
+function isEpoxideCarbon(graph: MoleculeGraph, atom: AtomInfo): boolean {
+  const neighbors = new Set(atom.heavyNeighbors.map(([n]) => n));
+  return atom.heavyNeighbors.some(
+    ([o]) =>
+      graph.atoms[o].element === "O" &&
+      graph.atoms[o].heavyNeighbors.some(([c2]) => c2 !== atom.index && neighbors.has(c2)),
+  );
+}
+
 /** sp2/sp炭素(芳香族、C=C、C=O、C=N、C≡X)か */
 function isUnsaturatedCarbon(graph: MoleculeGraph, idx: number): boolean {
   const atom = graph.atoms[idx];
@@ -223,6 +233,9 @@ export function expectedProtonRange(graph: MoleculeGraph, atom: AtomInfo): Shift
   if (e.singleO >= 2) return { lo: 4.2, hi: 6.4, label: "アセタール H" };
   // N・Sを含むヘテロ原子2置換のCH(ペナム環のC5-H δ5.5等)
   if (e.singleO + e.singleN + e.singleOtherHetero >= 2) return { lo: 3.8, hi: 6.4, label: "ヘテロ原子2置換 CH" };
+  // エポキシド(O を含む3員環)の CH は、環のひずみで通常の C-O の CH より高磁場
+  // (δ2.5-3.5。例: パルテノリドの H5 δ2.9)
+  if (e.singleO === 1 && isEpoxideCarbon(graph, atom)) return { lo: 2.4, hi: 3.6, label: "エポキシド CH" };
   if (e.singleO === 1) return { lo: 3.0, hi: 5.7, label: "O-CH" };
   if (e.singleN > 0) return { lo: 2.0, hi: 4.6, label: "N-CH" };
   if (e.singleOtherHetero > 0) return { lo: 1.7, hi: 3.6, label: "S-CH等" };
